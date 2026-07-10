@@ -1,0 +1,7 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:wither_rose" },
+  "catalyst": { "id": "mcextraction:rune", "count": 1 },
+  "result": { "id": "mcextraction:spellbook_poison_cloud" },
+  "casttime": 100
+}

@@ -1,0 +1,7 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:packed_ice" },
+  "catalyst": { "id": "mcextraction:rune", "count": 3 },
+  "result": { "id": "mcextraction:spellbook_blizzard" },
+  "casttime": 100
+}

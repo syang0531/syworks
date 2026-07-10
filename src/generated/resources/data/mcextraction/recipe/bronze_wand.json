@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "mcextraction:bronze_ingot"
+    }
+  },
+  "pattern": [
+    "  X",
+    " S ",
+    "S  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mcextraction:bronze_wand"
+  }
+}

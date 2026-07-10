@@ -1,0 +1,12 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:ender_eye" },
+  "catalyst": { "id": "mcextraction:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:looting": 1 } }
+    }
+  },
+  "casttime": 100
+}

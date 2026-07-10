@@ -1,0 +1,32 @@
+package com.syang.mcextraction.event;
+
+import com.syang.mcextraction.MCExtraction;
+import com.syang.mcextraction.registry.ModBlockEntities;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
+/**
+ * Exposes the Extractor's inventory as an item-handler capability so hoppers and other
+ * automation can insert fuel/source and pull the extracted metal.
+ */
+@EventBusSubscriber(modid = MCExtraction.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+public final class ModCapabilities {
+
+    private ModCapabilities() {
+    }
+
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.EXTRACTOR.get(),
+                (blockEntity, side) -> blockEntity.getInventory());
+
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.ALLOY_FURNACE.get(),
+                (blockEntity, side) -> blockEntity.getInventory());
+    }
+}

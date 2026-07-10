@@ -1,0 +1,96 @@
+Add-Type -AssemblyName System.Drawing
+
+$root = 'C:\Projects\mc-extraction\src\main\resources\assets\mcextraction\textures'
+New-Item -ItemType Directory -Force "$root\item"  | Out-Null
+New-Item -ItemType Directory -Force "$root\block" | Out-Null
+New-Item -ItemType Directory -Force "$root\models\armor" | Out-Null
+
+$colors = @{
+  tin='C8CDD0'; zinc='A7B0B5'; nickel='B7B4A8'; aluminum='D6D9DC'; silver='E3E4E8';
+  chromium='C4CBD0'; titanium='8891A0'; cobalt='3B5DA8'; tungsten='4A4A4A'; sulfur='E6D74A'; platinum='DDE1E6';
+  bronze='CD7F32'; brass='C6A44B'; constantan='B08D57'; duralumin='C9CDD1'; steel='7A828A';
+  stainless_steel='B8C0C6'; titanium_alloy='9AA6B2'; tungsten_steel='55585C';
+  cobalt_steel='4A5FA0'; electrum='E8D07A'; tungsten_carbide='2E3138'; platinum_superalloy='A8E0D0';
+  extractor='6E6E6E'; alloy_furnace='5A5A66'
+}
+
+$suffixes = @('_ingot','_sword','_pickaxe','_axe','_shovel','_hoe','_helmet','_chestplate','_leggings','_boots')
+
+function Get-Base([string]$n) {
+  foreach ($s in $suffixes) { if ($n.EndsWith($s)) { return $n.Substring(0, $n.Length - $s.Length) } }
+  return $n
+}
+function Get-Color([string]$hex) {
+  $r=[Convert]::ToInt32($hex.Substring(0,2),16); $g=[Convert]::ToInt32($hex.Substring(2,2),16); $b=[Convert]::ToInt32($hex.Substring(4,2),16)
+  return [System.Drawing.Color]::FromArgb(255,$r,$g,$b)
+}
+function Get-Darker($c,[double]$f=0.6){ return [System.Drawing.Color]::FromArgb(255,[int]($c.R*$f),[int]($c.G*$f),[int]($c.B*$f)) }
+
+function New-Icon([string]$name,[string]$path,[bool]$isBlock) {
+  $base = Get-Base $name
+  $hex = $colors[$base]; if (-not $hex) { $hex='999999' }
+  $col=Get-Color $hex; $dark=Get-Darker $col
+  $bmp=New-Object System.Drawing.Bitmap 16,16
+  $g=[System.Drawing.Graphics]::FromImage($bmp)
+  $g.Clear([System.Drawing.Color]::Transparent)
+  $b=New-Object System.Drawing.SolidBrush $col
+  $bd=New-Object System.Drawing.SolidBrush $dark
+  $pen=New-Object System.Drawing.Pen $dark,1
+  if ($isBlock) {
+    $g.FillRectangle($b,0,0,16,16)
+    $g.FillRectangle((New-Object System.Drawing.SolidBrush (Get-Darker $col 0.8)),3,3,10,10)
+    $g.DrawRectangle($pen,0,0,15,15)
+  } elseif ($name.EndsWith('_sword')) {
+    $g.FillRectangle($b,7,1,3,10); $g.FillRectangle($bd,5,10,7,2); $g.FillRectangle($bd,8,11,2,4)
+  } elseif ($name.EndsWith('_pickaxe')) {
+    $g.FillRectangle($b,2,3,12,3); $g.FillRectangle($bd,7,4,2,11)
+  } elseif ($name.EndsWith('_axe')) {
+    $g.FillRectangle($b,4,2,7,6); $g.FillRectangle($bd,7,3,2,11)
+  } elseif ($name.EndsWith('_shovel')) {
+    $g.FillRectangle($b,6,2,4,6); $g.FillRectangle($bd,7,8,2,6)
+  } elseif ($name.EndsWith('_hoe')) {
+    $g.FillRectangle($b,3,3,7,3); $g.FillRectangle($bd,8,4,2,11)
+  } elseif ($name.EndsWith('_helmet')) {
+    $g.FillRectangle($b,3,4,10,5); $g.FillRectangle($b,3,9,3,3); $g.FillRectangle($b,10,9,3,3); $g.DrawRectangle($pen,3,4,9,4)
+  } elseif ($name.EndsWith('_chestplate')) {
+    $g.FillRectangle($b,4,3,8,11); $g.FillRectangle($b,2,3,3,4); $g.FillRectangle($b,11,3,3,4); $g.DrawRectangle($pen,4,3,7,10)
+  } elseif ($name.EndsWith('_leggings')) {
+    $g.FillRectangle($b,4,3,8,4); $g.FillRectangle($b,4,7,3,8); $g.FillRectangle($b,9,7,3,8)
+  } elseif ($name.EndsWith('_boots')) {
+    $g.FillRectangle($b,3,9,4,5); $g.FillRectangle($b,9,9,4,5); $g.FillRectangle($b,2,12,12,2)
+  } else {
+    $g.FillRectangle($b,2,6,12,5); $g.DrawRectangle($pen,2,6,11,4)
+  }
+  $g.Dispose(); $bmp.Save($path,[System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+}
+
+function New-ArmorLayer([string]$alloy,[string]$path) {
+  $hex=$colors[$alloy]; if(-not $hex){$hex='999999'}
+  $col=Get-Color $hex
+  $bmp=New-Object System.Drawing.Bitmap 64,32
+  $g=[System.Drawing.Graphics]::FromImage($bmp)
+  $g.Clear([System.Drawing.Color]::Transparent)
+  # Fill the whole sheet; only the model's UV regions are sampled, giving solid-colored armor.
+  $g.FillRectangle((New-Object System.Drawing.SolidBrush $col),0,0,64,32)
+  $g.Dispose(); $bmp.Save($path,[System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+}
+
+$metals = 'tin','zinc','nickel','aluminum','silver','chromium','titanium','cobalt','tungsten','platinum'
+$alloys = 'bronze','brass','constantan','duralumin','steel','stainless_steel','titanium_alloy','tungsten_steel','cobalt_steel','electrum','tungsten_carbide','platinum_superalloy'
+$gear = '_sword','_pickaxe','_axe','_shovel','_hoe','_helmet','_chestplate','_leggings','_boots'
+
+$items = New-Object System.Collections.Generic.List[string]
+foreach ($m in $metals) { $items.Add("$($m)_ingot") }
+$items.Add('sulfur')
+foreach ($a in $alloys) { $items.Add("$($a)_ingot"); foreach ($s in $gear) { $items.Add("$a$s") } }
+
+foreach ($i in $items) { New-Icon $i "$root\item\$i.png" $false }
+New-Icon 'extractor'     "$root\block\extractor.png"     $true
+New-Icon 'alloy_furnace' "$root\block\alloy_furnace.png" $true
+
+foreach ($a in $alloys) {
+  New-ArmorLayer $a "$root\models\armor\$($a)_layer_1.png"
+  New-ArmorLayer $a "$root\models\armor\$($a)_layer_2.png"
+}
+
+Write-Output "Generated $($items.Count) item textures, 2 block textures, $($alloys.Count * 2) armor layers."

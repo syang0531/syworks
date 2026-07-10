@@ -1,0 +1,7 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:copper_ingot" },
+  "catalyst": { "id": "mcextraction:rune", "count": 2 },
+  "result": { "id": "mcextraction:spellbook_lightning" },
+  "casttime": 100
+}

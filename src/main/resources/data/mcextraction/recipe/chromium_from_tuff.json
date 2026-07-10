@@ -1,0 +1,6 @@
+{
+  "type": "mcextraction:extraction",
+  "ingredient": { "item": "minecraft:tuff" },
+  "result": { "id": "mcextraction:chromium_ingot", "count": 1 },
+  "processtime": 200
+}

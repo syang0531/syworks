@@ -1,0 +1,12 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:sweet_berries" },
+  "catalyst": { "id": "mcextraction:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:sweeping_edge": 1 } }
+    }
+  },
+  "casttime": 100
+}

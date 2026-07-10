@@ -1,0 +1,6 @@
+{
+  "type": "mcextraction:extraction",
+  "ingredient": { "item": "minecraft:clay" },
+  "result": { "id": "mcextraction:aluminum_ingot", "count": 1 },
+  "processtime": 200
+}

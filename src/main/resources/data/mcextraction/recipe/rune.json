@@ -1,0 +1,7 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:gold_ingot" },
+  "catalyst": { "id": "minecraft:lapis_lazuli" },
+  "result": { "id": "mcextraction:rune" },
+  "casttime": 100
+}

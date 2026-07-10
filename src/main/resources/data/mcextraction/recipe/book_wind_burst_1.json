@@ -1,0 +1,12 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:wind_charge" },
+  "catalyst": { "id": "mcextraction:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:wind_burst": 1 } }
+    }
+  },
+  "casttime": 100
+}

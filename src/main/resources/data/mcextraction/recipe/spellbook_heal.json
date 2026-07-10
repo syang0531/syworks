@@ -1,0 +1,7 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:glow_berries" },
+  "catalyst": { "id": "mcextraction:rune", "count": 1 },
+  "result": { "id": "mcextraction:spellbook_heal" },
+  "casttime": 100
+}

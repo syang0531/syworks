@@ -1,0 +1,9 @@
+{
+  "type": "mcextraction:alloying",
+  "ingredients": [
+    { "item": "mcextraction:steel_ingot", "count": 2 },
+    { "item": "mcextraction:cobalt_ingot", "count": 1 }
+  ],
+  "result": { "id": "mcextraction:cobalt_steel_ingot", "count": 2 },
+  "processtime": 400
+}

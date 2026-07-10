@@ -1,0 +1,17 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:unbreaking": 1 } }
+    }
+  },
+  "catalyst": { "id": "mcextraction:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:unbreaking": 2 } }
+    }
+  },
+  "casttime": 100
+}

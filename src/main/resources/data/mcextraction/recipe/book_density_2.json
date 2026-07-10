@@ -1,0 +1,17 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:density": 1 } }
+    }
+  },
+  "catalyst": { "id": "mcextraction:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:density": 2 } }
+    }
+  },
+  "casttime": 100
+}

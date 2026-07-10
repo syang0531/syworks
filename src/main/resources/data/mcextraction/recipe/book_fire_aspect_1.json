@@ -1,0 +1,12 @@
+{
+  "type": "mcextraction:imbuing",
+  "base": { "id": "minecraft:blaze_rod" },
+  "catalyst": { "id": "mcextraction:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:fire_aspect": 1 } }
+    }
+  },
+  "casttime": 100
+}
