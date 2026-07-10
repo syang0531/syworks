@@ -1,0 +1,22 @@
+{
+  "values": [
+    "yame:wooden_staff",
+    "yame:stone_staff",
+    "yame:iron_staff",
+    "yame:golden_staff",
+    "yame:diamond_staff",
+    "yame:netherite_staff",
+    "yame:bronze_staff",
+    "yame:brass_staff",
+    "yame:constantan_staff",
+    "yame:duralumin_staff",
+    "yame:steel_staff",
+    "yame:stainless_steel_staff",
+    "yame:titanium_alloy_staff",
+    "yame:tungsten_steel_staff",
+    "yame:cobalt_steel_staff",
+    "yame:electrum_staff",
+    "yame:tungsten_carbide_staff",
+    "yame:platinum_superalloy_staff"
+  ]
+}

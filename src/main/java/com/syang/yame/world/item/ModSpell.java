@@ -24,17 +24,21 @@ import java.util.Optional;
  * match stays unambiguous. Verify this when adding a spell.
  */
 public enum ModSpell {
+    // Cooldowns are the post-buff values: base cast rate was tripled (cd ÷3) so staff magic stays
+    // relevant into the boss-tier game (§5.7.10). Damage/effect magnitudes are doubled in SpellEffects.
     // id               display            element         rune cd(t) bookMaterial                        action
-    FIREBOLT("firebolt", "Firebolt", Element.FIRE, 1, 30, "minecraft:fire_charge", SpellEffects::firebolt),
-    FROST_ARROW("frost_arrow", "Frost Arrow", Element.FROST, 1, 30, "minecraft:snowball", SpellEffects::frostArrow),
-    LIGHTNING("lightning", "Lightning Strike", Element.STORM, 2, 80, "minecraft:copper_ingot", SpellEffects::lightning),
-    BLIZZARD("blizzard", "Blizzard", Element.FROST, 3, 240, "minecraft:packed_ice", SpellEffects::blizzard),
-    HEAL("heal", "Heal", Element.HOLY, 1, 120, "minecraft:glow_berries", SpellEffects::heal),
-    REGENERATION("regeneration", "Regeneration", Element.HOLY, 2, 400, "minecraft:glistering_melon_slice", SpellEffects::regeneration),
-    HASTE("haste", "Haste", Element.STORM, 2, 300, "minecraft:redstone", SpellEffects::haste),
-    SHIELD("shield", "Shield", Element.HOLY, 1, 240, "minecraft:turtle_scute", SpellEffects::shield),
-    POISON_CLOUD("poison_cloud", "Poison Cloud", Element.NATURE, 1, 120, "minecraft:wither_rose", SpellEffects::poisonCloud),
-    CURSE("curse", "Curse", Element.SHADOW, 1, 160, "minecraft:ink_sac", SpellEffects::curse);
+    // Firebolt is the innate beginner spell every staff casts for free (see ModDataComponents);
+    // its cooldown is deliberately the slowest of the cheap attacks so it stays an early-game tool.
+    FIREBOLT("firebolt", "Firebolt", Element.FIRE, 1, 20, "minecraft:fire_charge", SpellEffects::firebolt),
+    FROST_ARROW("frost_arrow", "Frost Arrow", Element.FROST, 1, 10, "minecraft:snowball", SpellEffects::frostArrow),
+    LIGHTNING("lightning", "Lightning Strike", Element.STORM, 2, 27, "minecraft:copper_ingot", SpellEffects::lightning),
+    BLIZZARD("blizzard", "Blizzard", Element.FROST, 3, 80, "minecraft:packed_ice", SpellEffects::blizzard),
+    HEAL("heal", "Heal", Element.HOLY, 1, 40, "minecraft:glow_berries", SpellEffects::heal),
+    REGENERATION("regeneration", "Regeneration", Element.HOLY, 2, 133, "minecraft:glistering_melon_slice", SpellEffects::regeneration),
+    HASTE("haste", "Haste", Element.STORM, 2, 100, "minecraft:redstone", SpellEffects::haste),
+    SHIELD("shield", "Shield", Element.HOLY, 1, 80, "minecraft:turtle_scute", SpellEffects::shield),
+    POISON_CLOUD("poison_cloud", "Poison Cloud", Element.NATURE, 1, 40, "minecraft:wither_rose", SpellEffects::poisonCloud),
+    CURSE("curse", "Curse", Element.SHADOW, 1, 53, "minecraft:ink_sac", SpellEffects::curse);
 
     /** The behaviour of a spell — invoked server-side with an already-computed power multiplier. */
     @FunctionalInterface

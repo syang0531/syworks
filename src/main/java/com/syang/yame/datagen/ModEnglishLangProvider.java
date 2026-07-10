@@ -56,10 +56,16 @@ public class ModEnglishLangProvider extends LanguageProvider {
             add(ModItems.SPELL_BOOKS.get(spell).get(), spell.displayName() + " Spellbook");
         }
 
+        // Staff-exclusive enchantments (§5.7.9).
+        add("enchantment.yame.spell_power", "Spell Power");
+        add("enchantment.yame.alacrity", "Alacrity");
+        add("enchantment.yame.arcane_reach", "Arcane Reach");
+
         add("tooltip.yame.staff.affinity", "Affinity: ");
         add("tooltip.yame.staff.affinity_all", "All Elements");
         add("tooltip.yame.staff.empty", "No spells bound");
         add("tooltip.yame.staff.spells", "Spells (%s/%s):");
+        add("tooltip.yame.staff.innate", " (innate)");
         add("tooltip.yame.spellbook.bind", "Bind to a staff at an anvil");
         add("message.yame.staff.no_spell", "No spell bound");
     }

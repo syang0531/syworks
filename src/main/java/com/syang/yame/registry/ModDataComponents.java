@@ -65,17 +65,35 @@ public final class ModDataComponents {
         return spells;
     }
 
-    /** The active spell, falling back to the first bound spell when none is explicitly selected. */
+    /**
+     * The spells a staff can actually cast: its innate {@link ModSpell#FIREBOLT} (always, first) plus
+     * every bound spell. Firebolt is <b>free</b> — it does not occupy a bind slot — so every staff is
+     * usable the moment it is crafted, before the (diamond-gated) Rune Altar is reached. The bind
+     * slots ({@link ModStaff#slots}) are for the additional spells taught by spellbooks.
+     */
+    public static List<ModSpell> getCastableSpells(ItemStack stack) {
+        List<ModSpell> bound = getBoundSpells(stack);
+        List<ModSpell> castable = new ArrayList<>(bound.size() + 1);
+        castable.add(ModSpell.FIREBOLT);
+        for (ModSpell spell : bound) {
+            if (spell != ModSpell.FIREBOLT) {
+                castable.add(spell);
+            }
+        }
+        return castable;
+    }
+
+    /** The active (right-click) spell — the selected one, else the innate Firebolt. Never empty. */
     public static Optional<ModSpell> getActiveSpell(ItemStack stack) {
+        List<ModSpell> castable = getCastableSpells(stack);
         String id = stack.get(ACTIVE_SPELL.get());
         if (id != null) {
             Optional<ModSpell> active = ModSpell.byId(id);
-            if (active.isPresent() && getBoundSpells(stack).contains(active.get())) {
+            if (active.isPresent() && castable.contains(active.get())) {
                 return active;
             }
         }
-        List<ModSpell> bound = getBoundSpells(stack);
-        return bound.isEmpty() ? Optional.empty() : Optional.of(bound.get(0));
+        return Optional.of(castable.get(0));
     }
 
     public static void setActiveSpell(ItemStack stack, ModSpell spell) {

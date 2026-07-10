@@ -2,6 +2,9 @@
   "block.yame.alloy_furnace": "Alloy Furnace",
   "block.yame.extraction_furnace": "Extraction Furnace",
   "block.yame.rune_altar": "Rune Altar",
+  "enchantment.yame.alacrity": "Alacrity",
+  "enchantment.yame.arcane_reach": "Arcane Reach",
+  "enchantment.yame.spell_power": "Spell Power",
   "item.yame.aluminum_ingot": "Aluminum Ingot",
   "item.yame.brass_axe": "Brass Axe",
   "item.yame.brass_boots": "Brass Boots",
@@ -168,5 +171,6 @@
   "tooltip.yame.staff.affinity": "Affinity: ",
   "tooltip.yame.staff.affinity_all": "All Elements",
   "tooltip.yame.staff.empty": "No spells bound",
+  "tooltip.yame.staff.innate": " (innate)",
   "tooltip.yame.staff.spells": "Spells (%s/%s):"
 }
