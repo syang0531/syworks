@@ -1,0 +1,12 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:emerald" },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:fortune": 1 } }
+    }
+  },
+  "casttime": 100
+}

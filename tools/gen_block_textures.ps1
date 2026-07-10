@@ -1,15 +1,15 @@
 Add-Type -AssemblyName System.Drawing
 
 # ---------------------------------------------------------------------------
-# Machine block textures for the Extractor (추출로) and Alloy Furnace (합금로).
+# Machine block textures for the Extraction Furnace (추출로) and Alloy Furnace (합금로).
 # Built by recoloring the vanilla furnace / blast-furnace textures (so they read
 # as believable furnace-family machines) and adding a distinct accent + glow:
-#   Extractor    = stone furnace body recolored steel-blue, CYAN intake glow.
+#   Extraction Furnace    = stone furnace body recolored steel-blue, CYAN intake glow.
 #   Alloy Furnace= blast-furnace metal body recolored warm steel, ORANGE melt glow.
 # Each block gets 4 faces: _side, _top, _front, _front_on (lit).
 # ---------------------------------------------------------------------------
 
-$root  = 'C:\Projects\mc-extraction\src\main\resources\assets\mcextraction\textures\block'
+$root  = 'C:\Projects\yame\src\main\resources\assets\yame\textures\block'
 $vbase = "$PSScriptRoot\vanilla_base"
 New-Item -ItemType Directory -Force $root  | Out-Null
 New-Item -ItemType Directory -Force $vbase | Out-Null
@@ -159,12 +159,12 @@ function Add-Glow([System.Drawing.Bitmap]$b,[string]$coreHex,[string]$edgeHex){
 
 Ensure-FurnaceBases
 
-# ---------------- Extractor (추출로): steel-blue + cyan ----------------
+# ---------------- Extraction Furnace (추출로): steel-blue + cyan ----------------
 $exTint='5E7488'; $exAccent='34C7E0'; $exBase=150.0
-$t=Recolor (Load 'furnace_top')   $exTint $exBase $false; Add-Rivets $t $exAccent; Save $t 'extractor_top'; $t.Dispose()
-$s=Recolor (Load 'furnace_side')  $exTint $exBase $false; Add-Rivets $s $exAccent; Add-Band $s $exAccent 3; Save $s 'extractor_side'; $s.Dispose()
-$fr=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fr $exAccent; Add-Band $fr $exAccent 3; Save $fr 'extractor_front'; $fr.Dispose()
-$fo=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fo $exAccent; Add-Band $fo $exAccent 3; Add-Glow $fo 'EAFDFF' '1E9FC0'; Save $fo 'extractor_front_on'; $fo.Dispose()
+$t=Recolor (Load 'furnace_top')   $exTint $exBase $false; Add-Rivets $t $exAccent; Save $t 'extraction_furnace_top'; $t.Dispose()
+$s=Recolor (Load 'furnace_side')  $exTint $exBase $false; Add-Rivets $s $exAccent; Add-Band $s $exAccent 3; Save $s 'extraction_furnace_side'; $s.Dispose()
+$fr=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fr $exAccent; Add-Band $fr $exAccent 3; Save $fr 'extraction_furnace_front'; $fr.Dispose()
+$fo=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fo $exAccent; Add-Band $fo $exAccent 3; Add-Glow $fo 'EAFDFF' '1E9FC0'; Save $fo 'extraction_furnace_front_on'; $fo.Dispose()
 
 # ---------------- Alloy Furnace (합금로): warm steel + orange ----------------
 $afTint='7A6A5C'; $afAccent='E8922E'; $afBase=140.0
@@ -174,7 +174,7 @@ $fr=Recolor (Load 'blast_furnace_front') $afTint $afBase $false; Add-Rivets $fr 
 $fo=Recolor (Load 'blast_furnace_front_on') $afTint $afBase $true; Add-Rivets $fo $afAccent; Add-Band $fo $afAccent 3; Add-Glow $fo 'FFF0C0' 'E0641A'; Save $fo 'alloy_furnace_front_on'; $fo.Dispose()
 
 # ---------------- Rune Altar (룬 제단): enchanting table recolored ARCANE BLUE ----------------
-# Vanilla enchanting-table faces recolored to a saturated sapphire (distinct from the extractor's
+# Vanilla enchanting-table faces recolored to a saturated sapphire (distinct from the extraction_furnace's
 # muted steel-blue). The block is modeled at the enchanting table's 3/4 height and the floating
 # book is drawn by RuneAltarRenderer, so no book is baked and no directional "front" is needed.
 Ensure-EnchantBases

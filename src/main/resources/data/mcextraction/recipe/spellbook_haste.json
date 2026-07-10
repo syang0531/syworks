@@ -1,7 +1,0 @@
-{
-  "type": "mcextraction:imbuing",
-  "base": { "id": "minecraft:redstone" },
-  "catalyst": { "id": "mcextraction:rune", "count": 2 },
-  "result": { "id": "mcextraction:spellbook_haste" },
-  "casttime": 100
-}

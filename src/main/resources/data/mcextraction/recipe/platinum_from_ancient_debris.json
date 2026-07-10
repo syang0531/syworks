@@ -1,6 +1,0 @@
-{
-  "type": "mcextraction:extraction",
-  "ingredient": { "item": "minecraft:ancient_debris" },
-  "result": { "id": "mcextraction:platinum_ingot", "count": 1 },
-  "processtime": 800
-}

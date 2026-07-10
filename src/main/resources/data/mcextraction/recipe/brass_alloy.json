@@ -1,9 +1,0 @@
-{
-  "type": "mcextraction:alloying",
-  "ingredients": [
-    { "item": "minecraft:copper_ingot", "count": 3 },
-    { "item": "mcextraction:zinc_ingot", "count": 1 }
-  ],
-  "result": { "id": "mcextraction:brass_ingot", "count": 4 },
-  "processtime": 200
-}

@@ -1,7 +1,0 @@
-{
-  "type": "mcextraction:imbuing",
-  "base": { "id": "minecraft:snowball" },
-  "catalyst": { "id": "mcextraction:rune", "count": 1 },
-  "result": { "id": "mcextraction:spellbook_frost_arrow" },
-  "casttime": 100
-}

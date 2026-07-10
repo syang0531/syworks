@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "yame:stainless_steel_ingot"
+    }
+  },
+  "pattern": [
+    "XX",
+    " S",
+    " S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "yame:stainless_steel_hoe"
+  }
+}

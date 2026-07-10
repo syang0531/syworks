@@ -1,7 +1,0 @@
-{
-  "type": "mcextraction:imbuing",
-  "base": { "id": "minecraft:ink_sac" },
-  "catalyst": { "id": "mcextraction:rune", "count": 1 },
-  "result": { "id": "mcextraction:spellbook_curse" },
-  "casttime": 100
-}

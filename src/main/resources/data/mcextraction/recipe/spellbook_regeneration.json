@@ -1,7 +1,0 @@
-{
-  "type": "mcextraction:imbuing",
-  "base": { "id": "minecraft:glistering_melon_slice" },
-  "catalyst": { "id": "mcextraction:rune", "count": 2 },
-  "result": { "id": "mcextraction:spellbook_regeneration" },
-  "casttime": 100
-}

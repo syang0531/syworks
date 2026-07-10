@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stainless_steel_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "yame:stainless_steel_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "yame:stainless_steel_helmet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_stainless_steel_helmet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "yame:stainless_steel_helmet"
+    ]
+  }
+}

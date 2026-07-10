@@ -1,0 +1,7 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:packed_ice" },
+  "catalyst": { "id": "yame:rune", "count": 3 },
+  "result": { "id": "yame:spellbook_blizzard" },
+  "casttime": 100
+}

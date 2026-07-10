@@ -1,0 +1,17 @@
+{
+  "type": "yame:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:riptide": 1 } }
+    }
+  },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:riptide": 2 } }
+    }
+  },
+  "casttime": 100
+}

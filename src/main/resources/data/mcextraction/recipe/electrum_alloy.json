@@ -1,9 +1,0 @@
-{
-  "type": "mcextraction:alloying",
-  "ingredients": [
-    { "item": "minecraft:gold_ingot", "count": 1 },
-    { "item": "mcextraction:silver_ingot", "count": 1 }
-  ],
-  "result": { "id": "mcextraction:electrum_ingot", "count": 2 },
-  "processtime": 200
-}

@@ -1,6 +1,6 @@
 Add-Type -AssemblyName System.Drawing
 
-$root = 'C:\Projects\mc-extraction\src\main\resources\assets\mcextraction\textures'
+$root = 'C:\Projects\yame\src\main\resources\assets\yame\textures'
 New-Item -ItemType Directory -Force "$root\item"  | Out-Null
 New-Item -ItemType Directory -Force "$root\block" | Out-Null
 New-Item -ItemType Directory -Force "$root\models\armor" | Out-Null
@@ -11,7 +11,7 @@ $colors = @{
   bronze='CD7F32'; brass='C6A44B'; constantan='B08D57'; duralumin='C9CDD1'; steel='7A828A';
   stainless_steel='B8C0C6'; titanium_alloy='9AA6B2'; tungsten_steel='55585C';
   cobalt_steel='4A5FA0'; electrum='E8D07A'; tungsten_carbide='2E3138'; platinum_superalloy='A8E0D0';
-  extractor='6E6E6E'; alloy_furnace='5A5A66'
+  extraction_furnace='6E6E6E'; alloy_furnace='5A5A66'
 }
 
 $suffixes = @('_ingot','_sword','_pickaxe','_axe','_shovel','_hoe','_helmet','_chestplate','_leggings','_boots')
@@ -85,7 +85,7 @@ $items.Add('sulfur')
 foreach ($a in $alloys) { $items.Add("$($a)_ingot"); foreach ($s in $gear) { $items.Add("$a$s") } }
 
 foreach ($i in $items) { New-Icon $i "$root\item\$i.png" $false }
-New-Icon 'extractor'     "$root\block\extractor.png"     $true
+New-Icon 'extraction_furnace'     "$root\block\extraction_furnace.png"     $true
 New-Icon 'alloy_furnace' "$root\block\alloy_furnace.png" $true
 
 foreach ($a in $alloys) {

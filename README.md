@@ -1,4 +1,4 @@
-# MC Extraction
+# Yame
 
 바닐라 자연블록을 **추출**해 새 금속을 얻고, 이를 **합금**해 청동·강철·티타늄 등 확장 장비를 만드는
 Minecraft **1.21.1** / **NeoForge** 모드.
@@ -56,15 +56,15 @@ $env:JAVA_HOME = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
 ## 구조
 
 ```
-src/main/java/com/syang/mcextraction/
-├── MCExtraction.java              메인 (@Mod)
+src/main/java/com/syang/yame/
+├── Yame.java              메인 (@Mod)
 ├── registry/                      DeferredRegister (items, blocks, tabs)
 ├── world/item/                    ModMetal, ModAlloy(밸런스), ModTier
-├── world/level/block/             ExtractorBlock, AlloyFurnaceBlock
+├── world/level/block/             ExtractionFurnaceBlock, AlloyFurnaceBlock
 └── datagen/                       모델·영문 lang 생성기
 src/main/resources/
 ├── META-INF/neoforge.mods.toml
-└── assets/mcextraction/lang/ko_kr.json
+└── assets/yame/lang/ko_kr.json
 ```
 
-밸런스 수치는 [ModAlloy.java](src/main/java/com/syang/mcextraction/world/item/ModAlloy.java) enum에서 한 곳에서 조정.
+밸런스 수치는 [ModAlloy.java](src/main/java/com/syang/yame/world/item/ModAlloy.java) enum에서 한 곳에서 조정.

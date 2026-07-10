@@ -17,7 +17,7 @@ Add-Type -AssemblyName System.Drawing
 # Re-run after adding a metal/alloy: just add its color (+optional accent) below.
 # ---------------------------------------------------------------------------
 
-$root  = 'C:\Projects\mc-extraction\src\main\resources\assets\mcextraction\textures'
+$root  = 'C:\Projects\yame\src\main\resources\assets\yame\textures'
 $vbase = "$PSScriptRoot\vanilla_base"   # cached vanilla templates (extracted once)
 New-Item -ItemType Directory -Force "$root\item"          | Out-Null
 New-Item -ItemType Directory -Force "$root\block"         | Out-Null
@@ -37,7 +37,7 @@ $colors = @{
   bronze='CD7F32'; brass='C6A44B'; constantan='B58B5E'; duralumin='CCC3A6'; steel='868C93';
   stainless_steel='AFC6C6'; titanium_alloy='A0A6C6'; tungsten_steel='52555C';
   cobalt_steel='4A5FA0'; electrum='E8D07A'; tungsten_carbide='2E3138'; platinum_superalloy='A8E0D0';
-  extractor='6E6E6E'; alloy_furnace='5A5A66'
+  extraction_furnace='6E6E6E'; alloy_furnace='5A5A66'
 }
 
 # --- Accent dots disabled (users preferred the clean, dot-free look; hue cast
@@ -180,7 +180,7 @@ foreach ($a in $alloys) {
 }
 
 # Blocks (unchanged style)
-New-BlockIcon 'extractor'     "$root\block\extractor.png"
+New-BlockIcon 'extraction_furnace' "$root\block\extraction_furnace.png"
 New-BlockIcon 'alloy_furnace' "$root\block\alloy_furnace.png"
 
 # Magic system: rune item

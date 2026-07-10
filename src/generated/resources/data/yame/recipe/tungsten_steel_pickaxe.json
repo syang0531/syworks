@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "yame:tungsten_steel_ingot"
+    }
+  },
+  "pattern": [
+    "XXX",
+    " S ",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "yame:tungsten_steel_pickaxe"
+  }
+}

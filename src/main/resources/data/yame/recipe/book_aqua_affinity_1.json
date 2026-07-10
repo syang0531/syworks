@@ -1,0 +1,12 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:prismarine_crystals" },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:aqua_affinity": 1 } }
+    }
+  },
+  "casttime": 100
+}

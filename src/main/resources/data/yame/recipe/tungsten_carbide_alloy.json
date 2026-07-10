@@ -1,0 +1,10 @@
+{
+  "type": "yame:alloying",
+  "ingredients": [
+    { "item": "yame:tungsten_steel_ingot", "count": 2 },
+    { "item": "minecraft:coal", "count": 1 },
+    { "item": "yame:cobalt_ingot", "count": 1 }
+  ],
+  "result": { "id": "yame:tungsten_carbide_ingot", "count": 1 },
+  "processtime": 500
+}

@@ -1,0 +1,7 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:fire_charge" },
+  "catalyst": { "id": "yame:rune", "count": 1 },
+  "result": { "id": "yame:spellbook_firebolt" },
+  "casttime": 100
+}
