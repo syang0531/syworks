@@ -43,7 +43,7 @@ public final class StaffClientEvents {
         if (!(stack.getItem() instanceof StaffItem)) {
             return;
         }
-        if (ModDataComponents.getBoundSpells(stack).size() < 2) {
+        if (ModDataComponents.getCastableSpells(stack).size() < 2) {
             return;
         }
         double delta = event.getScrollDeltaY();
@@ -66,14 +66,14 @@ public final class StaffClientEvents {
         if (!(stack.getItem() instanceof StaffItem)) {
             return;
         }
-        List<ModSpell> bound = ModDataComponents.getBoundSpells(stack);
+        List<ModSpell> castable = ModDataComponents.getCastableSpells(stack);
         Optional<ModSpell> active = ModDataComponents.getActiveSpell(stack);
         if (active.isEmpty()) {
             return;
         }
 
         ModSpell spell = active.get();
-        String slots = bound.size() > 1 ? "  (" + (bound.indexOf(spell) + 1) + "/" + bound.size() + ")" : "";
+        String slots = castable.size() > 1 ? "  (" + (castable.indexOf(spell) + 1) + "/" + castable.size() + ")" : "";
         Component label = Component.literal(spell.element().glyph() + " " + spell.displayName())
                 .withStyle(spell.element().color())
                 .append(Component.literal(slots).withStyle(net.minecraft.ChatFormatting.GRAY));

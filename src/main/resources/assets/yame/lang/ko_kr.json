@@ -181,10 +181,15 @@
   "item.yame.spellbook_poison_cloud": "독구름 주문서",
   "item.yame.spellbook_curse": "저주 주문서",
 
+  "enchantment.yame.spell_power": "마력",
+  "enchantment.yame.alacrity": "신속 시전",
+  "enchantment.yame.arcane_reach": "마력 확산",
+
   "tooltip.yame.staff.affinity": "친화: ",
   "tooltip.yame.staff.affinity_all": "전 원소",
   "tooltip.yame.staff.empty": "부여된 마법 없음",
   "tooltip.yame.staff.spells": "마법 (%s/%s):",
+  "tooltip.yame.staff.innate": " (기본)",
   "tooltip.yame.spellbook.bind": "모루에서 지팡이와 결합",
   "message.yame.staff.no_spell": "부여된 마법이 없습니다"
 }

@@ -1,8 +1,10 @@
 package com.syang.yame.world.item;
 
 import com.syang.yame.registry.ModDataComponents;
+import com.syang.yame.registry.ModEnchantments;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -60,10 +62,12 @@ public class StaffItem extends Item {
         ModSpell spell = active.get();
 
         if (level instanceof ServerLevel serverLevel) {
-            float power = staff.effectivePower(spell);
+            // Spell Power enchant folds into the cast power; Alacrity shortens the effective cooldown.
+            float power = staff.effectivePower(spell) * ModEnchantments.spellPower(serverLevel, stack);
             spell.cast(serverLevel, player, stack, power);
 
-            player.getCooldowns().addCooldown(this, staff.effectiveCooldown(spell));
+            int cooldown = Math.round(staff.effectiveCooldown(spell) * ModEnchantments.cooldown(serverLevel, stack));
+            player.getCooldowns().addCooldown(this, Math.max(1, cooldown));
             stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
             serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -88,18 +92,19 @@ public class StaffItem extends Item {
         tooltip.add(Component.translatable("tooltip.yame.staff.affinity").withStyle(ChatFormatting.GRAY)
                 .append(affinityText));
 
-        List<ModSpell> bound = ModDataComponents.getBoundSpells(stack);
+        // Firebolt is innate (free); the slot count reflects only the bound (spellbook-taught) spells.
+        List<ModSpell> castable = ModDataComponents.getCastableSpells(stack);
+        int boundCount = ModDataComponents.getBoundSpells(stack).size();
         Optional<ModSpell> active = ModDataComponents.getActiveSpell(stack);
-        if (bound.isEmpty()) {
-            tooltip.add(Component.translatable("tooltip.yame.staff.empty").withStyle(ChatFormatting.DARK_GRAY));
-            return;
-        }
-        tooltip.add(Component.translatable("tooltip.yame.staff.spells", bound.size(), staff.slots())
+        tooltip.add(Component.translatable("tooltip.yame.staff.spells", boundCount, staff.slots())
                 .withStyle(ChatFormatting.GRAY));
-        for (ModSpell spell : bound) {
+        for (ModSpell spell : castable) {
             boolean isActive = active.isPresent() && active.get() == spell;
-            Component line = Component.literal((isActive ? " ▸ " : "   ") + spell.element().glyph() + " " + spell.displayName())
+            MutableComponent line = Component.literal((isActive ? " ▸ " : "   ") + spell.element().glyph() + " " + spell.displayName())
                     .withStyle(isActive ? spell.element().color() : ChatFormatting.DARK_GRAY);
+            if (spell == ModSpell.FIREBOLT) {
+                line.append(Component.translatable("tooltip.yame.staff.innate").withStyle(ChatFormatting.DARK_GRAY));
+            }
             tooltip.add(line);
         }
     }

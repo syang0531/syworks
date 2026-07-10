@@ -37,14 +37,14 @@ public final class ModPayloads {
             if (!(stack.getItem() instanceof StaffItem)) {
                 return;
             }
-            List<ModSpell> bound = ModDataComponents.getBoundSpells(stack);
-            if (bound.size() < 2) {
+            List<ModSpell> castable = ModDataComponents.getCastableSpells(stack);
+            if (castable.size() < 2) {
                 return;
             }
-            ModSpell active = ModDataComponents.getActiveSpell(stack).orElse(bound.get(0));
-            int index = bound.indexOf(active);
-            int next = Math.floorMod(index + payload.direction(), bound.size());
-            ModDataComponents.setActiveSpell(stack, bound.get(next));
+            ModSpell active = ModDataComponents.getActiveSpell(stack).orElse(castable.get(0));
+            int index = castable.indexOf(active);
+            int next = Math.floorMod(index + payload.direction(), castable.size());
+            ModDataComponents.setActiveSpell(stack, castable.get(next));
         });
     }
 }

@@ -1,6 +1,7 @@
 package com.syang.yame.datagen;
 
 import com.syang.yame.Yame;
+import com.syang.yame.registry.ModBlocks;
 import com.syang.yame.registry.ModItems;
 import com.syang.yame.world.item.ModAlloy;
 import com.syang.yame.world.item.ModStaff;
@@ -43,6 +44,8 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
+        machines(recipeOutput);
+
         for (ModAlloy alloy : ModAlloy.values()) {
             ItemLike ingot = ModItems.ALLOY_INGOTS.get(alloy).get();
 
@@ -61,6 +64,34 @@ public class ModRecipeProvider extends RecipeProvider {
         for (ModStaff staff : ModStaff.values()) {
             staff(recipeOutput, staff);
         }
+    }
+
+    /**
+     * The three functional blocks — without these the whole mod is survival-unobtainable.
+     * All use vanilla-only ingredients so they can bootstrap the loop (extract → alloy → magic).
+     * Tune ingredients here to taste.
+     */
+    private void machines(RecipeOutput recipeOutput) {
+        // Extraction Furnace — the entry machine. Furnace core wrapped in iron.
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.EXTRACTION_FURNACE.get())
+                .pattern("III").pattern("IFI").pattern("III")
+                .define('I', Items.IRON_INGOT).define('F', Items.FURNACE)
+                .unlockedBy("has_furnace", has(Items.FURNACE))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, "extraction_furnace"));
+
+        // Alloy Furnace — blast-furnace core (hotter) wrapped in copper.
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ALLOY_FURNACE.get())
+                .pattern("CCC").pattern("CBC").pattern("CCC")
+                .define('C', Items.COPPER_INGOT).define('B', Items.BLAST_FURNACE)
+                .unlockedBy("has_blast_furnace", has(Items.BLAST_FURNACE))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, "alloy_furnace"));
+
+        // Rune Altar — a recoloured enchanting table; themed on the rune (gold + lapis).
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.RUNE_ALTAR.get())
+                .pattern("GLG").pattern("LEL").pattern("GLG")
+                .define('G', Items.GOLD_INGOT).define('L', Items.LAPIS_LAZULI).define('E', Items.ENCHANTING_TABLE)
+                .unlockedBy("has_enchanting_table", has(Items.ENCHANTING_TABLE))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, "rune_altar"));
     }
 
     /** Crafts a staff from its material (alloy ingot or vanilla item) + two sticks. */
