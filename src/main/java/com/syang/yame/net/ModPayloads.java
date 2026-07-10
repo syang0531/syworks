@@ -3,7 +3,7 @@ package com.syang.yame.net;
 import com.syang.yame.Yame;
 import com.syang.yame.registry.ModDataComponents;
 import com.syang.yame.world.item.ModSpell;
-import com.syang.yame.world.item.WandItem;
+import com.syang.yame.world.item.StaffItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,7 +34,7 @@ public final class ModPayloads {
         context.enqueueWork(() -> {
             Player player = context.player();
             ItemStack stack = player.getMainHandItem();
-            if (!(stack.getItem() instanceof WandItem)) {
+            if (!(stack.getItem() instanceof StaffItem)) {
                 return;
             }
             List<ModSpell> bound = ModDataComponents.getBoundSpells(stack);

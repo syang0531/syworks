@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting;
 
 /**
  * The six magic elements (see docs/진행상황.md §5.7.1). Every {@link ModSpell} has an element,
- * every {@link ModWand} has an affinity element; when they match the wand grants a bonus.
+ * every {@link ModStaff} has an affinity element; when they match the staff grants a bonus.
  */
 public enum Element {
     FIRE("Fire", "🔥", ChatFormatting.RED),

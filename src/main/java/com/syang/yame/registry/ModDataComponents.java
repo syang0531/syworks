@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * Data components carried on a wand (see §5.7.7): the list of bound spells and the active one.
+ * Data components carried on a staff (see §5.7.7): the list of bound spells and the active one.
  * Modelled on how enchanted books carry {@code stored_enchantments} — spells are stored as their
  * stable {@link ModSpell#id()} strings and resolved back through {@link ModSpell#byId(String)}.
  */
@@ -25,7 +25,7 @@ public final class ModDataComponents {
     public static final DeferredRegister<DataComponentType<?>> COMPONENTS =
             DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, Yame.MOD_ID);
 
-    /** All spells bound onto the wand, in binding order. Selection cycles through this list. */
+    /** All spells bound onto the staff, in binding order. Selection cycles through this list. */
     public static final Supplier<DataComponentType<List<String>>> BOUND_SPELLS =
             COMPONENTS.register("bound_spells", () -> DataComponentType.<List<String>>builder()
                     .persistent(Codec.STRING.listOf())
@@ -83,7 +83,7 @@ public final class ModDataComponents {
     }
 
     /**
-     * Adds a spell to the wand if it is not already bound. Returns {@code false} when it is a
+     * Adds a spell to the staff if it is not already bound. Returns {@code false} when it is a
      * duplicate (caller should reject the anvil binding in that case).
      */
     public static boolean addBoundSpell(ItemStack stack, ModSpell spell) {

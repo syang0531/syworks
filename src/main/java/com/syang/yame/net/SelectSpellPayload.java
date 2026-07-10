@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * Client → server: cycle the held wand's active spell by {@code direction} (+1 next, −1 previous).
+ * Client → server: cycle the held staff's active spell by {@code direction} (+1 next, −1 previous).
  * Sent by the Shift+scroll handler; applied server-side against the {@code active_spell} component.
  */
 public record SelectSpellPayload(int direction) implements CustomPacketPayload {

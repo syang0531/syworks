@@ -6,7 +6,7 @@ import com.syang.yame.registry.ModItems;
 import com.syang.yame.world.item.ModAlloy;
 import com.syang.yame.world.item.ModMetal;
 import com.syang.yame.world.item.ModSpell;
-import com.syang.yame.world.item.ModWand;
+import com.syang.yame.world.item.ModStaff;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -48,19 +48,19 @@ public class ModEnglishLangProvider extends LanguageProvider {
             add(ModItems.ALLOY_BOOTS.get(alloy).get(), name + " Boots");
         }
 
-        // Wand system.
-        for (ModWand wand : ModWand.values()) {
-            add(ModItems.WANDS.get(wand).get(), wand.displayName());
+        // Staff system.
+        for (ModStaff staff : ModStaff.values()) {
+            add(ModItems.STAFFS.get(staff).get(), staff.displayName());
         }
         for (ModSpell spell : ModSpell.values()) {
             add(ModItems.SPELL_BOOKS.get(spell).get(), spell.displayName() + " Spellbook");
         }
 
-        add("tooltip.yame.wand.affinity", "Affinity: ");
-        add("tooltip.yame.wand.affinity_all", "All Elements");
-        add("tooltip.yame.wand.empty", "No spells bound");
-        add("tooltip.yame.wand.spells", "Spells (%s/%s):");
-        add("tooltip.yame.spellbook.bind", "Bind to a wand at an anvil");
-        add("message.yame.wand.no_spell", "No spell bound");
+        add("tooltip.yame.staff.affinity", "Affinity: ");
+        add("tooltip.yame.staff.affinity_all", "All Elements");
+        add("tooltip.yame.staff.empty", "No spells bound");
+        add("tooltip.yame.staff.spells", "Spells (%s/%s):");
+        add("tooltip.yame.spellbook.bind", "Bind to a staff at an anvil");
+        add("message.yame.staff.no_spell", "No spell bound");
     }
 }

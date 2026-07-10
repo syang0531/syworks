@@ -40,8 +40,8 @@ public final class ModCreativeTabs {
                         // Magic system.
                         output.accept(ModBlocks.RUNE_ALTAR.get());
                         output.accept(ModItems.RUNE.get());
-                        // Wand system (§5.7): wands then spellbooks.
-                        ModItems.WANDS.values().forEach(i -> output.accept(i.get()));
+                        // Staff system (§5.7): staffs then spellbooks.
+                        ModItems.STAFFS.values().forEach(i -> output.accept(i.get()));
                         ModItems.SPELL_BOOKS.values().forEach(i -> output.accept(i.get()));
                     })
                     .build());

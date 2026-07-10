@@ -9,7 +9,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 /**
- * A spellbook — the anvil-binding material that teaches a {@link ModSpell} to a {@link WandItem}.
+ * A spellbook — the anvil-binding material that teaches a {@link ModSpell} to a {@link StaffItem}.
  * One tome item exists per spell, so the Rune Altar recipe and the anvil binding both reference a
  * plain item (no component needed). The tome knows its own spell for the anvil handler.
  */

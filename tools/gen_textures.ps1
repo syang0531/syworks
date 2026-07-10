@@ -44,6 +44,24 @@ $colors = @{
 #     alone distinguishes them). Left here so a mark can be re-enabled per item.
 $accent = @{}
 
+# --- Staff colors (§5.7.2). One grayscale staff base is tinted per material,
+#     exactly like the swords. The 12 alloys reuse their ingot color above; the 6
+#     vanilla materials get their own material-appropriate tint here. ----------
+$staffColors = @{
+  wooden_staff='9E7B4F'; stone_staff='8A8A8A'; iron_staff='C9C9C9';
+  golden_staff='EAC64B'; diamond_staff='6BE0D6'; netherite_staff='4A4247';
+  bronze_staff=$colors['bronze']; brass_staff=$colors['brass'];
+  constantan_staff=$colors['constantan']; duralumin_staff=$colors['duralumin'];
+  steel_staff=$colors['steel']; stainless_steel_staff=$colors['stainless_steel'];
+  titanium_alloy_staff=$colors['titanium_alloy']; tungsten_steel_staff=$colors['tungsten_steel'];
+  cobalt_steel_staff=$colors['cobalt_steel']; electrum_staff=$colors['electrum'];
+  tungsten_carbide_staff=$colors['tungsten_carbide']; platinum_superalloy_staff=$colors['platinum_superalloy']
+}
+
+# Spellbooks (§5.7.3): all 10 share one recolored enchanted-book texture — same
+# book shape, but the glowing red ribbon is recolored to a glowing blue.
+$spellbooks = 'firebolt','frost_arrow','lightning','blizzard','heal','regeneration','haste','shield','poison_cloud','curse'
+
 # --- Vanilla templates to pull from the Minecraft client jar -----------------
 $itemTemplates  = @('ingot','sword','pickaxe','axe','shovel','hoe','helmet','chestplate','leggings','boots')
 $armorTemplates = @('layer_1','layer_2')
@@ -53,6 +71,7 @@ function Ensure-VanillaBases {
   $need = $false
   foreach ($t in $itemTemplates)  { if (-not (Test-Path "$vbase\iron_$t.png"))        { $need=$true } }
   foreach ($t in $armorTemplates) { if (-not (Test-Path "$vbase\iron_$t.png"))        { $need=$true } }
+  if (-not (Test-Path "$vbase\enchanted_book.png")) { $need=$true }
   if (-not $need) { return }
 
   $jar = Get-ChildItem "$env:USERPROFILE\.gradle\caches\neoformruntime" -Recurse -Filter 'minecraft_1.21.1_client.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
@@ -68,6 +87,8 @@ function Ensure-VanillaBases {
       $e = $zip.GetEntry("assets/minecraft/textures/models/armor/iron_$t.png")
       if ($e) { [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, "$vbase\iron_$t.png", $true) }
     }
+    $eb = $zip.GetEntry("assets/minecraft/textures/item/enchanted_book.png")
+    if ($eb) { [System.IO.Compression.ZipFileExtensions]::ExtractToFile($eb, "$vbase\enchanted_book.png", $true) }
   } finally { $zip.Dispose() }
   Write-Output "Extracted vanilla iron templates -> $vbase"
 }
@@ -138,6 +159,56 @@ function New-RuneIcon([string]$path) {
   $bmp.Save($path,[System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
 }
 
+# Staff base — one neutral grayscale hooked wooden staff (shepherd's-crook: a
+# curled hook at the top-left, a solid shaft descending to the bottom-right).
+# Drawn once and tinted per material like the swords. Fully grayscale so
+# Tint-Template recolors all of it. Shades chosen around TINT_BASE=150 so a
+# given material color lands on the mid tone.
+function New-StaffBase([string]$path) {
+  $hi=195; $mid=150; $sh=110; $dk=82
+  $bmp = New-Object System.Drawing.Bitmap 16,16
+  for($y=0;$y -lt 16;$y++){ for($x=0;$x -lt 16;$x++){ $bmp.SetPixel($x,$y,[System.Drawing.Color]::FromArgb(0,0,0,0)) } }
+  function Set-Px($x,$y,$v){ if($x -ge 0 -and $x -lt 16 -and $y -ge 0 -and $y -lt 16){ $bmp.SetPixel($x,$y,[System.Drawing.Color]::FromArgb(255,$v,$v,$v)) } }
+  # hook / crook at top-left (open crook, tip curling down)
+  Set-Px 4 1 $hi; Set-Px 5 1 $hi; Set-Px 6 1 $mid
+  Set-Px 3 2 $hi; Set-Px 7 2 $mid
+  Set-Px 3 3 $mid; Set-Px 7 3 $sh
+  Set-Px 3 4 $mid; Set-Px 7 4 $sh
+  Set-Px 4 4 $dk
+  Set-Px 4 5 $sh; Set-Px 5 5 $dk
+  # shaft: 2px wide, crook base (7,4) down-right to the foot (12,15)
+  $left  = @(@(7,5),@(8,6),@(8,7),@(9,8),@(9,9),@(10,10),@(10,11),@(11,12),@(11,13),@(12,14))
+  $right = @(@(8,5),@(9,6),@(9,7),@(10,8),@(10,9),@(11,10),@(11,11),@(12,12),@(12,13),@(13,14))
+  foreach($q in $left)  { Set-Px $q[0] $q[1] $mid }
+  foreach($q in $right) { Set-Px $q[0] $q[1] $sh }
+  # upper-left highlight edge along the shaft
+  foreach($q in @(@(7,5),@(8,6),@(8,7),@(9,8),@(9,9),@(10,10),@(10,11),@(11,12),@(11,13))) { Set-Px $q[0] $q[1] $hi }
+  # rounded foot
+  Set-Px 12 15 $sh; Set-Px 13 15 $dk
+  $bmp.Save($path,[System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+}
+
+# Spellbook — recolor the vanilla enchanted book so its glowing red ribbon reads
+# as a glowing blue instead (the "purple/red glow -> blue glow" request). Book
+# shape, brown cover, gold clasp and white pages are kept; only the 6 ribbon
+# reds are remapped onto a blue glow ramp. One texture, shared by all 10 spells.
+$spellbookLut = @{
+  'C51339'='5AB0FF'; '9D1B37'='2E7BE6'; 'A42C2B'='3579E0';
+  '892120'='245FC8'; '6C1717'='1B47A0'; '611414'='163C8E'
+}
+function New-SpellbookBlue([string]$srcPath,[string]$dstPath) {
+  $src = New-Object System.Drawing.Bitmap $srcPath
+  $dst = New-Object System.Drawing.Bitmap $src.Width,$src.Height
+  for($y=0;$y -lt $src.Height;$y++){ for($x=0;$x -lt $src.Width;$x++){
+    $p=$src.GetPixel($x,$y)
+    if($p.A -eq 0){ $dst.SetPixel($x,$y,[System.Drawing.Color]::FromArgb(0,0,0,0)); continue }
+    $k=('{0:X2}{1:X2}{2:X2}' -f $p.R,$p.G,$p.B)
+    if($spellbookLut.ContainsKey($k)){ $c=Get-RGB $spellbookLut[$k]; $dst.SetPixel($x,$y,[System.Drawing.Color]::FromArgb($p.A,$c[0],$c[1],$c[2])) }
+    else { $dst.SetPixel($x,$y,$p) }
+  }}
+  $dst.Save($dstPath,[System.Drawing.Imaging.ImageFormat]::Png); $src.Dispose(); $dst.Dispose()
+}
+
 # Block icon (unchanged simple style — not part of the recolor request)
 function New-BlockIcon([string]$name,[string]$path) {
   $tc = Get-RGB $colors[$name]
@@ -186,4 +257,17 @@ New-BlockIcon 'alloy_furnace' "$root\block\alloy_furnace.png"
 # Magic system: rune item
 New-RuneIcon "$root\item\rune.png"
 
-Write-Output "Recolored $count item textures from vanilla + $($alloys.Count * 2) armor body layers + 2 block textures + 1 rune item."
+# Staffs — one grayscale base, tinted per material (like the swords).
+New-StaffBase "$vbase\staff.png"
+$staffCount = 0
+foreach ($w in $staffColors.Keys) {
+  Tint-Template "$vbase\staff.png" $staffColors[$w] "$root\item\$($w).png" $null; $staffCount++
+}
+
+# Spellbooks — one blue recolor of the enchanted book, written per spell id.
+$sbCount = 0
+foreach ($s in $spellbooks) {
+  New-SpellbookBlue "$vbase\enchanted_book.png" "$root\item\spellbook_$($s).png"; $sbCount++
+}
+
+Write-Output "Recolored $count item textures from vanilla + $($alloys.Count * 2) armor body layers + 2 block textures + 1 rune item + $staffCount staffs + $sbCount spellbooks."

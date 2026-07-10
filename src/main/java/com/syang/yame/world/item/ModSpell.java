@@ -13,11 +13,11 @@ import java.util.Optional;
  * and the {@link SpellAction cast behaviour} itself.
  *
  * <p>Each spell owns a "spellbook" item ({@code spellbook_<id>}) crafted at the Rune Altar
- * ({@code bookMaterial} + {@code runeCount}×rune) and bound onto a {@link ModWand} at an anvil.
+ * ({@code bookMaterial} + {@code runeCount}×rune) and bound onto a {@link ModStaff} at an anvil.
  *
  * <p>Cooldown is stored in <b>ticks</b> (20 t = 1 s). The effective cooldown at cast time is
- * shortened by the wand's cooldown-reduction and matching-element affinity (see
- * {@code WandItem}).
+ * shortened by the staff's cooldown-reduction and matching-element affinity (see
+ * {@code StaffItem}).
  *
  * <p><b>Material-collision rule (§5.7.7):</b> every {@code bookMaterial} is a single item that is
  * <i>not</i> used by any of the 42 enchanted-book recipes, so the Rune Altar's exact base+catalyst
@@ -39,7 +39,7 @@ public enum ModSpell {
     /** The behaviour of a spell — invoked server-side with an already-computed power multiplier. */
     @FunctionalInterface
     public interface SpellAction {
-        void cast(ServerLevel level, Player caster, ItemStack wand, float power);
+        void cast(ServerLevel level, Player caster, ItemStack staff, float power);
     }
 
     private final String id;
@@ -93,8 +93,8 @@ public enum ModSpell {
         return "spellbook_" + id;
     }
 
-    public void cast(ServerLevel level, Player caster, ItemStack wand, float power) {
-        action.cast(level, caster, wand, power);
+    public void cast(ServerLevel level, Player caster, ItemStack staff, float power) {
+        action.cast(level, caster, staff, power);
     }
 
     /** Resolve a spell from its stored string id, if any. */

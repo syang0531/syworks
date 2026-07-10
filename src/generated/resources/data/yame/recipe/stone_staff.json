@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "pattern": [
+    "  X",
+    " S ",
+    "S  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "yame:stone_staff"
+  }
+}

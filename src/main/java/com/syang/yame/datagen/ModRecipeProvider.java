@@ -3,7 +3,7 @@ package com.syang.yame.datagen;
 import com.syang.yame.Yame;
 import com.syang.yame.registry.ModItems;
 import com.syang.yame.world.item.ModAlloy;
-import com.syang.yame.world.item.ModWand;
+import com.syang.yame.world.item.ModStaff;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -34,8 +34,8 @@ public class ModRecipeProvider extends RecipeProvider {
     private static final String[] CHESTPLATE = {"X X", "XXX", "XXX"};
     private static final String[] LEGGINGS = {"XXX", "X X", "X X"};
     private static final String[] BOOTS = {"X X", "X X"};
-    // Wand: material head on a two-stick diagonal shaft.
-    private static final String[] WAND = {"  X", " S ", "S  "};
+    // Staff: material head on a two-stick diagonal shaft.
+    private static final String[] STAFF = {"  X", " S ", "S  "};
 
     public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
@@ -58,22 +58,22 @@ public class ModRecipeProvider extends RecipeProvider {
             equip(recipeOutput, ingot, ModItems.ALLOY_BOOTS.get(alloy).get(), alloy.bootsName(), RecipeCategory.COMBAT, BOOTS);
         }
 
-        for (ModWand wand : ModWand.values()) {
-            wand(recipeOutput, wand);
+        for (ModStaff staff : ModStaff.values()) {
+            staff(recipeOutput, staff);
         }
     }
 
-    /** Crafts a wand from its material (alloy ingot or vanilla item) + two sticks. */
-    private void wand(RecipeOutput recipeOutput, ModWand wand) {
-        Ingredient material = ModItems.wandMaterial(wand).get();
-        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.WANDS.get(wand).get());
-        for (String row : WAND) {
+    /** Crafts a staff from its material (alloy ingot or vanilla item) + two sticks. */
+    private void staff(RecipeOutput recipeOutput, ModStaff staff) {
+        Ingredient material = ModItems.staffMaterial(staff).get();
+        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.STAFFS.get(staff).get());
+        for (String row : STAFF) {
             builder.pattern(row);
         }
         builder.define('X', material);
         builder.define('S', Items.STICK);
         builder.unlockedBy("has_stick", has(Items.STICK));
-        builder.save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, wand.id()));
+        builder.save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, staff.id()));
     }
 
     private void equip(RecipeOutput recipeOutput, ItemLike ingot, ItemLike result, String id,
