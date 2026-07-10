@@ -1,9 +1,0 @@
-{
-  "type": "mcextraction:alloying",
-  "ingredients": [
-    { "item": "mcextraction:tungsten_carbide_ingot", "count": 1 },
-    { "item": "mcextraction:platinum_ingot", "count": 1 }
-  ],
-  "result": { "id": "mcextraction:platinum_superalloy_ingot", "count": 1 },
-  "processtime": 600
-}

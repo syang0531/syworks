@@ -1,0 +1,9 @@
+{
+  "type": "yame:alloying",
+  "ingredients": [
+    { "item": "yame:aluminum_ingot", "count": 3 },
+    { "item": "minecraft:copper_ingot", "count": 1 }
+  ],
+  "result": { "id": "yame:duralumin_ingot", "count": 4 },
+  "processtime": 200
+}

@@ -1,0 +1,17 @@
+{
+  "type": "yame:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:blast_protection": 3 } }
+    }
+  },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:blast_protection": 4 } }
+    }
+  },
+  "casttime": 100
+}

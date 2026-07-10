@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "mcextraction:block/extractor_front",
-    "side": "mcextraction:block/extractor_side",
-    "top": "mcextraction:block/extractor_top"
-  }
-}

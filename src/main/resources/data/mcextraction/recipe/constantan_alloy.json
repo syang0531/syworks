@@ -1,9 +1,0 @@
-{
-  "type": "mcextraction:alloying",
-  "ingredients": [
-    { "item": "minecraft:copper_ingot", "count": 2 },
-    { "item": "mcextraction:nickel_ingot", "count": 2 }
-  ],
-  "result": { "id": "mcextraction:constantan_ingot", "count": 4 },
-  "processtime": 200
-}

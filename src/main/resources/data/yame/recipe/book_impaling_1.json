@@ -1,0 +1,12 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:pointed_dripstone" },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:impaling": 1 } }
+    }
+  },
+  "casttime": 100
+}

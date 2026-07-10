@@ -1,9 +1,0 @@
-{
-  "type": "mcextraction:alloying",
-  "ingredients": [
-    { "item": "mcextraction:titanium_ingot", "count": 2 },
-    { "item": "mcextraction:aluminum_ingot", "count": 1 }
-  ],
-  "result": { "id": "mcextraction:titanium_alloy_ingot", "count": 3 },
-  "processtime": 300
-}

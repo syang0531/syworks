@@ -1,0 +1,12 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:blaze_powder" },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:flame": 1 } }
+    }
+  },
+  "casttime": 100
+}

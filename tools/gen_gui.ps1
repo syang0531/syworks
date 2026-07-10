@@ -9,7 +9,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 #   - rune_altar    : base + catalyst + output; no fuel, arrow before output.
 # ---------------------------------------------------------------------------
 
-$dir = 'C:\Projects\mc-extraction\src\main\resources\assets\mcextraction\textures\gui'
+$dir = 'C:\Projects\yame\src\main\resources\assets\yame\textures\gui'
 New-Item -ItemType Directory -Force $dir | Out-Null
 
 # Canvas MUST be 256x256 (MC blit assumes 256); GUI content lives in the top-left 176x166.
@@ -24,7 +24,7 @@ $border = C 55 55 55
 
 # Load the vanilla furnace.png once (source of the empty flame + arrow graphics).
 $furnace = $null
-$jar = Get-ChildItem -Path 'C:\Projects\mc-extraction\build\moddev' -Recurse -Filter '*client-extra*.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
+$jar = Get-ChildItem -Path 'C:\Projects\yame\build\moddev' -Recurse -Filter '*client-extra*.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($jar) {
   $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
   $entry = $zip.GetEntry('assets/minecraft/textures/gui/container/furnace.png')

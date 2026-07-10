@@ -1,0 +1,12 @@
+{
+  "type": "yame:imbuing",
+  "base": { "id": "minecraft:glow_ink_sac" },
+  "catalyst": { "id": "yame:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "levels": { "minecraft:lure": 1 } }
+    }
+  },
+  "casttime": 100
+}
