@@ -92,6 +92,24 @@ function Recolor-Lift([System.Drawing.Bitmap]$src, [string]$tintHex, [double]$ba
   return $dst
 }
 
+# Swap exact source colours (RRGGBB hex keys) to target colours; alpha is preserved and any
+# pixel not present in the map is copied verbatim. Used to recolor only the enchanting table's
+# cyan diamond gems into amethyst purple while leaving the obsidian/maroon body untouched.
+function Remap-Colors([System.Drawing.Bitmap]$src,[hashtable]$map){
+  $lut=@{}
+  foreach($k in $map.Keys){ $lut[$k.ToUpper()] = (Get-RGB $map[$k]) }
+  $w=$src.Width; $h=$src.Height
+  $dst=New-Object System.Drawing.Bitmap $w,$h
+  for($y=0;$y -lt $h;$y++){ for($x=0;$x -lt $w;$x++){
+    $p=$src.GetPixel($x,$y)
+    if($p.A -eq 0){ $dst.SetPixel($x,$y,[System.Drawing.Color]::FromArgb(0,0,0,0)); continue }
+    $key=('{0:X2}{1:X2}{2:X2}' -f $p.R,$p.G,$p.B)
+    if($lut.ContainsKey($key)){ $c=$lut[$key]; $dst.SetPixel($x,$y,[System.Drawing.Color]::FromArgb($p.A,$c[0],$c[1],$c[2])) }
+    else { $dst.SetPixel($x,$y,$p) }
+  }}
+  return $dst
+}
+
 function Load([string]$n) { return New-Object System.Drawing.Bitmap "$vbase\$n.png" }
 function Save([System.Drawing.Bitmap]$b,[string]$name){ $b.Save("$root\$name.png",[System.Drawing.Imaging.ImageFormat]::Png) }
 
@@ -173,14 +191,22 @@ $s=Recolor (Load 'blast_furnace_side')  $afTint $afBase $false; Add-Rivets $s $a
 $fr=Recolor (Load 'blast_furnace_front') $afTint $afBase $false; Add-Rivets $fr $afAccent; Add-Band $fr $afAccent 3; Save $fr 'alloy_furnace_front'; $fr.Dispose()
 $fo=Recolor (Load 'blast_furnace_front_on') $afTint $afBase $true; Add-Rivets $fo $afAccent; Add-Band $fo $afAccent 3; Add-Glow $fo 'FFF0C0' 'E0641A'; Save $fo 'alloy_furnace_front_on'; $fo.Dispose()
 
-# ---------------- Rune Altar (룬 제단): enchanting table recolored ARCANE BLUE ----------------
-# Vanilla enchanting-table faces recolored to a saturated sapphire (distinct from the extraction_furnace's
-# muted steel-blue). The block is modeled at the enchanting table's 3/4 height and the floating
-# book is drawn by RuneAltarRenderer, so no book is baked and no directional "front" is needed.
+# ---------------- Rune Altar (룬 제단): enchanting table with ARCANE PURPLE gems ----------------
+# Keep the vanilla enchanting-table colouring (dark obsidian body + maroon top surface), but recolor
+# the cyan diamond gems inlaid at the corners into an arcane amethyst purple, so the altar reads as a
+# rune/magic block that is clearly enchanting-table-family yet distinct. The gems appear on the top
+# face and on the top edge of each side; the bottom has none (its map is a no-op there). The block is
+# modeled at the enchanting table's 3/4 height and the floating book is drawn by RuneAltarRenderer.
 Ensure-EnchantBases
-$raTint='4A78F0'; $raBase=130.0; $raFloor=0.48   # brighter sapphire; $raFloor lifts the dark obsidian
-$t=Recolor-Lift (Load 'enchanting_table_top')    $raTint $raBase $raFloor; Save $t 'rune_altar_top';    $t.Dispose()
-$s=Recolor-Lift (Load 'enchanting_table_side')   $raTint $raBase $raFloor; Save $s 'rune_altar_side';   $s.Dispose()
-$b=Recolor-Lift (Load 'enchanting_table_bottom') $raTint $raBase $raFloor; Save $b 'rune_altar_bottom'; $b.Dispose()
+$raGems = @{               # vanilla cyan diamond palette -> amethyst purple (brightness preserved)
+  'FFFFFF' = 'F6F0FF'      #   corner specular highlight -> bright lavender
+  'C3FBF1' = 'DDCBFF'      #   lightest gem
+  'A2F6E7' = 'C4A6F5'      #   light gem
+  '4AEDD1' = '9C5CEB'      #   mid amethyst
+  '2CCDB1' = '7B3FCE'      #   deep amethyst
+}
+$t=Remap-Colors (Load 'enchanting_table_top')    $raGems; Save $t 'rune_altar_top';    $t.Dispose()
+$s=Remap-Colors (Load 'enchanting_table_side')   $raGems; Save $s 'rune_altar_side';   $s.Dispose()
+$b=Remap-Colors (Load 'enchanting_table_bottom') $raGems; Save $b 'rune_altar_bottom'; $b.Dispose()
 
 Write-Output "Generated 8 furnace-family + 3 rune_altar block textures (top/side/bottom) in $root"
