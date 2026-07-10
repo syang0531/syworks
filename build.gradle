@@ -3,7 +3,10 @@ plugins {
     id 'idea'
     id 'eclipse'
     id 'net.neoforged.moddev' version '1.0.21'
+    id 'net.darkhax.curseforgegradle' version '1.1.26'
 }
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 version = mod_version
 group = mod_group_id
@@ -91,4 +94,22 @@ tasks.withType(ProcessResources).configureEach {
 
 tasks.named('compileJava') {
     options.encoding = 'UTF-8'
+}
+
+// CurseForge upload task (CurseForgeGradle).
+// Run locally with:  CURSEFORGE_TOKEN=xxxx ./gradlew publishCurseForge
+// In CI the release workflow supplies CURSEFORGE_TOKEN, CHANGELOG, and -Pmod_version from the git tag.
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    dependsOn tasks.named('jar')
+
+    apiToken = providers.environmentVariable('CURSEFORGE_TOKEN').getOrElse('')
+
+    // project.curseforge_project_id comes from gradle.properties — set it to the real numeric ID.
+    def mainFile = upload(project.curseforge_project_id, tasks.named('jar'))
+    mainFile.releaseType = providers.environmentVariable('RELEASE_TYPE').getOrElse('release') // release | beta | alpha
+    mainFile.changelog = providers.environmentVariable('CHANGELOG').getOrElse('See the GitHub release for changes.')
+    mainFile.changelogType = 'markdown'
+    mainFile.addModLoader('NeoForge')
+    mainFile.addGameVersion(minecraft_version)
+    mainFile.addJavaVersion('Java 21')
 }
