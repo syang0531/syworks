@@ -4,9 +4,9 @@ import com.syang.yame.Yame;
 import com.syang.yame.world.item.ModAlloy;
 import com.syang.yame.world.item.ModMetal;
 import com.syang.yame.world.item.ModSpell;
-import com.syang.yame.world.item.ModWand;
+import com.syang.yame.world.item.ModStaff;
 import com.syang.yame.world.item.SpellBookItem;
-import com.syang.yame.world.item.WandItem;
+import com.syang.yame.world.item.StaffItem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -56,8 +56,8 @@ public final class ModItems {
     /** Magic system: the rune — catalyst for imbuing magic (enchanted) books at the Rune Altar. */
     public static final DeferredItem<Item> RUNE = ITEMS.registerSimpleItem("rune");
 
-    /** Wand system (§5.7): one castable wand per {@link ModWand} and one tome per {@link ModSpell}. */
-    public static final Map<ModWand, DeferredItem<WandItem>> WANDS = new EnumMap<>(ModWand.class);
+    /** Staff system (§5.7): one castable staff per {@link ModStaff} and one tome per {@link ModSpell}. */
+    public static final Map<ModStaff, DeferredItem<StaffItem>> STAFFS = new EnumMap<>(ModStaff.class);
     public static final Map<ModSpell, DeferredItem<SpellBookItem>> SPELL_BOOKS = new EnumMap<>(ModSpell.class);
 
     static {
@@ -105,11 +105,11 @@ public final class ModItems {
                             fire(alloy, props).durability(ArmorItem.Type.BOOTS.getDurability(mult)))));
         }
 
-        for (ModWand wand : ModWand.values()) {
-            Supplier<Ingredient> repair = wandMaterial(wand);
-            WANDS.put(wand, ITEMS.registerItem(wand.id(), props -> {
-                Item.Properties p = props.durability(wand.durability());
-                return new WandItem(wand, repair, wand.isFireResistant() ? p.fireResistant() : p);
+        for (ModStaff staff : ModStaff.values()) {
+            Supplier<Ingredient> repair = staffMaterial(staff);
+            STAFFS.put(staff, ITEMS.registerItem(staff.id(), props -> {
+                Item.Properties p = props.durability(staff.durability());
+                return new StaffItem(staff, repair, staff.isFireResistant() ? p.fireResistant() : p);
             }));
         }
 
@@ -124,13 +124,13 @@ public final class ModItems {
         return alloy.isFireResistant() ? props.fireResistant() : props;
     }
 
-    /** Crafting/repair ingredient for a wand: its alloy ingot, or the vanilla material. */
-    public static Supplier<Ingredient> wandMaterial(ModWand wand) {
-        if (wand.alloy() != null) {
-            ModAlloy alloy = wand.alloy();
+    /** Crafting/repair ingredient for a staff: its alloy ingot, or the vanilla material. */
+    public static Supplier<Ingredient> staffMaterial(ModStaff staff) {
+        if (staff.alloy() != null) {
+            ModAlloy alloy = staff.alloy();
             return () -> Ingredient.of(ALLOY_INGOTS.get(alloy).get());
         }
-        return wand.vanillaMaterial();
+        return staff.vanillaMaterial();
     }
 
     private ModItems() {

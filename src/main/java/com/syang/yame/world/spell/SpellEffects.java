@@ -25,8 +25,8 @@ import net.minecraft.world.phys.Vec3;
  * Server-side cast behaviours for every {@link com.syang.yame.world.item.ModSpell}.
  *
  * <p>Each method matches the {@code ModSpell.SpellAction} shape
- * {@code (ServerLevel, Player, ItemStack wand, float power)} and is referenced by method handle in
- * the {@code ModSpell} table, keeping the spell list declarative. {@code power} is the wand's
+ * {@code (ServerLevel, Player, ItemStack staff, float power)} and is referenced by method handle in
+ * the {@code ModSpell} table, keeping the spell list declarative. {@code power} is the staff's
  * already-computed cast-power multiplier — damage/heal magnitudes scale by it; fixed vanilla
  * projectiles (fireball) do not.
  */
@@ -40,7 +40,7 @@ public final class SpellEffects {
     // ---------------------------------------------------------------- attack
 
     /** Firebolt — a small fireball that ignites and deals ~5 damage on hit. */
-    public static void firebolt(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void firebolt(ServerLevel level, Player caster, ItemStack staff, float power) {
         Vec3 dir = caster.getViewVector(1.0F);
         SmallFireball fireball = new SmallFireball(level, caster, dir);
         Vec3 eye = caster.getEyePosition();
@@ -49,7 +49,7 @@ public final class SpellEffects {
     }
 
     /** Frost Arrow — an arrow doing 5×power damage that applies Slowness I for 3 s on hit. */
-    public static void frostArrow(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void frostArrow(ServerLevel level, Player caster, ItemStack staff, float power) {
         Arrow arrow = new Arrow(level, caster, new ItemStack(Items.ARROW), null);
         arrow.setBaseDamage(5.0 * power);
         arrow.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0));
@@ -59,7 +59,7 @@ public final class SpellEffects {
     }
 
     /** Lightning Strike — hitscan 7×power damage that bypasses armour, with a visual bolt. */
-    public static void lightning(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void lightning(ServerLevel level, Player caster, ItemStack staff, float power) {
         LivingEntity target = rayTraceLiving(level, caster);
         if (target == null) {
             fizzle(level, caster.getEyePosition());
@@ -75,7 +75,7 @@ public final class SpellEffects {
     }
 
     /** Blizzard — a 5×5 burst at the aimed point: ~6×power freeze damage + Slowness II + ground ice. */
-    public static void blizzard(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void blizzard(ServerLevel level, Player caster, ItemStack staff, float power) {
         Vec3 point = aimedPoint(caster);
         AABB area = new AABB(point, point).inflate(2.5, 2.0, 2.5);
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, area, e -> e != caster && e.isAlive())) {
@@ -89,13 +89,13 @@ public final class SpellEffects {
     // ---------------------------------------------------------------- heal
 
     /** Heal — restores 6×power health to the caster. */
-    public static void heal(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void heal(ServerLevel level, Player caster, ItemStack staff, float power) {
         caster.heal(6.0F * power);
         level.sendParticles(ParticleTypes.HEART, caster.getX(), caster.getY() + 1.0, caster.getZ(), 6, 0.4, 0.6, 0.4, 0.0);
     }
 
     /** Regeneration — Regen II for 8 s to the caster and every player within 4 blocks. */
-    public static void regeneration(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void regeneration(ServerLevel level, Player caster, ItemStack staff, float power) {
         caster.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 160, 1));
         for (Player ally : level.getEntitiesOfClass(Player.class, caster.getBoundingBox().inflate(4.0), p -> p.isAlive())) {
             ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 160, 1));
@@ -106,13 +106,13 @@ public final class SpellEffects {
     // ---------------------------------------------------------------- buff
 
     /** Haste — Haste II + Speed I for 20 s on the caster. */
-    public static void haste(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void haste(ServerLevel level, Player caster, ItemStack staff, float power) {
         caster.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 400, 1));
         caster.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 400, 0));
     }
 
     /** Shield — Absorption II + Resistance I for 15 s on the caster. */
-    public static void shield(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void shield(ServerLevel level, Player caster, ItemStack staff, float power) {
         caster.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 300, 1));
         caster.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, 0));
     }
@@ -120,7 +120,7 @@ public final class SpellEffects {
     // ---------------------------------------------------------------- debuff
 
     /** Poison Cloud — Poison II for 5 s to everything in a 3×3 area at the aimed point. */
-    public static void poisonCloud(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void poisonCloud(ServerLevel level, Player caster, ItemStack staff, float power) {
         Vec3 point = aimedPoint(caster);
         AABB area = new AABB(point, point).inflate(1.5, 1.0, 1.5);
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, area, e -> e != caster && e.isAlive())) {
@@ -130,7 +130,7 @@ public final class SpellEffects {
     }
 
     /** Curse — Weakness II + Slowness II for 10 s on the aimed target. */
-    public static void curse(ServerLevel level, Player caster, ItemStack wand, float power) {
+    public static void curse(ServerLevel level, Player caster, ItemStack staff, float power) {
         LivingEntity target = rayTraceLiving(level, caster);
         if (target == null) {
             fizzle(level, caster.getEyePosition());

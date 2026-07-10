@@ -36,15 +36,11 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(ModItems.RUNE);
 
-        // Wand system. Textures are art-track TODO — for now models reuse recognizable vanilla
-        // icons (a rod for wands, an enchanted book for tomes) so runData stays green. Swap
-        // layer0 to yame:item/<name> once gen_textures.ps1 produces per-item art.
-        ModItems.WANDS.values().forEach(item ->
-                withExistingParent(item.getId().getPath(), mcLoc("item/handheld"))
-                        .texture("layer0", mcLoc("item/blaze_rod")));
-        ModItems.SPELL_BOOKS.values().forEach(item ->
-                withExistingParent(item.getId().getPath(), mcLoc("item/generated"))
-                        .texture("layer0", mcLoc("item/enchanted_book")));
+        // Staff system. Staffs use a per-material tinted staff icon (item/handheld); spellbooks
+        // use a single blue-recolored enchanted-book icon (item/generated). Textures are
+        // produced by tools/gen_textures.ps1 at assets/yame/textures/item/<name>.png.
+        ModItems.STAFFS.values().forEach(this::handheldItem);
+        ModItems.SPELL_BOOKS.values().forEach(this::basicItem);
     }
 
     private void basicItem(DeferredItem<?> item) {
