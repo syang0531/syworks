@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "S": {
-      "item": "minecraft:stick"
-    },
-    "X": {
-      "item": "yame:brass_ingot"
-    }
+    "S": "minecraft:stick",
+    "X": "yame:brass_ingot"
   },
   "pattern": [
     "X",
@@ -15,7 +11,6 @@
     "S"
   ],
   "result": {
-    "count": 1,
     "id": "yame:brass_shovel"
   }
 }

@@ -64,7 +64,7 @@ $books = @(
     @{ ench = 'wind_burst';             max = 3; mat = 'minecraft:wind_charge' }
     # --- Special / Curses ---
     @{ ench = 'mending';                max = 1; mat = 'minecraft:golden_apple' }
-    @{ ench = 'binding_curse';          max = 1; mat = 'minecraft:chain' }
+    @{ ench = 'binding_curse';          max = 1; mat = 'minecraft:iron_chain' }
     @{ ench = 'vanishing_curse';        max = 1; mat = 'minecraft:fermented_spider_eye' }
 )
 
@@ -80,7 +80,7 @@ function Book-Stack($ench, $lvl, $indent) {
 {
 $pad  "id": "minecraft:enchanted_book",
 $pad  "components": {
-$pad    "minecraft:stored_enchantments": { "levels": { "minecraft:$ench": $lvl } }
+$pad    "minecraft:stored_enchantments": { "minecraft:$ench": $lvl }
 $pad  }
 $pad}
 "@

@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:blast_furnace"
-    },
-    "C": {
-      "item": "minecraft:copper_ingot"
-    }
+    "B": "minecraft:blast_furnace",
+    "C": "minecraft:copper_ingot"
   },
   "pattern": [
     "CCC",
@@ -15,7 +10,6 @@
     "CCC"
   ],
   "result": {
-    "count": 1,
     "id": "yame:alloy_furnace"
   }
 }

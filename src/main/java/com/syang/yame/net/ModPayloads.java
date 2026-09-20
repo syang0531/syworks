@@ -18,7 +18,7 @@ import java.util.List;
  * Registers the mod's network payloads and their server-side handlers.
  * Currently only {@link SelectSpellPayload} (Shift+scroll spell selection).
  */
-@EventBusSubscriber(modid = Yame.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Yame.MOD_ID)
 public final class ModPayloads {
 
     private ModPayloads() {

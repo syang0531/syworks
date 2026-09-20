@@ -1,11 +1,11 @@
 {
   "type": "yame:imbuing",
-  "base": { "id": "minecraft:chain" },
+  "base": { "id": "minecraft:iron_chain" },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:binding_curse": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:binding_curse": 1 }
     }
   },
   "casttime": 100

@@ -7,8 +7,8 @@ pluginManagement {
 }
 
 plugins {
-    // Auto-provisions a JDK 21 toolchain if one isn't found.
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+    // Auto-provisions the JDK 25 toolchain if one isn't found. Minecraft 26.2 requires Java 25.
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 rootProject.name = 'yame'

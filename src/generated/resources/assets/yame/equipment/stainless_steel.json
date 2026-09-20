@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "yame:stainless_steel"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "yame:stainless_steel"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "yame:stainless_steel"
+      }
+    ]
+  }
+}

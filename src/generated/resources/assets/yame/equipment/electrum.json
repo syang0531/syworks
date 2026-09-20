@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "yame:electrum"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "yame:electrum"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "yame:electrum"
+      }
+    ]
+  }
+}

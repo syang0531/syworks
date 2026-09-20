@@ -1,6 +1,5 @@
 package com.syang.yame;
 
-import com.syang.yame.registry.ModArmorMaterials;
 import com.syang.yame.registry.ModBlockEntities;
 import com.syang.yame.registry.ModBlocks;
 import com.syang.yame.registry.ModCreativeTabs;
@@ -19,6 +18,9 @@ import org.slf4j.LoggerFactory;
  *
  * <p>Wires up every {@code DeferredRegister} to the mod event bus. All content
  * (metals, alloys, tools, blocks) is declared in the {@code registry} package.
+ *
+ * <p>Targets Minecraft 26.2 / NeoForge 26.2 (Java 25), the same stack as the sibling
+ * {@code placitum} mod so the two can be played together.
  */
 @Mod(Yame.MOD_ID)
 public class Yame {
@@ -29,7 +31,7 @@ public class Yame {
     public Yame(IEventBus modBus, ModContainer container) {
         // Order matters only in that ModBlocks registers its BlockItems into ModItems.ITEMS,
         // so both registers must be attached before the RegisterEvent fires — which they are.
-        ModArmorMaterials.register(modBus);
+        // Armor materials are plain records since 1.21.2 (no registry), see ModArmorMaterials.
         ModItems.register(modBus);
         ModDataComponents.register(modBus);
         ModBlocks.register(modBus);

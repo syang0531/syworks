@@ -2,16 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "X": {
-      "item": "yame:duralumin_ingot"
-    }
+    "X": "yame:duralumin_ingot"
   },
   "pattern": [
     "X X",
     "X X"
   ],
   "result": {
-    "count": 1,
     "id": "yame:duralumin_boots"
   }
 }

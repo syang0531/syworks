@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:arcane_reach": 2 } }
+      "minecraft:stored_enchantments": { "yame:arcane_reach": 2 }
     }
   },
   "catalyst": { "id": "yame:rune", "count": 3 },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:arcane_reach": 3 } }
+      "minecraft:stored_enchantments": { "yame:arcane_reach": 3 }
     }
   },
   "casttime": 100

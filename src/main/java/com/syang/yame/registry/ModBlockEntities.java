@@ -17,19 +17,16 @@ public final class ModBlockEntities {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Yame.MOD_ID);
 
     public static final Supplier<BlockEntityType<ExtractionFurnaceBlockEntity>> EXTRACTION_FURNACE =
-            BLOCK_ENTITIES.register("extraction_furnace", () -> BlockEntityType.Builder
-                    .of(ExtractionFurnaceBlockEntity::new, ModBlocks.EXTRACTION_FURNACE.get())
-                    .build(null));
+            BLOCK_ENTITIES.register("extraction_furnace", () -> new BlockEntityType<>(
+                    ExtractionFurnaceBlockEntity::new, ModBlocks.EXTRACTION_FURNACE.get()));
 
     public static final Supplier<BlockEntityType<AlloyFurnaceBlockEntity>> ALLOY_FURNACE =
-            BLOCK_ENTITIES.register("alloy_furnace", () -> BlockEntityType.Builder
-                    .of(AlloyFurnaceBlockEntity::new, ModBlocks.ALLOY_FURNACE.get())
-                    .build(null));
+            BLOCK_ENTITIES.register("alloy_furnace", () -> new BlockEntityType<>(
+                    AlloyFurnaceBlockEntity::new, ModBlocks.ALLOY_FURNACE.get()));
 
     public static final Supplier<BlockEntityType<RuneAltarBlockEntity>> RUNE_ALTAR =
-            BLOCK_ENTITIES.register("rune_altar", () -> BlockEntityType.Builder
-                    .of(RuneAltarBlockEntity::new, ModBlocks.RUNE_ALTAR.get())
-                    .build(null));
+            BLOCK_ENTITIES.register("rune_altar", () -> new BlockEntityType<>(
+                    RuneAltarBlockEntity::new, ModBlocks.RUNE_ALTAR.get()));
 
     private ModBlockEntities() {
     }

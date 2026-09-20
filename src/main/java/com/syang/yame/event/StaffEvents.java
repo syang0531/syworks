@@ -69,7 +69,7 @@ public final class StaffEvents {
 
         event.setOutput(result);
         event.setMaterialCost(1);
-        event.setCost(spell.runeCount() + bound.size() + 1);
+        event.setXpCost(spell.runeCount() + bound.size() + 1);
     }
 
     /** A lone staff in a grindstone: wipe its bound spells + enchantments back to a bare staff. */

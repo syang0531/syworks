@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "yame:brass"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "yame:brass"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "yame:brass"
+      }
+    ]
+  }
+}

@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:wind_burst": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:wind_burst": 1 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:wind_burst": 2 } }
+      "minecraft:stored_enchantments": { "minecraft:wind_burst": 2 }
     }
   },
   "casttime": 100

@@ -1,16 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "E": {
-      "item": "minecraft:enchanting_table"
-    },
-    "G": {
-      "item": "minecraft:gold_ingot"
-    },
-    "L": {
-      "item": "minecraft:lapis_lazuli"
-    }
+    "E": "minecraft:enchanting_table",
+    "G": "minecraft:gold_ingot",
+    "L": "minecraft:lapis_lazuli"
   },
   "pattern": [
     "GLG",
@@ -18,7 +11,6 @@
     "GLG"
   ],
   "result": {
-    "count": 1,
     "id": "yame:rune_altar"
   }
 }

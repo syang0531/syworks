@@ -13,8 +13,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
-/** Client-only mod-bus events: binds menus to their screens. */
-@EventBusSubscriber(modid = Yame.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+/** Client-only mod-bus events: binds menus to their screens and the altar to its renderer. */
+@EventBusSubscriber(modid = Yame.MOD_ID, value = Dist.CLIENT)
 public final class ModClientEvents {
 
     private ModClientEvents() {

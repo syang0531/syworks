@@ -5,7 +5,7 @@
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:luck_of_the_sea": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:luck_of_the_sea": 1 }
     }
   },
   "casttime": 100

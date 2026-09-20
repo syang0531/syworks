@@ -5,7 +5,7 @@
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:aqua_affinity": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:aqua_affinity": 1 }
     }
   },
   "casttime": 100

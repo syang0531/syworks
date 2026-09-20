@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "yame:constantan"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "yame:constantan"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "yame:constantan"
+      }
+    ]
+  }
+}

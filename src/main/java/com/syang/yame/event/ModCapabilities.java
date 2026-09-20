@@ -8,10 +8,10 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**
- * Exposes the Extraction Furnace's inventory as an item-handler capability so hoppers and other
- * automation can insert fuel/source and pull the extracted metal.
+ * Exposes the machines' inventories as the item {@code ResourceHandler} capability so hoppers and
+ * other automation can insert fuel/source and pull the extracted metal / alloy.
  */
-@EventBusSubscriber(modid = Yame.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Yame.MOD_ID)
 public final class ModCapabilities {
 
     private ModCapabilities() {
@@ -20,12 +20,12 @@ public final class ModCapabilities {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 ModBlockEntities.EXTRACTION_FURNACE.get(),
                 (blockEntity, side) -> blockEntity.getInventory());
 
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 ModBlockEntities.ALLOY_FURNACE.get(),
                 (blockEntity, side) -> blockEntity.getInventory());
     }

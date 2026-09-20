@@ -1,11 +1,17 @@
 package com.syang.yame.world.item.crafting;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.syang.yame.registry.ModRecipes;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -18,7 +24,7 @@ import net.minecraft.world.level.Level;
  * <p>Exact-component matching is what makes the enchanted-book level chain work: a
  * "Sharpness&nbsp;I" book is component-distinct from a "Sharpness&nbsp;II" book, so
  * {@code (Sharpness I book) + rune → (Sharpness II book)} only fires on the Lv1 book. A plain
- * {@link Ingredient} (item/tag only) could not tell the two books apart.
+ * {@code Ingredient} (item/tag only) could not tell the two books apart.
  *
  * <p>JSON shape (data/yame/recipe/*.json):
  * <pre>
@@ -31,8 +37,23 @@ import net.minecraft.world.level.Level;
  * }
  * </pre>
  */
-public record ImbueRecipe(ItemStack base, ItemStack catalyst, ItemStack result, int castTime)
+public record ImbueRecipe(ItemStackTemplate base, ItemStackTemplate catalyst, ItemStackTemplate result, int castTime)
         implements Recipe<ImbueRecipeInput> {
+
+    public static final MapCodec<ImbueRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
+                    ItemStackTemplate.CODEC.fieldOf("base").forGetter(ImbueRecipe::base),
+                    ItemStackTemplate.CODEC.fieldOf("catalyst").forGetter(ImbueRecipe::catalyst),
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(ImbueRecipe::result),
+                    ExtraCodecs.POSITIVE_INT.optionalFieldOf("casttime", 100).forGetter(ImbueRecipe::castTime)
+            ).apply(instance, ImbueRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ImbueRecipe> STREAM_CODEC = StreamCodec.composite(
+            ItemStackTemplate.STREAM_CODEC, ImbueRecipe::base,
+            ItemStackTemplate.STREAM_CODEC, ImbueRecipe::catalyst,
+            ItemStackTemplate.STREAM_CODEC, ImbueRecipe::result,
+            ByteBufCodecs.INT, ImbueRecipe::castTime,
+            ImbueRecipe::new);
 
     @Override
     public boolean matches(ImbueRecipeInput input, Level level) {
@@ -52,40 +73,48 @@ public record ImbueRecipe(ItemStack base, ItemStack catalyst, ItemStack result, 
     }
 
     /** Exact item + component match, with the input holding at least the required count. */
-    private static boolean matchesStack(ItemStack in, ItemStack required) {
-        return in.getCount() >= required.getCount() && ItemStack.isSameItemSameComponents(in, required);
+    private static boolean matchesStack(ItemStack in, ItemStackTemplate required) {
+        return in.getCount() >= required.count() && ItemStack.isSameItemSameComponents(in, required);
     }
 
     @Override
-    public ItemStack assemble(ImbueRecipeInput input, HolderLookup.Provider registries) {
-        return result.copy();
+    public ItemStack assemble(ImbueRecipeInput input) {
+        return result.create();
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return true;
+    public boolean showNotification() {
+        return false;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return result;
+    public String group() {
+        return "";
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> list = NonNullList.create();
-        list.add(Ingredient.of(base.getItem()));
-        list.add(Ingredient.of(catalyst.getItem()));
-        return list;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<ImbueRecipe> getSerializer() {
         return ModRecipes.IMBUE_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<ImbueRecipe> getType() {
         return ModRecipes.IMBUE_TYPE.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    /** Like vanilla's special recipes: skipped by the recipe book, so the "can't be placed" warning is not logged. */
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return ModRecipes.IMBUE_CATEGORY.get();
     }
 }

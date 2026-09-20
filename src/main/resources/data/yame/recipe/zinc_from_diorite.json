@@ -1,6 +1,6 @@
 {
   "type": "yame:extraction",
-  "ingredient": { "item": "minecraft:diorite" },
+  "ingredient": "minecraft:diorite",
   "result": { "id": "yame:zinc_ingot", "count": 1 },
   "processtime": 200
 }

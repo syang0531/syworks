@@ -1,22 +1,20 @@
 # Yame
 
 바닐라 자연블록을 **추출**해 새 금속을 얻고, 이를 **합금**해 청동·강철·티타늄 등 확장 장비를 만드는
-Minecraft **1.21.1** / **NeoForge** 모드.
+Minecraft **26.2** / **NeoForge 26.2** (Java 25) 모드. 형제 모드 `placitum`과 같은 스택이라 함께 플레이할 수 있다.
 
 전체 기획은 [docs/기획.md](docs/기획.md) 참고.
 
 ## 요구 사항
 
-- **JDK 21** (설치됨: `C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot`)
+- **JDK 25** — 없으면 Gradle(foojay 툴체인)이 `~/.gradle/jdks`에 자동으로 받는다.
 - Gradle은 별도 설치 불필요 — 포함된 Gradle Wrapper(`gradlew`)가 자동 처리.
 
 ## 빌드 & 실행
 
-PowerShell 기준. Gradle이 JDK 21을 쓰도록 `JAVA_HOME`을 먼저 지정합니다.
+PowerShell 기준. 툴체인이 JDK 25를 자동 선택하므로 `JAVA_HOME` 지정은 필요 없다(다른 JDK를 쓰려면 `JAVA_HOME`만 바꾸면 된다).
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
-
 # 1) 리소스(모델/영문 lang) 생성 — 최초 1회 및 아이템 추가 시
 .\gradlew.bat runData
 

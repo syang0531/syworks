@@ -2,16 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "X": {
-      "item": "yame:cobalt_steel_ingot"
-    }
+    "X": "yame:cobalt_steel_ingot"
   },
   "pattern": [
     "XXX",
     "X X"
   ],
   "result": {
-    "count": 1,
     "id": "yame:cobalt_steel_helmet"
   }
 }

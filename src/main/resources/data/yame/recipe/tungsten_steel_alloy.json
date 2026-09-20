@@ -1,8 +1,8 @@
 {
   "type": "yame:alloying",
   "ingredients": [
-    { "item": "yame:steel_ingot", "count": 2 },
-    { "item": "yame:tungsten_ingot", "count": 1 }
+    { "ingredient": "yame:steel_ingot", "count": 2 },
+    { "ingredient": "yame:tungsten_ingot", "count": 1 }
   ],
   "result": { "id": "yame:tungsten_steel_ingot", "count": 2 },
   "processtime": 400

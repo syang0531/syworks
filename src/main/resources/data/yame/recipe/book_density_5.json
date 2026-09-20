@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:density": 4 } }
+      "minecraft:stored_enchantments": { "minecraft:density": 4 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:density": 5 } }
+      "minecraft:stored_enchantments": { "minecraft:density": 5 }
     }
   },
   "casttime": 100

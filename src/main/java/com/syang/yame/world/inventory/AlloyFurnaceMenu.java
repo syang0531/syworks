@@ -2,7 +2,6 @@ package com.syang.yame.world.inventory;
 
 import com.syang.yame.registry.ModBlocks;
 import com.syang.yame.registry.ModMenuTypes;
-import com.syang.yame.registry.ModRecipes;
 import com.syang.yame.world.level.block.entity.AlloyFurnaceBlockEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,8 +12,8 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 /**
  * Container menu for the Alloy Furnace. Three input slots (column), fuel, and output.
@@ -41,11 +40,11 @@ public class AlloyFurnaceMenu extends AbstractContainerMenu {
         this.data = data;
         this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
-        IItemHandler handler = blockEntity.getInventory();
-        addSlot(new SlotItemHandler(handler, AlloyFurnaceBlockEntity.SLOT_INPUT_0, 30, 17));
-        addSlot(new SlotItemHandler(handler, AlloyFurnaceBlockEntity.SLOT_INPUT_1, 30, 35));
-        addSlot(new SlotItemHandler(handler, AlloyFurnaceBlockEntity.SLOT_INPUT_2, 30, 53));
-        addSlot(new SlotItemHandler(handler, AlloyFurnaceBlockEntity.SLOT_FUEL, 56, 53));
+        ItemStacksResourceHandler handler = blockEntity.getInventory();
+        addSlot(new ResourceHandlerSlot(handler, handler::set, AlloyFurnaceBlockEntity.SLOT_INPUT_0, 30, 17));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, AlloyFurnaceBlockEntity.SLOT_INPUT_1, 30, 35));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, AlloyFurnaceBlockEntity.SLOT_INPUT_2, 30, 53));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, AlloyFurnaceBlockEntity.SLOT_FUEL, 56, 53));
         addSlot(new OutputSlot(handler, AlloyFurnaceBlockEntity.SLOT_OUTPUT, 116, 35));
 
         for (int row = 0; row < 3; row++) {
@@ -74,7 +73,7 @@ public class AlloyFurnaceMenu extends AbstractContainerMenu {
                 }
             } else {
                 boolean moved = false;
-                if (stack.getBurnTime(ModRecipes.ALLOY_TYPE.get()) > 0) {
+                if (player.level().fuelValues().burnDuration(stack) > 0) {
                     moved = moveItemStackTo(stack, AlloyFurnaceBlockEntity.SLOT_FUEL,
                             AlloyFurnaceBlockEntity.SLOT_FUEL + 1, false);
                 }
@@ -94,7 +93,7 @@ public class AlloyFurnaceMenu extends AbstractContainerMenu {
             }
 
             if (stack.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
@@ -132,9 +131,9 @@ public class AlloyFurnaceMenu extends AbstractContainerMenu {
         return (max == 0 || prog == 0) ? 0 : prog * 24 / max;
     }
 
-    private static class OutputSlot extends SlotItemHandler {
-        OutputSlot(IItemHandler handler, int index, int x, int y) {
-            super(handler, index, x, y);
+    private static class OutputSlot extends ResourceHandlerSlot {
+        OutputSlot(ItemStacksResourceHandler handler, int index, int x, int y) {
+            super(handler, handler::set, index, x, y);
         }
 
         @Override

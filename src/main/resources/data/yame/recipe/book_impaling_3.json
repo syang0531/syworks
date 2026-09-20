@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:impaling": 2 } }
+      "minecraft:stored_enchantments": { "minecraft:impaling": 2 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:impaling": 3 } }
+      "minecraft:stored_enchantments": { "minecraft:impaling": 3 }
     }
   },
   "casttime": 100

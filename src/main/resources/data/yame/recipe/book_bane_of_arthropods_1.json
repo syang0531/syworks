@@ -5,7 +5,7 @@
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:bane_of_arthropods": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:bane_of_arthropods": 1 }
     }
   },
   "casttime": 100

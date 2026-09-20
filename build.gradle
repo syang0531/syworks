@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'idea'
     id 'eclipse'
-    id 'net.neoforged.moddev' version '2.0.141'
+    id 'net.neoforged.moddev' version '2.0.147'
     id 'net.darkhax.curseforgegradle' version '1.1.26'
 }
 
@@ -16,7 +16,9 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    // Minecraft 26.2 runs on Java 25. The foojay resolver in settings.gradle
+    // provisions the toolchain automatically if it isn't installed.
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
 }
 
 repositories {
@@ -28,10 +30,11 @@ repositories {
 neoForge {
     version = project.neo_version
 
-    parchment {
-        minecraftVersion = project.parchment_minecraft_version
-        mappingsVersion = project.parchment_mappings_version
-    }
+    // Parchment has no 26.2 release yet - parameter names stay obfuscated until it does.
+    // parchment {
+    //     minecraftVersion = project.parchment_minecraft_version
+    //     mappingsVersion = project.parchment_mappings_version
+    // }
 
     runs {
         client {
@@ -44,8 +47,9 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
         // Runs the data generators: ./gradlew runData
+        // NeoForge runs client AND server providers in the single clientData run.
         data {
-            data()
+            clientData()
             programArguments.addAll '--mod', project.mod_id,
                     '--all',
                     '--output', file('src/generated/resources/').getAbsolutePath(),
@@ -87,12 +91,13 @@ tasks.withType(ProcessResources).configureEach {
             mod_description        : mod_description,
     ]
     inputs.properties replaceProperties
+    filteringCharset = 'UTF-8'
     filesMatching(['META-INF/neoforge.mods.toml']) {
         expand replaceProperties
     }
 }
 
-tasks.named('compileJava') {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
@@ -104,12 +109,14 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
 
     apiToken = providers.environmentVariable('CURSEFORGE_TOKEN').getOrElse('')
 
-    // project.curseforge_project_id comes from gradle.properties — set it to the real numeric ID.
+    // project.curseforge_project_id comes from gradle.properties - set it to the real numeric ID.
     def mainFile = upload(project.curseforge_project_id, tasks.named('jar'))
     mainFile.releaseType = providers.environmentVariable('RELEASE_TYPE').getOrElse('release') // release | beta | alpha
     mainFile.changelog = providers.environmentVariable('CHANGELOG').getOrElse('See the GitHub release for changes.')
     mainFile.changelogType = 'markdown'
     mainFile.addModLoader('NeoForge')
     mainFile.addGameVersion(minecraft_version)
-    mainFile.addJavaVersion('Java 21')
+    mainFile.addJavaVersion('Java 25')
+    // CurseForge refuses a file with no environment tag (error 1021).
+    mainFile.addEnvironment('Client', 'Server')
 }

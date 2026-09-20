@@ -6,13 +6,13 @@ import com.syang.yame.registry.ModItems;
 import com.syang.yame.world.item.ModAlloy;
 import com.syang.yame.world.item.ModStaff;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ItemTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -37,18 +37,21 @@ import java.util.concurrent.CompletableFuture;
  * the mod's own {@code #yame:enchantable/staff} tag, which gates the three staff-exclusive
  * enchantments ({@link ModEnchantments}). Spellbooks are bound separately at an anvil
  * ({@code StaffEvents}), independent of enchantments.
+ *
+ * <p>Also emits the per-alloy repair tags ({@link ModAlloy#repairTag()} = the alloy ingot), which
+ * is how 1.21.2+ tool/armor materials express their repair ingredient.
  */
 public class ModItemTagsProvider extends ItemTagsProvider {
 
-    public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-                               ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
-                Yame.MOD_ID, existingFileHelper);
+    public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, Yame.MOD_ID);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         for (ModAlloy alloy : ModAlloy.values()) {
+            add(alloy.repairTag(), ModItems.ALLOY_INGOTS.get(alloy).get());
+
             add(ItemTags.SWORDS, ModItems.ALLOY_SWORDS.get(alloy).get());
             add(ItemTags.PICKAXES, ModItems.ALLOY_PICKAXES.get(alloy).get());
             add(ItemTags.AXES, ModItems.ALLOY_AXES.get(alloy).get());
@@ -72,6 +75,10 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     }
 
     private void add(TagKey<Item> tag, Item item) {
-        tag(tag).add(item);
+        tag(tag).add(key(item));
+    }
+
+    private static ResourceKey<Item> key(Item item) {
+        return BuiltInRegistries.ITEM.getResourceKey(item).orElseThrow();
     }
 }

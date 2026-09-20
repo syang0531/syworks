@@ -5,13 +5,10 @@ import com.syang.yame.registry.ModRecipes;
 import com.syang.yame.world.inventory.ExtractionFurnaceMenu;
 import com.syang.yame.world.item.crafting.ExtractionRecipe;
 import com.syang.yame.world.level.block.ExtractionFurnaceBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,14 +18,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Drives the Extraction Furnace: consumes fuel to turn a source item (slot 0) into a metal
  * (slot 2) according to an {@link ExtractionRecipe}. Furnace-style burn + progress.
+ *
+ * <p>The inventory is a NeoForge {@link ItemStacksResourceHandler} (the 1.21.9+ transfer API):
+ * it is what hoppers see through the item capability and what the menu's slots wrap.
  */
 public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -39,17 +44,17 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
 
     private static final int DEFAULT_PROCESS_TIME = 200;
 
-    private final ItemStackHandler inventory = new ItemStackHandler(SLOT_COUNT) {
+    private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(SLOT_COUNT) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int index, ItemStack previousContents) {
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
+        public boolean isValid(int slot, ItemResource resource) {
             return switch (slot) {
                 case SLOT_OUTPUT -> false;
-                case SLOT_FUEL -> stack.getBurnTime(ModRecipes.EXTRACTION_TYPE.get()) > 0;
+                case SLOT_FUEL -> level != null && level.fuelValues().burnDuration(resource.toStack()) > 0;
                 default -> true;
             };
         }
@@ -92,8 +97,25 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
         super(ModBlockEntities.EXTRACTION_FURNACE.get(), pos, state);
     }
 
-    public ItemStackHandler getInventory() {
+    public ItemStacksResourceHandler getInventory() {
         return inventory;
+    }
+
+    /** A copy of the stack in {@code slot} (the handler hands out immutable resources). */
+    private ItemStack stackIn(int slot) {
+        return inventory.getResource(slot).toStack(inventory.getAmountAsInt(slot));
+    }
+
+    /** Removes up to {@code amount} items from {@code slot}, committing immediately. */
+    private void take(int slot, int amount) {
+        ItemResource resource = inventory.getResource(slot);
+        if (resource.isEmpty()) {
+            return;
+        }
+        try (Transaction tx = Transaction.openRoot()) {
+            inventory.extract(slot, resource, amount, tx);
+            tx.commit();
+        }
     }
 
     private boolean isLit() {
@@ -101,7 +123,7 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
 
@@ -114,18 +136,18 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
 
         ExtractionRecipe recipe = getCurrentRecipe();
         boolean canProcess = canProcess(recipe);
-        ItemStack fuel = inventory.getStackInSlot(SLOT_FUEL);
+        ItemStack fuel = stackIn(SLOT_FUEL);
 
         // Light the burner if we have work to do and fuel available.
         if (!isLit() && canProcess && !fuel.isEmpty()) {
-            litTime = fuel.getBurnTime(ModRecipes.EXTRACTION_TYPE.get());
+            litTime = level.fuelValues().burnDuration(fuel);
             litDuration = litTime;
             if (isLit()) {
                 changed = true;
-                ItemStack remainder = fuel.getCraftingRemainingItem();
-                fuel.shrink(1);
-                if (fuel.isEmpty() && !remainder.isEmpty()) {
-                    inventory.setStackInSlot(SLOT_FUEL, remainder);
+                ItemStack remainder = FurnaceSupport.craftingRemainder(fuel);
+                take(SLOT_FUEL, 1);
+                if (stackIn(SLOT_FUEL).isEmpty() && !remainder.isEmpty()) {
+                    inventory.set(SLOT_FUEL, ItemResource.of(remainder), remainder.getCount());
                 }
             }
         }
@@ -134,7 +156,7 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
             maxProgress = recipe.processTime();
             progress++;
             if (progress >= maxProgress) {
-                craft(recipe, level);
+                craft(recipe);
                 progress = 0;
                 changed = true;
             }
@@ -161,49 +183,35 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
 
     @Nullable
     private ExtractionRecipe getCurrentRecipe() {
-        if (level == null) {
+        if (!(level instanceof ServerLevel server)) {
             return null;
         }
-        return level.getRecipeManager()
-                .getRecipeFor(ModRecipes.EXTRACTION_TYPE.get(),
-                        new SingleRecipeInput(inventory.getStackInSlot(SLOT_INPUT)), level)
+        return server.recipeAccess()
+                .getRecipeFor(ModRecipes.EXTRACTION_TYPE.get(), new SingleRecipeInput(stackIn(SLOT_INPUT)), server)
                 .map(RecipeHolder::value)
                 .orElse(null);
     }
 
     private boolean canProcess(@Nullable ExtractionRecipe recipe) {
-        if (recipe == null || inventory.getStackInSlot(SLOT_INPUT).isEmpty()) {
+        if (recipe == null || stackIn(SLOT_INPUT).isEmpty()) {
             return false;
         }
-        ItemStack result = recipe.result();
-        ItemStack out = inventory.getStackInSlot(SLOT_OUTPUT);
-        if (out.isEmpty()) {
-            return true;
-        }
-        if (!ItemStack.isSameItemSameComponents(out, result)) {
-            return false;
-        }
-        return out.getCount() + result.getCount() <= out.getMaxStackSize();
+        return FurnaceSupport.outputAccepts(stackIn(SLOT_OUTPUT), recipe.result().create());
     }
 
-    private void craft(ExtractionRecipe recipe, Level level) {
-        ItemStack result = recipe.assemble(
-                new SingleRecipeInput(inventory.getStackInSlot(SLOT_INPUT)), level.registryAccess());
-        inventory.extractItem(SLOT_INPUT, 1, false);
-        ItemStack out = inventory.getStackInSlot(SLOT_OUTPUT);
-        if (out.isEmpty()) {
-            inventory.setStackInSlot(SLOT_OUTPUT, result.copy());
-        } else {
-            out.grow(result.getCount());
-        }
+    private void craft(ExtractionRecipe recipe) {
+        ItemStack result = recipe.assemble(new SingleRecipeInput(stackIn(SLOT_INPUT)));
+        take(SLOT_INPUT, 1);
+        FurnaceSupport.addToOutput(inventory, SLOT_OUTPUT, result);
     }
 
-    public void drops(Level level, BlockPos pos) {
-        SimpleContainer container = new SimpleContainer(inventory.getSlots());
-        for (int i = 0; i < inventory.getSlots(); i++) {
-            container.setItem(i, inventory.getStackInSlot(i));
+    /** Called by the chunk right before this block entity is removed (block broken / replaced). */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null) {
+            Containers.dropContents(level, pos, inventory.copyToList());
         }
-        Containers.dropContents(level, pos, container);
     }
 
     // --- MenuProvider ---
@@ -219,25 +227,25 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
         return new ExtractionFurnaceMenu(id, playerInventory, this, dataAccess);
     }
 
-    // --- NBT ---
+    // --- persistence (ValueIO since 1.21.6) ---
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
-        tag.putInt("LitTime", litTime);
-        tag.putInt("LitDuration", litDuration);
-        tag.putInt("Progress", progress);
-        tag.putInt("MaxProgress", maxProgress);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        inventory.serialize(output.child("Inventory"));
+        output.putInt("LitTime", litTime);
+        output.putInt("LitDuration", litDuration);
+        output.putInt("Progress", progress);
+        output.putInt("MaxProgress", maxProgress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
-        litTime = tag.getInt("LitTime");
-        litDuration = tag.getInt("LitDuration");
-        progress = tag.getInt("Progress");
-        maxProgress = tag.contains("MaxProgress") ? tag.getInt("MaxProgress") : DEFAULT_PROCESS_TIME;
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        inventory.deserialize(input.childOrEmpty("Inventory"));
+        litTime = input.getIntOr("LitTime", 0);
+        litDuration = input.getIntOr("LitDuration", 0);
+        progress = input.getIntOr("Progress", 0);
+        maxProgress = input.getIntOr("MaxProgress", DEFAULT_PROCESS_TIME);
     }
 }

@@ -21,7 +21,8 @@ $root  = 'C:\Projects\yame\src\main\resources\assets\yame\textures'
 $vbase = "$PSScriptRoot\vanilla_base"   # cached vanilla templates (extracted once)
 New-Item -ItemType Directory -Force "$root\item"          | Out-Null
 New-Item -ItemType Directory -Force "$root\block"         | Out-Null
-New-Item -ItemType Directory -Force "$root\models\armor"  | Out-Null
+New-Item -ItemType Directory -Force "$root\entity\equipment\humanoid"          | Out-Null
+New-Item -ItemType Directory -Force "$root\entity\equipment\humanoid_leggings" | Out-Null
 New-Item -ItemType Directory -Force $vbase                | Out-Null
 
 # --- Base metal/alloy colors. Distinction is by HUE CAST ONLY (no dots) — the
@@ -74,8 +75,8 @@ function Ensure-VanillaBases {
   if (-not (Test-Path "$vbase\enchanted_book.png")) { $need=$true }
   if (-not $need) { return }
 
-  $jar = Get-ChildItem "$env:USERPROFILE\.gradle\caches\neoformruntime" -Recurse -Filter 'minecraft_1.21.1_client.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
-  if (-not $jar) { throw "Vanilla client jar not found. Run a gradle task (e.g. .\gradlew.bat runData) once so NeoForge downloads Minecraft 1.21.1." }
+  $jar = Get-ChildItem "$PSScriptRoot\..\build\moddev\artifacts" -Filter "minecraft-patched-*.jar" -ErrorAction SilentlyContinue | Where-Object { $_.Name -notmatch "sources|merged" } | Select-Object -First 1
+  if (-not $jar) { throw "Vanilla client jar not found. Run a gradle task (e.g. .\gradlew.bat runData) once so ModDevGradle creates the Minecraft 26.2 artifacts (build/moddev/artifacts)." }
   Add-Type -AssemblyName System.IO.Compression.FileSystem
   $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
   try {
@@ -83,8 +84,11 @@ function Ensure-VanillaBases {
       $e = $zip.GetEntry("assets/minecraft/textures/item/iron_$t.png")
       if ($e) { [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, "$vbase\iron_$t.png", $true) }
     }
+    # 1.21.2+: worn-armor textures live at entity/equipment/{humanoid,humanoid_leggings}/<material>.png
+    $armorEntries = @{ layer_1 = 'assets/minecraft/textures/entity/equipment/humanoid/iron.png'
+                       layer_2 = 'assets/minecraft/textures/entity/equipment/humanoid_leggings/iron.png' }
     foreach ($t in $armorTemplates) {
-      $e = $zip.GetEntry("assets/minecraft/textures/models/armor/iron_$t.png")
+      $e = $zip.GetEntry($armorEntries[$t])
       if ($e) { [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, "$vbase\iron_$t.png", $true) }
     }
     $eb = $zip.GetEntry("assets/minecraft/textures/item/enchanted_book.png")
@@ -245,9 +249,9 @@ foreach ($a in $alloys) {
   foreach ($t in $gear) {
     Tint-Template "$vbase\iron_$t.png" $colors[$a] "$root\item\$($a)_$t.png" $null; $count++
   }
-  # worn-armor body layers
-  Tint-Template "$vbase\iron_layer_1.png" $colors[$a] "$root\models\armor\$($a)_layer_1.png" $null
-  Tint-Template "$vbase\iron_layer_2.png" $colors[$a] "$root\models\armor\$($a)_layer_2.png" $null
+  # worn-armor body layers (1.21.2+ equipment layout: humanoid = helmet/chest/boots, humanoid_leggings = legs)
+  Tint-Template "$vbase\iron_layer_1.png" $colors[$a] "$root\entity\equipment\humanoid\$a.png" $null
+  Tint-Template "$vbase\iron_layer_2.png" $colors[$a] "$root\entity\equipment\humanoid_leggings\$a.png" $null
 }
 
 # Blocks (unchanged style)

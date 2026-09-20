@@ -5,7 +5,7 @@
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:alacrity": 1 } }
+      "minecraft:stored_enchantments": { "yame:alacrity": 1 }
     }
   },
   "casttime": 100

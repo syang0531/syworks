@@ -1,8 +1,8 @@
 {
   "type": "yame:alloying",
   "ingredients": [
-    { "item": "yame:titanium_ingot", "count": 2 },
-    { "item": "yame:aluminum_ingot", "count": 1 }
+    { "ingredient": "yame:titanium_ingot", "count": 2 },
+    { "ingredient": "yame:aluminum_ingot", "count": 1 }
   ],
   "result": { "id": "yame:titanium_alloy_ingot", "count": 3 },
   "processtime": 300

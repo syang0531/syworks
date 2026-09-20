@@ -5,9 +5,12 @@ import com.syang.yame.registry.ModBlockEntities;
 import com.syang.yame.world.level.block.entity.RuneAltarBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -30,10 +33,10 @@ import org.jetbrains.annotations.Nullable;
  * The Rune Altar (룬 제단): imbues a base item with a catalyst to produce runes and magic
  * (enchanted) books, backed by {@link RuneAltarBlockEntity}.
  *
- * <p>Shaped and rendered like a vanilla enchanting table — a 3/4-height obsidian block (recolored
- * sapphire) with a floating book drawn by {@code RuneAltarRenderer}. It is symmetric (no facing).
- * The {@link #LIT} state (a valid recipe is present) drives block light + {@link #animateTick}
- * enchant particles.
+ * <p>Shaped and rendered like a vanilla enchanting table — a 3/4-height obsidian block with
+ * amethyst-purple gems and a floating book drawn by {@code RuneAltarRenderer}. It is symmetric
+ * (no facing). The {@link #LIT} state (a valid recipe is present) drives block light +
+ * {@link #animateTick} enchant particles.
  */
 public class RuneAltarBlock extends Block implements EntityBlock {
 
@@ -91,7 +94,7 @@ public class RuneAltarBlock extends Block implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
                                                                   BlockEntityType<T> type) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return null;
         }
         return createTickerHelper(type, ModBlockEntities.RUNE_ALTAR.get(),
@@ -101,24 +104,17 @@ public class RuneAltarBlock extends Block implements EntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof RuneAltarBlockEntity altar) {
-                player.openMenu(altar, buf -> buf.writeBlockPos(pos));
-            }
+        if (player instanceof ServerPlayer serverPlayer
+                && level.getBlockEntity(pos) instanceof RuneAltarBlockEntity altar) {
+            serverPlayer.openMenu(altar, buf -> buf.writeBlockPos(pos));
         }
         return InteractionResult.SUCCESS;
     }
 
+    /** Contents are dropped by the block entity ({@code preRemoveSideEffects}); this just wakes neighbours. */
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof RuneAltarBlockEntity altar) {
-                altar.drops(level, pos);
-            }
-            super.onRemove(state, level, pos, newState, movedByPiston);
-        }
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+        Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
 
     @SuppressWarnings("unchecked")

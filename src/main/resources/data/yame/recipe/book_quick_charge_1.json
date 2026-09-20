@@ -5,7 +5,7 @@
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:quick_charge": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:quick_charge": 1 }
     }
   },
   "casttime": 100
