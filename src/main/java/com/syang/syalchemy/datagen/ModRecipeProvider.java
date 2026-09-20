@@ -4,7 +4,6 @@ import com.syang.syalchemy.SyAlchemy;
 import com.syang.syalchemy.registry.ModBlocks;
 import com.syang.syalchemy.registry.ModItems;
 import com.syang.syalchemy.world.item.ModAlloy;
-import com.syang.syalchemy.world.item.ModStaff;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -23,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * Generates standard vanilla-pattern crafting recipes (alloy ingot + sticks) for every
- * alloy's tools and armor, the staffs, and the three machines. This closes the survival loop:
+ * alloy's tools and armor, and the two machines. This closes the survival loop:
  * ingot → equipment.
  *
  * <p>Since 1.21.4 a {@link RecipeProvider} is created per run by a {@link Runner}; the provider
@@ -41,8 +40,6 @@ public class ModRecipeProvider extends RecipeProvider {
     private static final String[] CHESTPLATE = {"X X", "XXX", "XXX"};
     private static final String[] LEGGINGS = {"XXX", "X X", "X X"};
     private static final String[] BOOTS = {"X X", "X X"};
-    // Staff: material head on a two-stick diagonal shaft.
-    private static final String[] STAFF = {"  X", " S ", "S  "};
 
     protected ModRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         super(registries, output);
@@ -66,15 +63,11 @@ public class ModRecipeProvider extends RecipeProvider {
             equip(ingot, ModItems.ALLOY_LEGGINGS.get(alloy).get(), alloy.leggingsName(), RecipeCategory.COMBAT, LEGGINGS);
             equip(ingot, ModItems.ALLOY_BOOTS.get(alloy).get(), alloy.bootsName(), RecipeCategory.COMBAT, BOOTS);
         }
-
-        for (ModStaff staff : ModStaff.values()) {
-            staff(staff);
-        }
     }
 
     /**
-     * The three functional blocks — without these the whole mod is survival-unobtainable.
-     * All use vanilla-only ingredients so they can bootstrap the loop (extract → alloy → magic).
+     * The two functional blocks — without these the whole mod is survival-unobtainable.
+     * All use vanilla-only ingredients so they can bootstrap the loop (extract → alloy → craft).
      * Tune ingredients here to taste.
      */
     private void machines() {
@@ -91,33 +84,6 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('C', Items.COPPER_INGOT).define('B', Items.BLAST_FURNACE)
                 .unlockedBy("has_blast_furnace", has(Items.BLAST_FURNACE))
                 .save(this.output, key("alloy_furnace"));
-
-        // Rune Altar — a recoloured enchanting table; themed on the rune (gold + lapis).
-        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC, ModBlocks.RUNE_ALTAR.get())
-                .pattern("GLG").pattern("LEL").pattern("GLG")
-                .define('G', Items.GOLD_INGOT).define('L', Items.LAPIS_LAZULI).define('E', Items.ENCHANTING_TABLE)
-                .unlockedBy("has_enchanting_table", has(Items.ENCHANTING_TABLE))
-                .save(this.output, key("rune_altar"));
-    }
-
-    /** Crafts a staff from its material (alloy ingot, vanilla item, or vanilla tag) + two sticks. */
-    private void staff(ModStaff staff) {
-        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(this.items, RecipeCategory.COMBAT, ModItems.STAFFS.get(staff).get());
-        for (String row : STAFF) {
-            builder.pattern(row);
-        }
-        if (staff.alloy() != null) {
-            builder.define('X', ModItems.ALLOY_INGOTS.get(staff.alloy()).get());
-        } else if (staff.materialTag() != null) {
-            builder.define('X', staff.materialTag());
-        } else if (staff.materialItem() != null) {
-            builder.define('X', staff.materialItem().get());
-        } else {
-            throw new IllegalStateException("Staff " + staff + " has no crafting material");
-        }
-        builder.define('S', Items.STICK);
-        builder.unlockedBy("has_stick", has(Items.STICK));
-        builder.save(this.output, key(staff.id()));
     }
 
     private void equip(ItemLike ingot, ItemLike result, String id, RecipeCategory category, String[] pattern) {

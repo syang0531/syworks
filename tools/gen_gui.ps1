@@ -6,7 +6,6 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 # with the vanilla furnace's empty flame/arrow composited in so the idle state
 # looks native (the runtime blitSprite overlays align exactly on top).
 #   - alloy_furnace : 3 inputs + fuel + output; flame above fuel, arrow before output.
-#   - rune_altar    : base + catalyst + output; no fuel, arrow before output.
 # ---------------------------------------------------------------------------
 
 $dir = Join-Path $PSScriptRoot '..\src\main\resources\assets\syalchemy\textures\gui'
@@ -112,10 +111,5 @@ for ($col = 0; $col -lt 9; $col++) { $inv += ,@((8 + $col*18), 142) }
 $afSlots = @(@(30,17),@(30,35),@(30,53),@(56,53),@(116,35)) + $inv
 Build-Gui $afSlots @(56,36) @(79,34) $null $null 'alloy_furnace'
 
-# Rune Altar (matches RuneAltarMenu): base(44,35) + catalyst(76,35) + output(134,35).
-# Anvil-style: static "+" between inputs and a static arrow before the output (no progress).
-$raSlots = @(@(44,35),@(76,35),@(134,35)) + $inv
-Build-Gui $raSlots $null $null @(68,43) @(99,34) 'rune_altar'
-
 if ($furnace) { $furnace.Dispose() }
-Write-Output "Wrote alloy_furnace.png + rune_altar.png (${CANVAS}x${CANVAS}, content ${CW}x${CH}) to $dir"
+Write-Output "Wrote alloy_furnace.png (${CANVAS}x${CANVAS}, content ${CW}x${CH}) to $dir"

@@ -18,9 +18,7 @@ public enum ModMetal {
     COBALT("cobalt_ingot", "Cobalt Ingot", false),
     TUNGSTEN("tungsten_ingot", "Tungsten Ingot", false),
     // Sulfur is a non-metal byproduct; kept here as a raw extracted material.
-    SULFUR("sulfur", "Sulfur", false),
-    // Platinum group — extracted from Ancient Debris at very low yield; fire-immune.
-    PLATINUM("platinum_ingot", "Platinum Ingot", true);
+    SULFUR("sulfur", "Sulfur", false);
 
     private final String itemName;
     private final String displayName;

@@ -1,7 +1,0 @@
-{
-  "type": "syalchemy:imbuing",
-  "base": { "id": "minecraft:redstone" },
-  "catalyst": { "id": "syalchemy:rune", "count": 2 },
-  "result": { "id": "syalchemy:spellbook_haste" },
-  "casttime": 100
-}

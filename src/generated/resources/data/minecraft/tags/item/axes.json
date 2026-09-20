@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_axe",
     "syalchemy:tungsten_steel_axe",
     "syalchemy:cobalt_steel_axe",
-    "syalchemy:electrum_axe",
-    "syalchemy:tungsten_carbide_axe",
-    "syalchemy:platinum_superalloy_axe"
+    "syalchemy:electrum_axe"
   ]
 }

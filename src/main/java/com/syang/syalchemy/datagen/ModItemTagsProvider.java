@@ -1,10 +1,8 @@
 package com.syang.syalchemy.datagen;
 
 import com.syang.syalchemy.SyAlchemy;
-import com.syang.syalchemy.registry.ModEnchantments;
 import com.syang.syalchemy.registry.ModItems;
 import com.syang.syalchemy.world.item.ModAlloy;
-import com.syang.syalchemy.world.item.ModStaff;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -32,12 +30,6 @@ import java.util.concurrent.CompletableFuture;
  * is enchantable with <i>nothing</i> (see {@code Enchantment#isSupportedItem}); only a creative
  * anvil bypasses the check. NeoForge does not auto-populate these tags.
  *
- * <p>The staff is deliberately narrower: it is a plain (non-tiered) item, and we add it only to
- * {@code durability} + {@code vanishing} (weapon-common Unbreaking/Mending/Curse of Vanishing) plus
- * the mod's own {@code #syalchemy:enchantable/staff} tag, which gates the three staff-exclusive
- * enchantments ({@link ModEnchantments}). Spellbooks are bound separately at an anvil
- * ({@code StaffEvents}), independent of enchantments.
- *
  * <p>Also emits the per-alloy repair tags ({@link ModAlloy#repairTag()} = the alloy ingot), which
  * is how 1.21.2+ tool/armor materials express their repair ingredient.
  */
@@ -62,15 +54,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
             add(ItemTags.CHEST_ARMOR, ModItems.ALLOY_CHESTPLATES.get(alloy).get());
             add(ItemTags.LEG_ARMOR, ModItems.ALLOY_LEGGINGS.get(alloy).get());
             add(ItemTags.FOOT_ARMOR, ModItems.ALLOY_BOOTS.get(alloy).get());
-        }
-
-        // Staffs: weapon-common enchantments (Unbreaking/Mending/Curse of Vanishing) + the mod's own
-        // staff-exclusive enchantments. Nothing else — staffs are in no combat/mining tag.
-        for (ModStaff staff : ModStaff.values()) {
-            Item item = ModItems.STAFFS.get(staff).get();
-            add(ItemTags.DURABILITY_ENCHANTABLE, item);
-            add(ItemTags.VANISHING_ENCHANTABLE, item);
-            add(ModEnchantments.STAFF_ENCHANTABLE, item);
         }
     }
 

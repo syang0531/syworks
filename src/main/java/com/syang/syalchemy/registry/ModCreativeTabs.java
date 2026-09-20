@@ -37,12 +37,6 @@ public final class ModCreativeTabs {
                         ModItems.ALLOY_BOOTS.values().forEach(i -> output.accept(i.get()));
                         output.accept(ModBlocks.EXTRACTION_FURNACE.get());
                         output.accept(ModBlocks.ALLOY_FURNACE.get());
-                        // Magic system.
-                        output.accept(ModBlocks.RUNE_ALTAR.get());
-                        output.accept(ModItems.RUNE.get());
-                        // Staff system (§5.7): staffs then spellbooks.
-                        ModItems.STAFFS.values().forEach(i -> output.accept(i.get()));
-                        ModItems.SPELL_BOOKS.values().forEach(i -> output.accept(i.get()));
                     })
                     .build());
 

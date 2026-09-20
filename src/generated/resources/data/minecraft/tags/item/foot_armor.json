@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_boots",
     "syalchemy:tungsten_steel_boots",
     "syalchemy:cobalt_steel_boots",
-    "syalchemy:electrum_boots",
-    "syalchemy:tungsten_carbide_boots",
-    "syalchemy:platinum_superalloy_boots"
+    "syalchemy:electrum_boots"
   ]
 }

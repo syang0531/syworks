@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_helmet",
     "syalchemy:tungsten_steel_helmet",
     "syalchemy:cobalt_steel_helmet",
-    "syalchemy:electrum_helmet",
-    "syalchemy:tungsten_carbide_helmet",
-    "syalchemy:platinum_superalloy_helmet"
+    "syalchemy:electrum_helmet"
   ]
 }
