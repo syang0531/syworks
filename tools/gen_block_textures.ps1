@@ -9,7 +9,7 @@ Add-Type -AssemblyName System.Drawing
 # Each block gets 4 faces: _side, _top, _front, _front_on (lit).
 # ---------------------------------------------------------------------------
 
-$root  = 'C:\Projects\yame\src\main\resources\assets\yame\textures\block'
+$root  = Join-Path $PSScriptRoot '..\src\main\resources\assets\syalchemy\textures\block'
 $vbase = "$PSScriptRoot\vanilla_base"
 New-Item -ItemType Directory -Force $root  | Out-Null
 New-Item -ItemType Directory -Force $vbase | Out-Null

@@ -1,7 +1,0 @@
-{
-  "type": "yame:imbuing",
-  "base": { "id": "minecraft:glistering_melon_slice" },
-  "catalyst": { "id": "yame:rune", "count": 2 },
-  "result": { "id": "yame:spellbook_regeneration" },
-  "casttime": 100
-}

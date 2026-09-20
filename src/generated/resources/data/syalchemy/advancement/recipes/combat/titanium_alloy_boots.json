@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "syalchemy:titanium_alloy_boots"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_titanium_alloy_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": "syalchemy:titanium_alloy_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_titanium_alloy_boots"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "syalchemy:titanium_alloy_boots"
+    ]
+  }
+}

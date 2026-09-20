@@ -1,6 +1,6 @@
 Add-Type -AssemblyName System.Drawing
 
-$root = 'C:\Projects\yame\src\main\resources\assets\yame\textures'
+$root = 'C:\Projects\syalchemy\src\main\resources\assets\syalchemy\textures'
 New-Item -ItemType Directory -Force "$root\item"  | Out-Null
 New-Item -ItemType Directory -Force "$root\block" | Out-Null
 New-Item -ItemType Directory -Force "$root\models\armor" | Out-Null

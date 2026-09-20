@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:andesite",
+  "result": { "id": "syalchemy:nickel_ingot", "count": 1 },
+  "processtime": 200
+}

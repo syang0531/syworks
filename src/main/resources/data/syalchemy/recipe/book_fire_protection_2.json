@@ -1,0 +1,17 @@
+{
+  "type": "syalchemy:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "minecraft:fire_protection": 1 }
+    }
+  },
+  "catalyst": { "id": "syalchemy:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "minecraft:fire_protection": 2 }
+    }
+  },
+  "casttime": 100
+}

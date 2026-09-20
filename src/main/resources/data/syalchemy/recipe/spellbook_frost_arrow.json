@@ -1,0 +1,7 @@
+{
+  "type": "syalchemy:imbuing",
+  "base": { "id": "minecraft:snowball" },
+  "catalyst": { "id": "syalchemy:rune", "count": 1 },
+  "result": { "id": "syalchemy:spellbook_frost_arrow" },
+  "casttime": 100
+}

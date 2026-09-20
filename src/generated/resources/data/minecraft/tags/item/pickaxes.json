@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_pickaxe",
-    "yame:brass_pickaxe",
-    "yame:constantan_pickaxe",
-    "yame:duralumin_pickaxe",
-    "yame:steel_pickaxe",
-    "yame:stainless_steel_pickaxe",
-    "yame:titanium_alloy_pickaxe",
-    "yame:tungsten_steel_pickaxe",
-    "yame:cobalt_steel_pickaxe",
-    "yame:electrum_pickaxe",
-    "yame:tungsten_carbide_pickaxe",
-    "yame:platinum_superalloy_pickaxe"
+    "syalchemy:bronze_pickaxe",
+    "syalchemy:brass_pickaxe",
+    "syalchemy:constantan_pickaxe",
+    "syalchemy:duralumin_pickaxe",
+    "syalchemy:steel_pickaxe",
+    "syalchemy:stainless_steel_pickaxe",
+    "syalchemy:titanium_alloy_pickaxe",
+    "syalchemy:tungsten_steel_pickaxe",
+    "syalchemy:cobalt_steel_pickaxe",
+    "syalchemy:electrum_pickaxe",
+    "syalchemy:tungsten_carbide_pickaxe",
+    "syalchemy:platinum_superalloy_pickaxe"
   ]
 }

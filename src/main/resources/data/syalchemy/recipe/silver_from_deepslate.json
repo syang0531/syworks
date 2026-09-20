@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:deepslate",
+  "result": { "id": "syalchemy:silver_ingot", "count": 1 },
+  "processtime": 200
+}

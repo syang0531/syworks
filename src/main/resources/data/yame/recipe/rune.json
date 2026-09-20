@@ -1,7 +1,0 @@
-{
-  "type": "yame:imbuing",
-  "base": { "id": "minecraft:gold_ingot" },
-  "catalyst": { "id": "minecraft:lapis_lazuli" },
-  "result": { "id": "yame:rune" },
-  "casttime": 100
-}

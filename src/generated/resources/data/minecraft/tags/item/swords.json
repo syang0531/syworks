@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_sword",
-    "yame:brass_sword",
-    "yame:constantan_sword",
-    "yame:duralumin_sword",
-    "yame:steel_sword",
-    "yame:stainless_steel_sword",
-    "yame:titanium_alloy_sword",
-    "yame:tungsten_steel_sword",
-    "yame:cobalt_steel_sword",
-    "yame:electrum_sword",
-    "yame:tungsten_carbide_sword",
-    "yame:platinum_superalloy_sword"
+    "syalchemy:bronze_sword",
+    "syalchemy:brass_sword",
+    "syalchemy:constantan_sword",
+    "syalchemy:duralumin_sword",
+    "syalchemy:steel_sword",
+    "syalchemy:stainless_steel_sword",
+    "syalchemy:titanium_alloy_sword",
+    "syalchemy:tungsten_steel_sword",
+    "syalchemy:cobalt_steel_sword",
+    "syalchemy:electrum_sword",
+    "syalchemy:tungsten_carbide_sword",
+    "syalchemy:platinum_superalloy_sword"
   ]
 }

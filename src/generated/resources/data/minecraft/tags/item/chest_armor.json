@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_chestplate",
-    "yame:brass_chestplate",
-    "yame:constantan_chestplate",
-    "yame:duralumin_chestplate",
-    "yame:steel_chestplate",
-    "yame:stainless_steel_chestplate",
-    "yame:titanium_alloy_chestplate",
-    "yame:tungsten_steel_chestplate",
-    "yame:cobalt_steel_chestplate",
-    "yame:electrum_chestplate",
-    "yame:tungsten_carbide_chestplate",
-    "yame:platinum_superalloy_chestplate"
+    "syalchemy:bronze_chestplate",
+    "syalchemy:brass_chestplate",
+    "syalchemy:constantan_chestplate",
+    "syalchemy:duralumin_chestplate",
+    "syalchemy:steel_chestplate",
+    "syalchemy:stainless_steel_chestplate",
+    "syalchemy:titanium_alloy_chestplate",
+    "syalchemy:tungsten_steel_chestplate",
+    "syalchemy:cobalt_steel_chestplate",
+    "syalchemy:electrum_chestplate",
+    "syalchemy:tungsten_carbide_chestplate",
+    "syalchemy:platinum_superalloy_chestplate"
   ]
 }

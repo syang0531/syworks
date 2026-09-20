@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_leggings",
-    "yame:brass_leggings",
-    "yame:constantan_leggings",
-    "yame:duralumin_leggings",
-    "yame:steel_leggings",
-    "yame:stainless_steel_leggings",
-    "yame:titanium_alloy_leggings",
-    "yame:tungsten_steel_leggings",
-    "yame:cobalt_steel_leggings",
-    "yame:electrum_leggings",
-    "yame:tungsten_carbide_leggings",
-    "yame:platinum_superalloy_leggings"
+    "syalchemy:bronze_leggings",
+    "syalchemy:brass_leggings",
+    "syalchemy:constantan_leggings",
+    "syalchemy:duralumin_leggings",
+    "syalchemy:steel_leggings",
+    "syalchemy:stainless_steel_leggings",
+    "syalchemy:titanium_alloy_leggings",
+    "syalchemy:tungsten_steel_leggings",
+    "syalchemy:cobalt_steel_leggings",
+    "syalchemy:electrum_leggings",
+    "syalchemy:tungsten_carbide_leggings",
+    "syalchemy:platinum_superalloy_leggings"
   ]
 }

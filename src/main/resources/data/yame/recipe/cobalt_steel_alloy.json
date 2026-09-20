@@ -1,9 +1,0 @@
-{
-  "type": "yame:alloying",
-  "ingredients": [
-    { "ingredient": "yame:steel_ingot", "count": 2 },
-    { "ingredient": "yame:cobalt_ingot", "count": 1 }
-  ],
-  "result": { "id": "yame:cobalt_steel_ingot", "count": 2 },
-  "processtime": 400
-}

@@ -1,0 +1,17 @@
+{
+  "type": "syalchemy:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "syalchemy:alacrity": 1 }
+    }
+  },
+  "catalyst": { "id": "syalchemy:rune", "count": 2 },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "syalchemy:alacrity": 2 }
+    }
+  },
+  "casttime": 100
+}

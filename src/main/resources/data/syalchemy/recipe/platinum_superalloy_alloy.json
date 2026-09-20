@@ -1,0 +1,9 @@
+{
+  "type": "syalchemy:alloying",
+  "ingredients": [
+    { "ingredient": "syalchemy:tungsten_carbide_ingot", "count": 1 },
+    { "ingredient": "syalchemy:platinum_ingot", "count": 1 }
+  ],
+  "result": { "id": "syalchemy:platinum_superalloy_ingot", "count": 1 },
+  "processtime": 600
+}

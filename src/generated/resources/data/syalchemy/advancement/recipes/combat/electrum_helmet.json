@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_electrum_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "syalchemy:electrum_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "syalchemy:electrum_helmet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_electrum_helmet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "syalchemy:electrum_helmet"
+    ]
+  }
+}

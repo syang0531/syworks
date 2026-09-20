@@ -1,7 +1,0 @@
-{
-  "type": "yame:imbuing",
-  "base": { "id": "minecraft:redstone" },
-  "catalyst": { "id": "yame:rune", "count": 2 },
-  "result": { "id": "yame:spellbook_haste" },
-  "casttime": 100
-}

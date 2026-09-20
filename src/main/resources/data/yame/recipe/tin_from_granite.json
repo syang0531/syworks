@@ -1,6 +1,0 @@
-{
-  "type": "yame:extraction",
-  "ingredient": "minecraft:granite",
-  "result": { "id": "yame:tin_ingot", "count": 1 },
-  "processtime": 200
-}

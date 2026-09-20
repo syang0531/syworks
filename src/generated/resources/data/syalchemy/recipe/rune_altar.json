@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": "minecraft:enchanting_table",
+    "G": "minecraft:gold_ingot",
+    "L": "minecraft:lapis_lazuli"
+  },
+  "pattern": [
+    "GLG",
+    "LEL",
+    "GLG"
+  ],
+  "result": {
+    "id": "syalchemy:rune_altar"
+  }
+}

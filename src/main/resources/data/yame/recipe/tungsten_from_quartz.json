@@ -1,6 +1,0 @@
-{
-  "type": "yame:extraction",
-  "ingredient": "minecraft:quartz",
-  "result": { "id": "yame:tungsten_ingot", "count": 1 },
-  "processtime": 200
-}

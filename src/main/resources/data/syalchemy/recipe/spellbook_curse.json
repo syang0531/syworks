@@ -1,0 +1,7 @@
+{
+  "type": "syalchemy:imbuing",
+  "base": { "id": "minecraft:ink_sac" },
+  "catalyst": { "id": "syalchemy:rune", "count": 1 },
+  "result": { "id": "syalchemy:spellbook_curse" },
+  "casttime": 100
+}

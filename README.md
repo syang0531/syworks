@@ -1,4 +1,4 @@
-# Yame
+# SY Alchemy
 
 바닐라 자연블록을 **추출**해 새 금속을 얻고, 이를 **합금**해 청동·강철·티타늄 등 확장 장비를 만드는
 Minecraft **26.2** / **NeoForge 26.2** (Java 25) 모드. 형제 모드 `placitum`과 같은 스택이라 함께 플레이할 수 있다.
@@ -54,15 +54,15 @@ PowerShell 기준. 툴체인이 JDK 25를 자동 선택하므로 `JAVA_HOME` 지
 ## 구조
 
 ```
-src/main/java/com/syang/yame/
-├── Yame.java              메인 (@Mod)
+src/main/java/com/syang/syalchemy/
+├── SyAlchemy.java              메인 (@Mod)
 ├── registry/                      DeferredRegister (items, blocks, tabs)
 ├── world/item/                    ModMetal, ModAlloy(밸런스), ModTier
 ├── world/level/block/             ExtractionFurnaceBlock, AlloyFurnaceBlock
 └── datagen/                       모델·영문 lang 생성기
 src/main/resources/
 ├── META-INF/neoforge.mods.toml
-└── assets/yame/lang/ko_kr.json
+└── assets/syalchemy/lang/ko_kr.json
 ```
 
-밸런스 수치는 [ModAlloy.java](src/main/java/com/syang/yame/world/item/ModAlloy.java) enum에서 한 곳에서 조정.
+밸런스 수치는 [ModAlloy.java](src/main/java/com/syang/syalchemy/world/item/ModAlloy.java) enum에서 한 곳에서 조정.

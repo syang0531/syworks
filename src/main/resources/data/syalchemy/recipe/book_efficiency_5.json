@@ -1,0 +1,17 @@
+{
+  "type": "syalchemy:imbuing",
+  "base": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "minecraft:efficiency": 4 }
+    }
+  },
+  "catalyst": { "id": "syalchemy:rune" },
+  "result": {
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": { "minecraft:efficiency": 5 }
+    }
+  },
+  "casttime": 100
+}
