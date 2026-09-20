@@ -32,23 +32,6 @@ function Ensure-FurnaceBases {
   } finally { $zip.Dispose() }
 }
 
-function Ensure-EnchantBases {
-  $need = @('enchanting_table_top','enchanting_table_side','enchanting_table_bottom')
-  $missing = $false
-  foreach ($n in $need) { if (-not (Test-Path "$vbase\$n.png")) { $missing = $true } }
-  if (-not $missing) { return }
-  $jar = Get-ChildItem "$PSScriptRoot\..\build\moddev\artifacts" -Filter "minecraft-patched-*.jar" -ErrorAction SilentlyContinue | Where-Object { $_.Name -notmatch "sources|merged" } | Select-Object -First 1
-  if (-not $jar) { throw "Vanilla client jar not found. Run a gradle task once." }
-  Add-Type -AssemblyName System.IO.Compression.FileSystem
-  $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
-  try {
-    foreach ($n in $need) {
-      $e = $zip.GetEntry("assets/minecraft/textures/block/$n.png")
-      if ($e) { [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, "$vbase\$n.png", $true) }
-    }
-  } finally { $zip.Dispose() }
-}
-
 function Get-RGB([string]$hex) {
   return @([Convert]::ToInt32($hex.Substring(0,2),16),
            [Convert]::ToInt32($hex.Substring(2,2),16),
@@ -93,23 +76,7 @@ function Recolor-Lift([System.Drawing.Bitmap]$src, [string]$tintHex, [double]$ba
 }
 
 # Swap exact source colours (RRGGBB hex keys) to target colours; alpha is preserved and any
-# pixel not present in the map is copied verbatim. Used to recolor only the enchanting table's
 # cyan diamond gems into amethyst purple while leaving the obsidian/maroon body untouched.
-function Remap-Colors([System.Drawing.Bitmap]$src,[hashtable]$map){
-  $lut=@{}
-  foreach($k in $map.Keys){ $lut[$k.ToUpper()] = (Get-RGB $map[$k]) }
-  $w=$src.Width; $h=$src.Height
-  $dst=New-Object System.Drawing.Bitmap $w,$h
-  for($y=0;$y -lt $h;$y++){ for($x=0;$x -lt $w;$x++){
-    $p=$src.GetPixel($x,$y)
-    if($p.A -eq 0){ $dst.SetPixel($x,$y,[System.Drawing.Color]::FromArgb(0,0,0,0)); continue }
-    $key=('{0:X2}{1:X2}{2:X2}' -f $p.R,$p.G,$p.B)
-    if($lut.ContainsKey($key)){ $c=$lut[$key]; $dst.SetPixel($x,$y,[System.Drawing.Color]::FromArgb($p.A,$c[0],$c[1],$c[2])) }
-    else { $dst.SetPixel($x,$y,$p) }
-  }}
-  return $dst
-}
-
 function Load([string]$n) { return New-Object System.Drawing.Bitmap "$vbase\$n.png" }
 function Save([System.Drawing.Bitmap]$b,[string]$name){ $b.Save("$root\$name.png",[System.Drawing.Imaging.ImageFormat]::Png) }
 
@@ -123,41 +90,6 @@ function Add-Rivets([System.Drawing.Bitmap]$b,[string]$hex){
 function Add-Band([System.Drawing.Bitmap]$b,[string]$hex,[int]$y){
   $c=Get-RGB $hex; $col=[System.Drawing.Color]::FromArgb(255,$c[0],$c[1],$c[2])
   for($x=2;$x -le 13;$x++){ $b.SetPixel($x,$y,$col) }
-}
-
-# Blend a soft radial glow over the whole face center, preserving the underlying
-# carving (used for the Rune Altar's lit front — an arcane purple pulse).
-function Add-CenterGlow([System.Drawing.Bitmap]$b,[string]$coreHex,[string]$edgeHex){
-  $core=Get-RGB $coreHex; $edge=Get-RGB $edgeHex
-  $cx=7.5; $cy=7.5; $rad=6.5
-  for($y=0;$y -lt 16;$y++){ for($x=0;$x -lt 16;$x++){
-    $p=$b.GetPixel($x,$y); if($p.A -eq 0){continue}
-    $d=[Math]::Sqrt(($x-$cx)*($x-$cx)+($y-$cy)*($y-$cy))
-    if($d -gt $rad){continue}
-    $t=[Math]::Max(0.0,1.0-$d/$rad)
-    $gr=[int]($edge[0]+($core[0]-$edge[0])*$t)
-    $gg=[int]($edge[1]+($core[1]-$edge[1])*$t)
-    $gb=[int]($edge[2]+($core[2]-$edge[2])*$t)
-    $a=$t*0.6
-    $nr=[Math]::Min(255,[int]($p.R+($gr-$p.R)*$a))
-    $ng=[Math]::Min(255,[int]($p.G+($gg-$p.G)*$a))
-    $nb=[Math]::Min(255,[int]($p.B+($gb-$p.B)*$a))
-    $b.SetPixel($x,$y,[System.Drawing.Color]::FromArgb($p.A,$nr,$ng,$nb))
-  }}
-}
-
-# Draw a small open book (cream pages + cover) centered on a top face — the Rune
-# Altar is a full cube, so unlike vanilla it can't show the floating book entity;
-# we bake a static one onto the top so the block still reads as an arcane altar.
-function Add-Book([System.Drawing.Bitmap]$b){
-  $cover=[System.Drawing.Color]::FromArgb(255,120,70,40)
-  $spine=[System.Drawing.Color]::FromArgb(255,80,45,25)
-  $page =[System.Drawing.Color]::FromArgb(255,232,224,200)
-  $shade=[System.Drawing.Color]::FromArgb(255,198,188,162)
-  for($x=4;$x -le 11;$x++){ for($y=5;$y -le 10;$y++){ $b.SetPixel($x,$y,$cover) } }   # cover
-  for($x=5;$x -le 10;$x++){ for($y=6;$y -le 9;$y++){ $b.SetPixel($x,$y,$page) } }      # pages
-  for($y=5;$y -le 10;$y++){ $b.SetPixel(7,$y,$spine); $b.SetPixel(8,$y,$spine) }        # spine
-  foreach($x in 5,6,9,10){ $b.SetPixel($x,7,$shade); $b.SetPixel($x,8,$shade) }         # page lines
 }
 
 # Fill the lower "opening" region with a radial glow (bright center -> accent).
@@ -191,22 +123,4 @@ $s=Recolor (Load 'blast_furnace_side')  $afTint $afBase $false; Add-Rivets $s $a
 $fr=Recolor (Load 'blast_furnace_front') $afTint $afBase $false; Add-Rivets $fr $afAccent; Add-Band $fr $afAccent 3; Save $fr 'alloy_furnace_front'; $fr.Dispose()
 $fo=Recolor (Load 'blast_furnace_front_on') $afTint $afBase $true; Add-Rivets $fo $afAccent; Add-Band $fo $afAccent 3; Add-Glow $fo 'FFF0C0' 'E0641A'; Save $fo 'alloy_furnace_front_on'; $fo.Dispose()
 
-# ---------------- Rune Altar (룬 제단): enchanting table with ARCANE PURPLE gems ----------------
-# Keep the vanilla enchanting-table colouring (dark obsidian body + maroon top surface), but recolor
-# the cyan diamond gems inlaid at the corners into an arcane amethyst purple, so the altar reads as a
-# rune/magic block that is clearly enchanting-table-family yet distinct. The gems appear on the top
-# face and on the top edge of each side; the bottom has none (its map is a no-op there). The block is
-# modeled at the enchanting table's 3/4 height and the floating book is drawn by RuneAltarRenderer.
-Ensure-EnchantBases
-$raGems = @{               # vanilla cyan diamond palette -> amethyst purple (brightness preserved)
-  'FFFFFF' = 'F6F0FF'      #   corner specular highlight -> bright lavender
-  'C3FBF1' = 'DDCBFF'      #   lightest gem
-  'A2F6E7' = 'C4A6F5'      #   light gem
-  '4AEDD1' = '9C5CEB'      #   mid amethyst
-  '2CCDB1' = '7B3FCE'      #   deep amethyst
-}
-$t=Remap-Colors (Load 'enchanting_table_top')    $raGems; Save $t 'rune_altar_top';    $t.Dispose()
-$s=Remap-Colors (Load 'enchanting_table_side')   $raGems; Save $s 'rune_altar_side';   $s.Dispose()
-$b=Remap-Colors (Load 'enchanting_table_bottom') $raGems; Save $b 'rune_altar_bottom'; $b.Dispose()
-
-Write-Output "Generated 8 furnace-family + 3 rune_altar block textures (top/side/bottom) in $root"
+Write-Output "Generated 8 furnace-family block textures in $root"

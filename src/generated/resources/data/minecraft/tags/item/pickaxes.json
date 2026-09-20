@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_pickaxe",
     "syalchemy:tungsten_steel_pickaxe",
     "syalchemy:cobalt_steel_pickaxe",
-    "syalchemy:electrum_pickaxe",
-    "syalchemy:tungsten_carbide_pickaxe",
-    "syalchemy:platinum_superalloy_pickaxe"
+    "syalchemy:electrum_pickaxe"
   ]
 }

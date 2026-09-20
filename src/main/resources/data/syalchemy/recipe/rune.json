@@ -1,7 +1,0 @@
-{
-  "type": "syalchemy:imbuing",
-  "base": { "id": "minecraft:gold_ingot" },
-  "catalyst": { "id": "minecraft:lapis_lazuli" },
-  "result": { "id": "syalchemy:rune" },
-  "casttime": 100
-}

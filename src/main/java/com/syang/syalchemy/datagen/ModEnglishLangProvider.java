@@ -5,8 +5,6 @@ import com.syang.syalchemy.registry.ModBlocks;
 import com.syang.syalchemy.registry.ModItems;
 import com.syang.syalchemy.world.item.ModAlloy;
 import com.syang.syalchemy.world.item.ModMetal;
-import com.syang.syalchemy.world.item.ModSpell;
-import com.syang.syalchemy.world.item.ModStaff;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -26,9 +24,6 @@ public class ModEnglishLangProvider extends LanguageProvider {
 
         add(ModBlocks.EXTRACTION_FURNACE.get(), "Extraction Furnace");
         add(ModBlocks.ALLOY_FURNACE.get(), "Alloy Furnace");
-        add(ModBlocks.RUNE_ALTAR.get(), "Rune Altar");
-
-        add(ModItems.RUNE.get(), "Rune");
 
         for (ModMetal metal : ModMetal.values()) {
             add(ModItems.METAL_INGOTS.get(metal).get(), metal.displayName());
@@ -47,26 +42,5 @@ public class ModEnglishLangProvider extends LanguageProvider {
             add(ModItems.ALLOY_LEGGINGS.get(alloy).get(), name + " Leggings");
             add(ModItems.ALLOY_BOOTS.get(alloy).get(), name + " Boots");
         }
-
-        // Staff system.
-        for (ModStaff staff : ModStaff.values()) {
-            add(ModItems.STAFFS.get(staff).get(), staff.displayName());
-        }
-        for (ModSpell spell : ModSpell.values()) {
-            add(ModItems.SPELL_BOOKS.get(spell).get(), spell.displayName() + " Spellbook");
-        }
-
-        // Staff-exclusive enchantments (§5.7.9).
-        add("enchantment.syalchemy.spell_power", "Spell Power");
-        add("enchantment.syalchemy.alacrity", "Alacrity");
-        add("enchantment.syalchemy.arcane_reach", "Arcane Reach");
-
-        add("tooltip.syalchemy.staff.affinity", "Affinity: ");
-        add("tooltip.syalchemy.staff.affinity_all", "All Elements");
-        add("tooltip.syalchemy.staff.empty", "No spells bound");
-        add("tooltip.syalchemy.staff.spells", "Spells (%s/%s):");
-        add("tooltip.syalchemy.staff.innate", " (innate)");
-        add("tooltip.syalchemy.spellbook.bind", "Bind to a staff at an anvil");
-        add("message.syalchemy.staff.no_spell", "No spell bound");
     }
 }

@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_sword",
     "syalchemy:tungsten_steel_sword",
     "syalchemy:cobalt_steel_sword",
-    "syalchemy:electrum_sword",
-    "syalchemy:tungsten_carbide_sword",
-    "syalchemy:platinum_superalloy_sword"
+    "syalchemy:electrum_sword"
   ]
 }

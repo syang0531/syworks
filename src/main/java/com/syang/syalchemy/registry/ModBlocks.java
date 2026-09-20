@@ -3,7 +3,6 @@ package com.syang.syalchemy.registry;
 import com.syang.syalchemy.SyAlchemy;
 import com.syang.syalchemy.world.level.block.AlloyFurnaceBlock;
 import com.syang.syalchemy.world.level.block.ExtractionFurnaceBlock;
-import com.syang.syalchemy.world.level.block.RuneAltarBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -15,7 +14,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * The three functional blocks. Each also gets a BlockItem registered into {@link ModItems#ITEMS}.
+ * The two functional blocks. Each also gets a BlockItem registered into {@link ModItems#ITEMS}.
  *
  * <p>Since 1.21.2 every block must carry its registry id in its properties ({@code setId});
  * {@code DeferredRegister.Blocks#registerBlock} does that for us when given a properties supplier.
@@ -37,15 +36,6 @@ public final class ModBlocks {
                     .mapColor(MapColor.METAL)
                     .strength(3.5F)
                     .requiresCorrectToolForDrops());
-
-    public static final DeferredBlock<RuneAltarBlock> RUNE_ALTAR = registerBlock("rune_altar",
-            RuneAltarBlock::new,
-            () -> BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_BLUE)
-                    .strength(3.5F)
-                    .requiresCorrectToolForDrops()
-                    .noOcclusion()
-                    .lightLevel(state -> state.getValue(RuneAltarBlock.LIT) ? 7 : 0));
 
     private ModBlocks() {
     }

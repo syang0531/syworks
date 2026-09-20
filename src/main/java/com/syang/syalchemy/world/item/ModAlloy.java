@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
  *   <li>Copper-based → iron-like</li>
  *   <li>Iron-based → diamond-like</li>
  *   <li>Titanium-based → netherite-like</li>
- *   <li>Steel-based → beyond netherite (current cap ≈ ×1.3; ×2 reserved for Phase 2)</li>
+ *   <li>Steel-based → beyond netherite (current cap ≈ ×1.3 — see docs/재설계-제안.md for the 0.3.0+ plan to bring this back to netherite parity)</li>
  * </ul>
  *
  * <p>Tool stat columns: {@code uses}=내구도, {@code speed}=채굴속도,
@@ -36,11 +36,7 @@ public enum ModAlloy {
     TITANIUM_ALLOY("titanium_alloy", "Titanium Alloy", 2000, 10.0F, 4.0F, 14, MiningLevel.NETHERITE, ArmorPreset.NETHERITE, false),
     TUNGSTEN_STEEL("tungsten_steel", "Tungsten Steel", 2600, 9.0F, 5.0F, 12, MiningLevel.NETHERITE, ArmorPreset.SUPERIOR, false),
     COBALT_STEEL("cobalt_steel", "Cobalt Steel", 2400, 11.0F, 5.0F, 16, MiningLevel.NETHERITE, ArmorPreset.SUPERIOR, false),
-    ELECTRUM("electrum", "Electrum", 150, 12.0F, 1.0F, 25, MiningLevel.IRON, ArmorPreset.IRON, false),
-    // Phase 2 capstone — Tungsten Carbide (초경합금). ≈ ×2 netherite durability, fire-resistant.
-    TUNGSTEN_CARBIDE("tungsten_carbide", "Tungsten Carbide", 4064, 11.0F, 6.0F, 15, MiningLevel.NETHERITE, ArmorPreset.CARBIDE, true),
-    // Platinum-group extension — the absolute final tier (초경합금 + 백금). Deepest tech tree.
-    PLATINUM_SUPERALLOY("platinum_superalloy", "Platinum Superalloy", 4600, 12.0F, 7.0F, 22, MiningLevel.NETHERITE, ArmorPreset.SUPERALLOY, true);
+    ELECTRUM("electrum", "Electrum", 150, 12.0F, 1.0F, 25, MiningLevel.IRON, ArmorPreset.IRON, false);
 
     private final String id;
     private final String displayName;
@@ -168,11 +164,7 @@ public enum ModAlloy {
         IRON(15, 2, 6, 5, 2, 0.0F, 0.0F),
         DIAMOND(33, 3, 8, 6, 3, 2.0F, 0.0F),
         NETHERITE(37, 3, 8, 6, 3, 3.0F, 0.1F),
-        SUPERIOR(40, 4, 9, 7, 4, 4.0F, 0.15F),
-        // Phase 2 capstone: ≈ ×2 netherite durability.
-        CARBIDE(74, 4, 9, 7, 4, 5.0F, 0.2F),
-        // Platinum extension: absolute top — extreme durability, toughness, knockback.
-        SUPERALLOY(84, 4, 9, 7, 4, 6.0F, 0.3F);
+        SUPERIOR(40, 4, 9, 7, 4, 4.0F, 0.15F);
 
         private final int durabilityMult;
         private final int helmet;

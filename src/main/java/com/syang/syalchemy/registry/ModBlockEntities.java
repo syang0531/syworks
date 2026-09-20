@@ -3,7 +3,6 @@ package com.syang.syalchemy.registry;
 import com.syang.syalchemy.SyAlchemy;
 import com.syang.syalchemy.world.level.block.entity.AlloyFurnaceBlockEntity;
 import com.syang.syalchemy.world.level.block.entity.ExtractionFurnaceBlockEntity;
-import com.syang.syalchemy.world.level.block.entity.RuneAltarBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -23,10 +22,6 @@ public final class ModBlockEntities {
     public static final Supplier<BlockEntityType<AlloyFurnaceBlockEntity>> ALLOY_FURNACE =
             BLOCK_ENTITIES.register("alloy_furnace", () -> new BlockEntityType<>(
                     AlloyFurnaceBlockEntity::new, ModBlocks.ALLOY_FURNACE.get()));
-
-    public static final Supplier<BlockEntityType<RuneAltarBlockEntity>> RUNE_ALTAR =
-            BLOCK_ENTITIES.register("rune_altar", () -> new BlockEntityType<>(
-                    RuneAltarBlockEntity::new, ModBlocks.RUNE_ALTAR.get()));
 
     private ModBlockEntities() {
     }

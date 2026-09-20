@@ -3,7 +3,6 @@ package com.syang.syalchemy.registry;
 import com.syang.syalchemy.SyAlchemy;
 import com.syang.syalchemy.world.item.crafting.AlloyRecipe;
 import com.syang.syalchemy.world.item.crafting.ExtractionRecipe;
-import com.syang.syalchemy.world.item.crafting.ImbueRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -15,7 +14,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 /**
- * Recipe types, serializers and recipe-book categories for the three machines.
+ * Recipe types, serializers and recipe-book categories for the two machines.
  *
  * <p>Since 1.21.2 a {@link RecipeSerializer} is a plain record of (codec, stream codec), and every
  * recipe must name a {@link RecipeBookCategory}; ours are registered here but never shown in the
@@ -45,14 +44,6 @@ public final class ModRecipes {
                     () -> new RecipeSerializer<>(AlloyRecipe.CODEC, AlloyRecipe.STREAM_CODEC));
     public static final Supplier<RecipeBookCategory> ALLOY_CATEGORY =
             BOOK_CATEGORIES.register("alloying", RecipeBookCategory::new);
-
-    public static final Supplier<RecipeType<ImbueRecipe>> IMBUE_TYPE =
-            RECIPE_TYPES.register("imbuing", () -> RecipeType.simple(id("imbuing")));
-    public static final Supplier<RecipeSerializer<ImbueRecipe>> IMBUE_SERIALIZER =
-            RECIPE_SERIALIZERS.register("imbuing",
-                    () -> new RecipeSerializer<>(ImbueRecipe.CODEC, ImbueRecipe.STREAM_CODEC));
-    public static final Supplier<RecipeBookCategory> IMBUE_CATEGORY =
-            BOOK_CATEGORIES.register("imbuing", RecipeBookCategory::new);
 
     private ModRecipes() {
     }

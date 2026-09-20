@@ -3,7 +3,6 @@ package com.syang.syalchemy;
 import com.syang.syalchemy.registry.ModBlockEntities;
 import com.syang.syalchemy.registry.ModBlocks;
 import com.syang.syalchemy.registry.ModCreativeTabs;
-import com.syang.syalchemy.registry.ModDataComponents;
 import com.syang.syalchemy.registry.ModItems;
 import com.syang.syalchemy.registry.ModMenuTypes;
 import com.syang.syalchemy.registry.ModRecipes;
@@ -33,7 +32,6 @@ public class SyAlchemy {
         // so both registers must be attached before the RegisterEvent fires — which they are.
         // Armor materials are plain records since 1.21.2 (no registry), see ModArmorMaterials.
         ModItems.register(modBus);
-        ModDataComponents.register(modBus);
         ModBlocks.register(modBus);
         ModBlockEntities.register(modBus);
         ModMenuTypes.register(modBus);

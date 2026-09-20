@@ -3,10 +3,6 @@ package com.syang.syalchemy.registry;
 import com.syang.syalchemy.SyAlchemy;
 import com.syang.syalchemy.world.item.ModAlloy;
 import com.syang.syalchemy.world.item.ModMetal;
-import com.syang.syalchemy.world.item.ModSpell;
-import com.syang.syalchemy.world.item.ModStaff;
-import com.syang.syalchemy.world.item.SpellBookItem;
-import com.syang.syalchemy.world.item.StaffItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
@@ -53,13 +49,6 @@ public final class ModItems {
     public static final Map<ModAlloy, DeferredItem<Item>> ALLOY_LEGGINGS = new EnumMap<>(ModAlloy.class);
     public static final Map<ModAlloy, DeferredItem<Item>> ALLOY_BOOTS = new EnumMap<>(ModAlloy.class);
 
-    /** Magic system: the rune — catalyst for imbuing magic (enchanted) books at the Rune Altar. */
-    public static final DeferredItem<Item> RUNE = ITEMS.registerSimpleItem("rune");
-
-    /** Staff system (§5.7): one castable staff per {@link ModStaff} and one tome per {@link ModSpell}. */
-    public static final Map<ModStaff, DeferredItem<StaffItem>> STAFFS = new EnumMap<>(ModStaff.class);
-    public static final Map<ModSpell, DeferredItem<SpellBookItem>> SPELL_BOOKS = new EnumMap<>(ModSpell.class);
-
     static {
         for (ModMetal metal : ModMetal.values()) {
             DeferredItem<Item> item = metal.isFireResistant()
@@ -98,26 +87,6 @@ public final class ModItems {
                     props -> new Item(fire(alloy, props).humanoidArmor(armor, ArmorType.LEGGINGS))));
             ALLOY_BOOTS.put(alloy, ITEMS.registerItem(alloy.bootsName(),
                     props -> new Item(fire(alloy, props).humanoidArmor(armor, ArmorType.BOOTS))));
-        }
-
-        for (ModStaff staff : ModStaff.values()) {
-            STAFFS.put(staff, ITEMS.registerItem(staff.id(), props -> {
-                Item.Properties p = props.durability(staff.durability());
-                // Repairable with the staff's crafting material: alloy ingot (tag) or vanilla item/tag.
-                if (staff.alloy() != null) {
-                    p = p.repairable(staff.alloy().repairTag());
-                } else if (staff.materialTag() != null) {
-                    p = p.repairable(staff.materialTag());
-                } else if (staff.materialItem() != null) {
-                    p = p.repairable(staff.materialItem().get());
-                }
-                return new StaffItem(staff, staff.isFireResistant() ? p.fireResistant() : p);
-            }));
-        }
-
-        for (ModSpell spell : ModSpell.values()) {
-            SPELL_BOOKS.put(spell, ITEMS.registerItem(spell.bookName(),
-                    props -> new SpellBookItem(spell, props.stacksTo(16))));
         }
     }
 

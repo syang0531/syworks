@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_chestplate",
     "syalchemy:tungsten_steel_chestplate",
     "syalchemy:cobalt_steel_chestplate",
-    "syalchemy:electrum_chestplate",
-    "syalchemy:tungsten_carbide_chestplate",
-    "syalchemy:platinum_superalloy_chestplate"
+    "syalchemy:electrum_chestplate"
   ]
 }

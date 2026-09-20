@@ -45,10 +45,10 @@ function Draw-Tex($name, $x, $y, $size, $angleDeg) {
     $img.Dispose()
 }
 
-# --- Hero: platinum superalloy ingot (capstone alloy) + rune accent ---
-Draw-Tex 'platinum_superalloy_staff.png' 300 70  190 18   # magic axis, tucked behind
-Draw-Tex 'platinum_superalloy_ingot.png' 120 190 260 -8   # hero: metal/alloy axis
-Draw-Tex 'rune.png'                      70  70  150 0     # rune accent (magic)
+# --- Hero: the top alloy ingot + the two machines' axis ---
+Draw-Tex 'tungsten_steel_sword.png'      300 70  190 18   # equipment axis, tucked behind
+Draw-Tex 'tungsten_steel_ingot.png'      120 190 260 -8   # hero: metal/alloy axis
+Draw-Tex 'bronze_ingot.png'             70  70  150 0     # the first alloy
 
 # subtle inner vignette to focus the center
 $vig = New-Object System.Drawing.Drawing2D.GraphicsPath

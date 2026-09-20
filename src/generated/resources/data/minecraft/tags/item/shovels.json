@@ -9,8 +9,6 @@
     "syalchemy:titanium_alloy_shovel",
     "syalchemy:tungsten_steel_shovel",
     "syalchemy:cobalt_steel_shovel",
-    "syalchemy:electrum_shovel",
-    "syalchemy:tungsten_carbide_shovel",
-    "syalchemy:platinum_superalloy_shovel"
+    "syalchemy:electrum_shovel"
   ]
 }
