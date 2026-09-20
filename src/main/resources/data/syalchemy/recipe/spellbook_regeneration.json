@@ -1,0 +1,7 @@
+{
+  "type": "syalchemy:imbuing",
+  "base": { "id": "minecraft:glistering_melon_slice" },
+  "catalyst": { "id": "syalchemy:rune", "count": 2 },
+  "result": { "id": "syalchemy:spellbook_regeneration" },
+  "casttime": 100
+}

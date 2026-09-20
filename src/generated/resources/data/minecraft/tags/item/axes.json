@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_axe",
-    "yame:brass_axe",
-    "yame:constantan_axe",
-    "yame:duralumin_axe",
-    "yame:steel_axe",
-    "yame:stainless_steel_axe",
-    "yame:titanium_alloy_axe",
-    "yame:tungsten_steel_axe",
-    "yame:cobalt_steel_axe",
-    "yame:electrum_axe",
-    "yame:tungsten_carbide_axe",
-    "yame:platinum_superalloy_axe"
+    "syalchemy:bronze_axe",
+    "syalchemy:brass_axe",
+    "syalchemy:constantan_axe",
+    "syalchemy:duralumin_axe",
+    "syalchemy:steel_axe",
+    "syalchemy:stainless_steel_axe",
+    "syalchemy:titanium_alloy_axe",
+    "syalchemy:tungsten_steel_axe",
+    "syalchemy:cobalt_steel_axe",
+    "syalchemy:electrum_axe",
+    "syalchemy:tungsten_carbide_axe",
+    "syalchemy:platinum_superalloy_axe"
   ]
 }

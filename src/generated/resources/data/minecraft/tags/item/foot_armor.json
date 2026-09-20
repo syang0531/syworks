@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_boots",
-    "yame:brass_boots",
-    "yame:constantan_boots",
-    "yame:duralumin_boots",
-    "yame:steel_boots",
-    "yame:stainless_steel_boots",
-    "yame:titanium_alloy_boots",
-    "yame:tungsten_steel_boots",
-    "yame:cobalt_steel_boots",
-    "yame:electrum_boots",
-    "yame:tungsten_carbide_boots",
-    "yame:platinum_superalloy_boots"
+    "syalchemy:bronze_boots",
+    "syalchemy:brass_boots",
+    "syalchemy:constantan_boots",
+    "syalchemy:duralumin_boots",
+    "syalchemy:steel_boots",
+    "syalchemy:stainless_steel_boots",
+    "syalchemy:titanium_alloy_boots",
+    "syalchemy:tungsten_steel_boots",
+    "syalchemy:cobalt_steel_boots",
+    "syalchemy:electrum_boots",
+    "syalchemy:tungsten_carbide_boots",
+    "syalchemy:platinum_superalloy_boots"
   ]
 }

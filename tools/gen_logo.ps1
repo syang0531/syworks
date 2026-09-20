@@ -4,7 +4,7 @@
 Add-Type -AssemblyName System.Drawing
 
 $root   = Split-Path $PSScriptRoot -Parent
-$itemTx = Join-Path $root 'src/main/resources/assets/yame/textures/item'
+$itemTx = Join-Path $root 'src/main/resources/assets/syalchemy/textures/item'
 $outDir = Join-Path $root 'docs/curseforge'
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $outPng = Join-Path $outDir 'logo.png'

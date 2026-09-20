@@ -1,7 +1,0 @@
-{
-  "type": "yame:imbuing",
-  "base": { "id": "minecraft:copper_ingot" },
-  "catalyst": { "id": "yame:rune", "count": 2 },
-  "result": { "id": "yame:spellbook_lightning" },
-  "casttime": 100
-}

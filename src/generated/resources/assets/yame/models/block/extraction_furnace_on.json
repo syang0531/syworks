@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "yame:block/extraction_furnace_front_on",
-    "side": "yame:block/extraction_furnace_side",
-    "top": "yame:block/extraction_furnace_top"
-  }
-}

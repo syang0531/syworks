@@ -17,7 +17,7 @@ Add-Type -AssemblyName System.Drawing
 # Re-run after adding a metal/alloy: just add its color (+optional accent) below.
 # ---------------------------------------------------------------------------
 
-$root  = 'C:\Projects\yame\src\main\resources\assets\yame\textures'
+$root  = Join-Path $PSScriptRoot '..\src\main\resources\assets\syalchemy\textures'
 $vbase = "$PSScriptRoot\vanilla_base"   # cached vanilla templates (extracted once)
 New-Item -ItemType Directory -Force "$root\item"          | Out-Null
 New-Item -ItemType Directory -Force "$root\block"         | Out-Null

@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:clay",
+  "result": { "id": "syalchemy:aluminum_ingot", "count": 1 },
+  "processtime": 200
+}

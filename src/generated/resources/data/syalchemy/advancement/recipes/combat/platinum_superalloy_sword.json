@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_platinum_superalloy_sword": {
+      "conditions": {
+        "items": [
+          {
+            "items": "syalchemy:platinum_superalloy_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "syalchemy:platinum_superalloy_sword"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_platinum_superalloy_sword"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "syalchemy:platinum_superalloy_sword"
+    ]
+  }
+}

@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_hoe",
-    "yame:brass_hoe",
-    "yame:constantan_hoe",
-    "yame:duralumin_hoe",
-    "yame:steel_hoe",
-    "yame:stainless_steel_hoe",
-    "yame:titanium_alloy_hoe",
-    "yame:tungsten_steel_hoe",
-    "yame:cobalt_steel_hoe",
-    "yame:electrum_hoe",
-    "yame:tungsten_carbide_hoe",
-    "yame:platinum_superalloy_hoe"
+    "syalchemy:bronze_hoe",
+    "syalchemy:brass_hoe",
+    "syalchemy:constantan_hoe",
+    "syalchemy:duralumin_hoe",
+    "syalchemy:steel_hoe",
+    "syalchemy:stainless_steel_hoe",
+    "syalchemy:titanium_alloy_hoe",
+    "syalchemy:tungsten_steel_hoe",
+    "syalchemy:cobalt_steel_hoe",
+    "syalchemy:electrum_hoe",
+    "syalchemy:tungsten_carbide_hoe",
+    "syalchemy:platinum_superalloy_hoe"
   ]
 }

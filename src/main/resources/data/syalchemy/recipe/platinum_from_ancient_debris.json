@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:ancient_debris",
+  "result": { "id": "syalchemy:platinum_ingot", "count": 1 },
+  "processtime": 800
+}

@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "syalchemy:constantan"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "syalchemy:constantan"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "syalchemy:constantan"
+      }
+    ]
+  }
+}

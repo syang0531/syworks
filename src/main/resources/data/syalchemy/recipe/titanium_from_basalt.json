@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:basalt",
+  "result": { "id": "syalchemy:titanium_ingot", "count": 1 },
+  "processtime": 200
+}

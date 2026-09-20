@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "syalchemy:cobalt_steel"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "syalchemy:cobalt_steel"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "syalchemy:cobalt_steel"
+      }
+    ]
+  }
+}

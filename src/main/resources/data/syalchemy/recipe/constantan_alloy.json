@@ -1,0 +1,9 @@
+{
+  "type": "syalchemy:alloying",
+  "ingredients": [
+    { "ingredient": "minecraft:copper_ingot", "count": 2 },
+    { "ingredient": "syalchemy:nickel_ingot", "count": 2 }
+  ],
+  "result": { "id": "syalchemy:constantan_ingot", "count": 4 },
+  "processtime": 200
+}

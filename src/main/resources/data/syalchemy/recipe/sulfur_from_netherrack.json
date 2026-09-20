@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:netherrack",
+  "result": { "id": "syalchemy:sulfur", "count": 1 },
+  "processtime": 200
+}

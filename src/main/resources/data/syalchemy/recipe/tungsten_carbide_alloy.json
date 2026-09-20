@@ -1,0 +1,10 @@
+{
+  "type": "syalchemy:alloying",
+  "ingredients": [
+    { "ingredient": "syalchemy:tungsten_steel_ingot", "count": 2 },
+    { "ingredient": "minecraft:coal", "count": 1 },
+    { "ingredient": "syalchemy:cobalt_ingot", "count": 1 }
+  ],
+  "result": { "id": "syalchemy:tungsten_carbide_ingot", "count": 1 },
+  "processtime": 500
+}

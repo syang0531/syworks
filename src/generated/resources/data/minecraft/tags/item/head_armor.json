@@ -1,16 +1,16 @@
 {
   "values": [
-    "yame:bronze_helmet",
-    "yame:brass_helmet",
-    "yame:constantan_helmet",
-    "yame:duralumin_helmet",
-    "yame:steel_helmet",
-    "yame:stainless_steel_helmet",
-    "yame:titanium_alloy_helmet",
-    "yame:tungsten_steel_helmet",
-    "yame:cobalt_steel_helmet",
-    "yame:electrum_helmet",
-    "yame:tungsten_carbide_helmet",
-    "yame:platinum_superalloy_helmet"
+    "syalchemy:bronze_helmet",
+    "syalchemy:brass_helmet",
+    "syalchemy:constantan_helmet",
+    "syalchemy:duralumin_helmet",
+    "syalchemy:steel_helmet",
+    "syalchemy:stainless_steel_helmet",
+    "syalchemy:titanium_alloy_helmet",
+    "syalchemy:tungsten_steel_helmet",
+    "syalchemy:cobalt_steel_helmet",
+    "syalchemy:electrum_helmet",
+    "syalchemy:tungsten_carbide_helmet",
+    "syalchemy:platinum_superalloy_helmet"
   ]
 }

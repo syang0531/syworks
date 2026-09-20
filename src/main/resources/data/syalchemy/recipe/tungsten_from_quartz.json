@@ -1,0 +1,6 @@
+{
+  "type": "syalchemy:extraction",
+  "ingredient": "minecraft:quartz",
+  "result": { "id": "syalchemy:tungsten_ingot", "count": 1 },
+  "processtime": 200
+}

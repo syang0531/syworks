@@ -1,7 +1,0 @@
-{
-  "type": "yame:imbuing",
-  "base": { "id": "minecraft:ink_sac" },
-  "catalyst": { "id": "yame:rune", "count": 1 },
-  "result": { "id": "yame:spellbook_curse" },
-  "casttime": 100
-}

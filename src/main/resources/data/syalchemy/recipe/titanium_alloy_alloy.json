@@ -1,0 +1,9 @@
+{
+  "type": "syalchemy:alloying",
+  "ingredients": [
+    { "ingredient": "syalchemy:titanium_ingot", "count": 2 },
+    { "ingredient": "syalchemy:aluminum_ingot", "count": 1 }
+  ],
+  "result": { "id": "syalchemy:titanium_alloy_ingot", "count": 3 },
+  "processtime": 300
+}

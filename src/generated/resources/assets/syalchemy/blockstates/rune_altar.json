@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "syalchemy:block/rune_altar"
+    }
+  }
+}

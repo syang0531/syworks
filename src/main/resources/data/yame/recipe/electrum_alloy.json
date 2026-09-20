@@ -1,9 +1,0 @@
-{
-  "type": "yame:alloying",
-  "ingredients": [
-    { "ingredient": "minecraft:gold_ingot", "count": 1 },
-    { "ingredient": "yame:silver_ingot", "count": 1 }
-  ],
-  "result": { "id": "yame:electrum_ingot", "count": 2 },
-  "processtime": 200
-}

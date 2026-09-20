@@ -1,5 +1,5 @@
-# Generates every Rune Altar (yame:imbuing) recipe into
-#   src/main/resources/data/yame/recipe/
+# Generates every Rune Altar (syalchemy:imbuing) recipe into
+#   src/main/resources/data/syalchemy/recipe/
 #
 # For each vanilla enchantment (see docs/진행상황.md §5.3):
 #   Lv1:  <material> + rune  -> enchanted_book{ench:1}
@@ -10,7 +10,7 @@
 # strict JSON parser accepts them. Old book_*/rune.json are overwritten.
 
 $ErrorActionPreference = 'Stop'
-$recipeDir = Resolve-Path (Join-Path $PSScriptRoot '..\src\main\resources\data\yame\recipe')
+$recipeDir = Resolve-Path (Join-Path $PSScriptRoot '..\src\main\resources\data\syalchemy\recipe')
 $enc = New-Object System.Text.UTF8Encoding($false)
 $castTime = 100
 
@@ -89,10 +89,10 @@ $pad}
 # --- Rune ---
 Write-Json 'rune' @"
 {
-  "type": "yame:imbuing",
+  "type": "syalchemy:imbuing",
   "base": { "id": "minecraft:gold_ingot" },
   "catalyst": { "id": "minecraft:lapis_lazuli" },
-  "result": { "id": "yame:rune" },
+  "result": { "id": "syalchemy:rune" },
   "casttime": $castTime
 }
 "@
@@ -109,9 +109,9 @@ foreach ($b in $books) {
         $result = Book-Stack $b.ench $lv 2
         $json = @"
 {
-  "type": "yame:imbuing",
+  "type": "syalchemy:imbuing",
   "base": $base,
-  "catalyst": { "id": "yame:rune" },
+  "catalyst": { "id": "syalchemy:rune" },
   "result": $result,
   "casttime": $castTime
 }

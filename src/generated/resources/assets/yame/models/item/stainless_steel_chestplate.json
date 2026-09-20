@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "yame:item/stainless_steel_chestplate"
-  }
-}
