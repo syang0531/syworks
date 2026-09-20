@@ -20,7 +20,7 @@ function Ensure-FurnaceBases {
   $missing = $false
   foreach ($n in $need) { if (-not (Test-Path "$vbase\$n.png")) { $missing = $true } }
   if (-not $missing) { return }
-  $jar = Get-ChildItem "$env:USERPROFILE\.gradle\caches\neoformruntime" -Recurse -Filter 'minecraft_1.21.1_client.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
+  $jar = Get-ChildItem "$PSScriptRoot\..\build\moddev\artifacts" -Filter "minecraft-patched-*.jar" -ErrorAction SilentlyContinue | Where-Object { $_.Name -notmatch "sources|merged" } | Select-Object -First 1
   if (-not $jar) { throw "Vanilla client jar not found. Run a gradle task once." }
   Add-Type -AssemblyName System.IO.Compression.FileSystem
   $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
@@ -37,7 +37,7 @@ function Ensure-EnchantBases {
   $missing = $false
   foreach ($n in $need) { if (-not (Test-Path "$vbase\$n.png")) { $missing = $true } }
   if (-not $missing) { return }
-  $jar = Get-ChildItem "$env:USERPROFILE\.gradle\caches\neoformruntime" -Recurse -Filter 'minecraft_1.21.1_client.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
+  $jar = Get-ChildItem "$PSScriptRoot\..\build\moddev\artifacts" -Filter "minecraft-patched-*.jar" -ErrorAction SilentlyContinue | Where-Object { $_.Name -notmatch "sources|merged" } | Select-Object -First 1
   if (-not $jar) { throw "Vanilla client jar not found. Run a gradle task once." }
   Add-Type -AssemblyName System.IO.Compression.FileSystem
   $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)

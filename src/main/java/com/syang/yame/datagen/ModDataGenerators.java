@@ -1,34 +1,31 @@
 package com.syang.yame.datagen;
 
 import com.syang.yame.Yame;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 /**
  * Hooks the data providers to {@code ./gradlew runData}. Output lands in
  * src/generated/resources, which build.gradle adds as a resource root.
+ *
+ * <p>NeoForge runs client <b>and</b> server providers in the single {@code clientData} run
+ * (there is no separate server run configured), so everything is added on the Client event.
  */
-@EventBusSubscriber(modid = Yame.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Yame.MOD_ID)
 public final class ModDataGenerators {
 
     private ModDataGenerators() {
     }
 
     @SubscribeEvent
-    public static void onGatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-
-        generator.addProvider(event.includeClient(), new ModItemModelProvider(output, existingFileHelper));
-        generator.addProvider(event.includeClient(), new ModBlockStateProvider(output, existingFileHelper));
-        generator.addProvider(event.includeClient(), new ModEnglishLangProvider(output));
-        generator.addProvider(event.includeServer(), new ModRecipeProvider(output, event.getLookupProvider()));
-        generator.addProvider(event.includeServer(),
-                new ModItemTagsProvider(output, event.getLookupProvider(), existingFileHelper));
+    public static void onGatherData(GatherDataEvent.Client event) {
+        // Client resources: blockstates + models + client item definitions, equipment (armor) assets, lang.
+        event.createProvider(ModModelProvider::new);
+        event.createProvider(ModEquipmentAssetProvider::new);
+        event.createProvider(ModEnglishLangProvider::new);
+        // Server data: crafting recipes (+ their unlock advancements) and item tags.
+        event.createProvider(ModRecipeProvider.Runner::new);
+        event.createProvider(ModItemTagsProvider::new);
     }
 }

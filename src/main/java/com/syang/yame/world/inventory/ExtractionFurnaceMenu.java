@@ -2,7 +2,6 @@ package com.syang.yame.world.inventory;
 
 import com.syang.yame.registry.ModBlocks;
 import com.syang.yame.registry.ModMenuTypes;
-import com.syang.yame.registry.ModRecipes;
 import com.syang.yame.world.level.block.entity.ExtractionFurnaceBlockEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,8 +12,8 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 /**
  * Container menu for the Extraction Furnace. Slot layout matches the vanilla furnace so the
@@ -27,7 +26,6 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
     private static final int HOTBAR_START = MACHINE_SLOTS + 27;
     private static final int TOTAL_SLOTS = MACHINE_SLOTS + 36;
 
-    private final ExtractionFurnaceBlockEntity blockEntity;
     private final ContainerLevelAccess access;
     private final ContainerData data;
 
@@ -40,13 +38,12 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
 
     public ExtractionFurnaceMenu(int id, Inventory playerInventory, ExtractionFurnaceBlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.EXTRACTION_FURNACE.get(), id);
-        this.blockEntity = blockEntity;
         this.data = data;
         this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
-        IItemHandler handler = blockEntity.getInventory();
-        addSlot(new SlotItemHandler(handler, ExtractionFurnaceBlockEntity.SLOT_INPUT, 56, 17));
-        addSlot(new SlotItemHandler(handler, ExtractionFurnaceBlockEntity.SLOT_FUEL, 56, 53));
+        ItemStacksResourceHandler handler = blockEntity.getInventory();
+        addSlot(new ResourceHandlerSlot(handler, handler::set, ExtractionFurnaceBlockEntity.SLOT_INPUT, 56, 17));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, ExtractionFurnaceBlockEntity.SLOT_FUEL, 56, 53));
         addSlot(new OutputSlot(handler, ExtractionFurnaceBlockEntity.SLOT_OUTPUT, 116, 35));
 
         for (int row = 0; row < 3; row++) {
@@ -77,7 +74,7 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
             } else {
                 // Player inventory → machine (fuel if burnable, otherwise input).
                 boolean moved = false;
-                if (stack.getBurnTime(ModRecipes.EXTRACTION_TYPE.get()) > 0) {
+                if (player.level().fuelValues().burnDuration(stack) > 0) {
                     moved = moveItemStackTo(stack, ExtractionFurnaceBlockEntity.SLOT_FUEL,
                             ExtractionFurnaceBlockEntity.SLOT_FUEL + 1, false);
                 }
@@ -98,7 +95,7 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
             }
 
             if (stack.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
@@ -138,9 +135,9 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
         return (max == 0 || prog == 0) ? 0 : prog * 24 / max;
     }
 
-    private static class OutputSlot extends SlotItemHandler {
-        OutputSlot(IItemHandler handler, int index, int x, int y) {
-            super(handler, index, x, y);
+    private static class OutputSlot extends ResourceHandlerSlot {
+        OutputSlot(ItemStacksResourceHandler handler, int index, int x, int y) {
+            super(handler, handler::set, index, x, y);
         }
 
         @Override

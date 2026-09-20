@@ -1,6 +1,6 @@
 {
   "type": "yame:extraction",
-  "ingredient": { "item": "minecraft:basalt" },
+  "ingredient": "minecraft:basalt",
   "result": { "id": "yame:titanium_ingot", "count": 1 },
   "processtime": 200
 }

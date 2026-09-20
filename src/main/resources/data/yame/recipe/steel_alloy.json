@@ -1,8 +1,8 @@
 {
   "type": "yame:alloying",
   "ingredients": [
-    { "item": "minecraft:iron_ingot", "count": 3 },
-    { "item": "minecraft:coal", "count": 1 }
+    { "ingredient": "minecraft:iron_ingot", "count": 3 },
+    { "ingredient": "minecraft:coal", "count": 1 }
   ],
   "result": { "id": "yame:steel_ingot", "count": 3 },
   "processtime": 250

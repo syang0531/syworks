@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:quick_charge": 2 } }
+      "minecraft:stored_enchantments": { "minecraft:quick_charge": 2 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:quick_charge": 3 } }
+      "minecraft:stored_enchantments": { "minecraft:quick_charge": 3 }
     }
   },
   "casttime": 100

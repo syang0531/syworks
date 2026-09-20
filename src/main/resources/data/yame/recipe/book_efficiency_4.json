@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:efficiency": 3 } }
+      "minecraft:stored_enchantments": { "minecraft:efficiency": 3 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:efficiency": 4 } }
+      "minecraft:stored_enchantments": { "minecraft:efficiency": 4 }
     }
   },
   "casttime": 100

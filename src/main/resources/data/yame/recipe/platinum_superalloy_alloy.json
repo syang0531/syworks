@@ -1,8 +1,8 @@
 {
   "type": "yame:alloying",
   "ingredients": [
-    { "item": "yame:tungsten_carbide_ingot", "count": 1 },
-    { "item": "yame:platinum_ingot", "count": 1 }
+    { "ingredient": "yame:tungsten_carbide_ingot", "count": 1 },
+    { "ingredient": "yame:platinum_ingot", "count": 1 }
   ],
   "result": { "id": "yame:platinum_superalloy_ingot", "count": 1 },
   "processtime": 600

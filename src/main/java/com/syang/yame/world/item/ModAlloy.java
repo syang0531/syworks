@@ -1,18 +1,18 @@
 package com.syang.yame.world.item;
 
+import com.syang.yame.Yame;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.block.Block;
-
-import java.util.function.Supplier;
 
 /**
  * The 10 alloy equipment materials (see docs/기획.md §3–4).
  *
- * <p>Each alloy defines a tool {@link Tier} and an {@link ArmorPreset}. Balance follows
+ * <p>Each alloy defines a tool {@link ToolMaterial} and an {@link ArmorPreset}. Balance follows
  * the four rules from the design doc:
  * <ul>
  *   <li>Copper-based → iron-like</li>
@@ -51,6 +51,8 @@ public enum ModAlloy {
     private final MiningLevel miningLevel;
     private final ArmorPreset armorPreset;
     private final boolean fireResistant;
+    private final TagKey<Item> repairTag;
+    private final ToolMaterial toolMaterial;
 
     ModAlloy(String id, String displayName, int uses, float speed, float attackDamageBonus,
              int enchantmentValue, MiningLevel miningLevel, ArmorPreset armorPreset, boolean fireResistant) {
@@ -63,6 +65,11 @@ public enum ModAlloy {
         this.miningLevel = miningLevel;
         this.armorPreset = armorPreset;
         this.fireResistant = fireResistant;
+        // 1.21.2+: repair materials are item tags. One per alloy, containing its ingot
+        // (populated by ModItemTagsProvider), shared by the tools, the armor and the staff.
+        this.repairTag = ItemTags.create(Identifier.fromNamespaceAndPath(Yame.MOD_ID, "tool_materials/" + id));
+        this.toolMaterial = new ToolMaterial(
+                miningLevel.incorrectBlocksTag(), uses, speed, attackDamageBonus, enchantmentValue, repairTag);
     }
 
     public String id() {
@@ -84,6 +91,16 @@ public enum ModAlloy {
     /** Fire/lava-immune items (like netherite gear) — the Tungsten Carbide signature perk. */
     public boolean isFireResistant() {
         return fireResistant;
+    }
+
+    /** {@code #yame:tool_materials/<alloy>} — the items that repair this alloy's equipment (its ingot). */
+    public TagKey<Item> repairTag() {
+        return repairTag;
+    }
+
+    /** The tool material (durability / speed / damage bonus / enchantability / repair tag) for this alloy. */
+    public ToolMaterial toolMaterial() {
+        return toolMaterial;
     }
 
     public String ingotName() {
@@ -124,21 +141,6 @@ public enum ModAlloy {
 
     public String bootsName() {
         return id + "_boots";
-    }
-
-    /**
-     * Builds the tool tier for this alloy. Repair ingredient is the alloy's own ingot,
-     * supplied lazily to avoid a registration ordering cycle.
-     */
-    public Tier createTier(Supplier<? extends ItemLike> repairIngredient) {
-        return new ModTier(
-                miningLevel.incorrectBlocksTag(),
-                uses,
-                speed,
-                attackDamageBonus,
-                enchantmentValue,
-                () -> Ingredient.of(repairIngredient.get())
-        );
     }
 
     /** Maps a balance bracket to the vanilla "blocks this tool cannot mine" tag. */

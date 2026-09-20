@@ -1,8 +1,8 @@
 {
   "type": "yame:alloying",
   "ingredients": [
-    { "item": "minecraft:copper_ingot", "count": 2 },
-    { "item": "yame:nickel_ingot", "count": 2 }
+    { "ingredient": "minecraft:copper_ingot", "count": 2 },
+    { "ingredient": "yame:nickel_ingot", "count": 2 }
   ],
   "result": { "id": "yame:constantan_ingot", "count": 4 },
   "processtime": 200

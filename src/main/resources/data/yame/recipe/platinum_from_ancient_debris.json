@@ -1,6 +1,6 @@
 {
   "type": "yame:extraction",
-  "ingredient": { "item": "minecraft:ancient_debris" },
+  "ingredient": "minecraft:ancient_debris",
   "result": { "id": "yame:platinum_ingot", "count": 1 },
   "processtime": 800
 }

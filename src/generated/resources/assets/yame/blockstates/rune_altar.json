@@ -1,9 +1,6 @@
 {
   "variants": {
-    "lit=false": {
-      "model": "yame:block/rune_altar"
-    },
-    "lit=true": {
+    "": {
       "model": "yame:block/rune_altar"
     }
   }

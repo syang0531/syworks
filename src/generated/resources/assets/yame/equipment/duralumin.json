@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "yame:duralumin"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "yame:duralumin"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "yame:duralumin"
+      }
+    ]
+  }
+}

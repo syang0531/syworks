@@ -5,8 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A spellbook — the anvil-binding material that teaches a {@link ModSpell} to a {@link StaffItem}.
@@ -27,9 +28,10 @@ public class SpellBookItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal(spell.element().glyph() + " " + spell.element().displayName())
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.literal(spell.element().glyph() + " " + spell.element().displayName())
                 .withStyle(spell.element().color()));
-        tooltip.add(Component.translatable("tooltip.yame.spellbook.bind").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.accept(Component.translatable("tooltip.yame.spellbook.bind").withStyle(ChatFormatting.DARK_GRAY));
     }
 }

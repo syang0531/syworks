@@ -7,13 +7,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
@@ -64,7 +65,7 @@ public final class SpellEffects {
         // Vanilla arrow damage = impact-speed × baseDamage. Divide the launch speed back out so a hit
         // lands for exactly 5×power regardless of speed — Arcane Reach then extends range, not damage.
         arrow.setBaseDamage((5.0 * power) / velocity);
-        arrow.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0));
+        arrow.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, 0));
         arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
         arrow.shootFromRotation(caster, caster.getXRot(), caster.getYRot(), 0.0F, velocity, 1.0F);
         level.addFreshEntity(arrow);
@@ -77,11 +78,11 @@ public final class SpellEffects {
             fizzle(level, caster.getEyePosition());
             return;
         }
-        target.hurt(level.damageSources().magic(), 21.0F * power);
-        var bolt = EntityType.LIGHTNING_BOLT.create(level);
+        target.hurtServer(level, level.damageSources().magic(), 21.0F * power);
+        var bolt = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
         if (bolt != null) {
             bolt.setVisualOnly(true);
-            bolt.moveTo(target.getX(), target.getY(), target.getZ());
+            bolt.setPos(target.getX(), target.getY(), target.getZ());
             level.addFreshEntity(bolt);
         }
     }
@@ -97,8 +98,8 @@ public final class SpellEffects {
         double r = Math.min(64.0, 10.0 * power * ModEnchantments.reach(level, staff));
         AABB area = new AABB(point, point).inflate(r, 4.0, r);
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, area, e -> e != caster && e.isAlive())) {
-            entity.hurt(level.damageSources().freeze(), 12.0F * power);
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 120, 1));
+            entity.hurtServer(level, level.damageSources().freeze(), 12.0F * power);
+            entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 1));
         }
         // Cap the ground-freeze sweep so the biggest blasts don't scan tens of thousands of blocks.
         freezeGround(level, BlockPos.containing(point), Math.min(24, (int) Math.round(r)));
@@ -128,14 +129,14 @@ public final class SpellEffects {
 
     /** Haste — Haste II + Speed I for 40 s on the caster. */
     public static void haste(ServerLevel level, Player caster, ItemStack staff, float power) {
-        caster.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 800, 1));
-        caster.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 800, 0));
+        caster.addEffect(new MobEffectInstance(MobEffects.HASTE, 800, 1));
+        caster.addEffect(new MobEffectInstance(MobEffects.SPEED, 800, 0));
     }
 
     /** Shield — Absorption III + Resistance I for 30 s on the caster. */
     public static void shield(ServerLevel level, Player caster, ItemStack staff, float power) {
         caster.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 600, 2));
-        caster.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 600, 0));
+        caster.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 600, 0));
     }
 
     // ---------------------------------------------------------------- debuff
@@ -160,7 +161,7 @@ public final class SpellEffects {
             return;
         }
         target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 400, 1));
-        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 1));
+        target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 400, 1));
         level.sendParticles(ParticleTypes.WITCH, target.getX(), target.getY() + 1.0, target.getZ(), 20, 0.4, 0.6, 0.4, 0.0);
     }
 
@@ -174,8 +175,8 @@ public final class SpellEffects {
         // Stop the ray at the first solid block so we cannot hit through walls.
         Vec3 blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster)).getLocation();
         AABB search = caster.getBoundingBox().expandTowards(dir.scale(HITSCAN_RANGE)).inflate(1.0);
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(level, caster, start, blockHit, search,
-                e -> e instanceof LivingEntity && e.isAlive() && e != caster);
+        EntityHitResult hit = ProjectileUtil.getEntityHitResult(caster, start, blockHit, search,
+                e -> e instanceof LivingEntity && e.isAlive() && e != caster, HITSCAN_RANGE * HITSCAN_RANGE);
         return hit != null && hit.getEntity() instanceof LivingEntity living ? living : null;
     }
 

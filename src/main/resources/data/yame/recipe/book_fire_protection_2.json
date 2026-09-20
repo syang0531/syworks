@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:fire_protection": 1 } }
+      "minecraft:stored_enchantments": { "minecraft:fire_protection": 1 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:fire_protection": 2 } }
+      "minecraft:stored_enchantments": { "minecraft:fire_protection": 2 }
     }
   },
   "casttime": 100

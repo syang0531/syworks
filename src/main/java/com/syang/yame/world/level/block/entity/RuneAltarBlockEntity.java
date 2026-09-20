@@ -7,12 +7,10 @@ import com.syang.yame.world.item.crafting.ImbueRecipe;
 import com.syang.yame.world.item.crafting.ImbueRecipeInput;
 import com.syang.yame.world.level.block.RuneAltarBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,7 +20,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -42,9 +44,9 @@ public class RuneAltarBlockEntity extends BlockEntity implements MenuProvider {
     public static final int SLOT_CATALYST = 1;
     public static final int SLOT_COUNT = 2;
 
-    private final ItemStackHandler inventory = new ItemStackHandler(SLOT_COUNT) {
+    private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(SLOT_COUNT) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int index, ItemStack previousContents) {
             setChanged();
         }
     };
@@ -53,13 +55,28 @@ public class RuneAltarBlockEntity extends BlockEntity implements MenuProvider {
         super(ModBlockEntities.RUNE_ALTAR.get(), pos, state);
     }
 
-    public ItemStackHandler getInventory() {
+    public ItemStacksResourceHandler getInventory() {
         return inventory;
+    }
+
+    private ItemStack stackIn(int slot) {
+        return inventory.getResource(slot).toStack(inventory.getAmountAsInt(slot));
+    }
+
+    private void take(int slot, int amount) {
+        ItemResource resource = inventory.getResource(slot);
+        if (resource.isEmpty()) {
+            return;
+        }
+        try (Transaction tx = Transaction.openRoot()) {
+            inventory.extract(slot, resource, amount, tx);
+            tx.commit();
+        }
     }
 
     /** Server tick: keep the LIT (glowing "ready") state in sync with recipe validity. */
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         boolean ready = getCurrentRecipe() != null;
@@ -70,13 +87,12 @@ public class RuneAltarBlockEntity extends BlockEntity implements MenuProvider {
 
     @Nullable
     public ImbueRecipe getCurrentRecipe() {
-        if (level == null) {
+        if (!(level instanceof ServerLevel server)) {
             return null;
         }
-        ImbueRecipeInput input = new ImbueRecipeInput(
-                inventory.getStackInSlot(SLOT_BASE), inventory.getStackInSlot(SLOT_CATALYST));
-        return level.getRecipeManager()
-                .getRecipeFor(ModRecipes.IMBUE_TYPE.get(), input, level)
+        ImbueRecipeInput input = new ImbueRecipeInput(stackIn(SLOT_BASE), stackIn(SLOT_CATALYST));
+        return server.recipeAccess()
+                .getRecipeFor(ModRecipes.IMBUE_TYPE.get(), input, server)
                 .map(RecipeHolder::value)
                 .orElse(null);
     }
@@ -84,7 +100,7 @@ public class RuneAltarBlockEntity extends BlockEntity implements MenuProvider {
     /** The result preview for the current inputs, or EMPTY. No side effects. */
     public ItemStack assembleResult() {
         ImbueRecipe recipe = getCurrentRecipe();
-        return recipe == null ? ItemStack.EMPTY : recipe.result().copy();
+        return recipe == null ? ItemStack.EMPTY : recipe.result().create();
     }
 
     /** Consume the required base + catalyst amounts, from whichever slot holds each. */
@@ -93,21 +109,22 @@ public class RuneAltarBlockEntity extends BlockEntity implements MenuProvider {
         if (recipe == null) {
             return;
         }
-        if (recipe.baseMatches(inventory.getStackInSlot(SLOT_BASE))) {
-            inventory.extractItem(SLOT_BASE, recipe.base().getCount(), false);
-            inventory.extractItem(SLOT_CATALYST, recipe.catalyst().getCount(), false);
+        if (recipe.baseMatches(stackIn(SLOT_BASE))) {
+            take(SLOT_BASE, recipe.base().count());
+            take(SLOT_CATALYST, recipe.catalyst().count());
         } else {
-            inventory.extractItem(SLOT_CATALYST, recipe.base().getCount(), false);
-            inventory.extractItem(SLOT_BASE, recipe.catalyst().getCount(), false);
+            take(SLOT_CATALYST, recipe.base().count());
+            take(SLOT_BASE, recipe.catalyst().count());
         }
     }
 
-    public void drops(Level level, BlockPos pos) {
-        SimpleContainer container = new SimpleContainer(inventory.getSlots());
-        for (int i = 0; i < inventory.getSlots(); i++) {
-            container.setItem(i, inventory.getStackInSlot(i));
+    /** Called by the chunk right before this block entity is removed (block broken / replaced). */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null) {
+            Containers.dropContents(level, pos, inventory.copyToList());
         }
-        Containers.dropContents(level, pos, container);
     }
 
     @Override
@@ -122,14 +139,14 @@ public class RuneAltarBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        inventory.serialize(output.child("Inventory"));
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        inventory.deserialize(input.childOrEmpty("Inventory"));
     }
 }

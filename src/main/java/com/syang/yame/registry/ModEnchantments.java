@@ -3,8 +3,8 @@ package com.syang.yame.registry;
 import com.syang.yame.Yame;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -29,7 +29,7 @@ public final class ModEnchantments {
 
     /** Item tag that gates every staff-exclusive enchantment (populated in {@code ModItemTagsProvider}). */
     public static final TagKey<Item> STAFF_ENCHANTABLE =
-            ItemTags.create(ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, "enchantable/staff"));
+            ItemTags.create(Identifier.fromNamespaceAndPath(Yame.MOD_ID, "enchantable/staff"));
 
     /** +20% spell damage / heal / effect magnitude per level (I–V). Like Sharpness, but for magic. */
     public static final ResourceKey<Enchantment> SPELL_POWER = key("spell_power");
@@ -44,12 +44,12 @@ public final class ModEnchantments {
     }
 
     private static ResourceKey<Enchantment> key(String path) {
-        return ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, path));
+        return ResourceKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(Yame.MOD_ID, path));
     }
 
     /** Level of {@code key} on {@code stack}, or 0 if absent. Resolves the datapack enchantment holder. */
     public static int level(ServerLevel level, ItemStack stack, ResourceKey<Enchantment> key) {
-        Holder<Enchantment> holder = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(key);
+        Holder<Enchantment> holder = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key);
         return EnchantmentHelper.getItemEnchantmentLevel(holder, stack);
     }
 

@@ -2,10 +2,11 @@ package com.syang.yame.client.gui.screens;
 
 import com.syang.yame.Yame;
 import com.syang.yame.world.inventory.RuneAltarMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
@@ -15,8 +16,8 @@ import net.minecraft.world.entity.player.Inventory;
  */
 public class RuneAltarScreen extends AbstractContainerScreen<RuneAltarMenu> {
 
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Yame.MOD_ID, "textures/gui/rune_altar.png");
+    private static final Identifier TEXTURE =
+            Identifier.fromNamespaceAndPath(Yame.MOD_ID, "textures/gui/rune_altar.png");
 
     public RuneAltarScreen(RuneAltarMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -30,13 +31,9 @@ public class RuneAltarScreen extends AbstractContainerScreen<RuneAltarMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos, this.topPos, 0.0F, 0.0F,
+                this.imageWidth, this.imageHeight, 256, 256);
     }
 }

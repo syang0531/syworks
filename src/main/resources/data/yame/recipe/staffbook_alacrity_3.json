@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:alacrity": 2 } }
+      "minecraft:stored_enchantments": { "yame:alacrity": 2 }
     }
   },
   "catalyst": { "id": "yame:rune", "count": 2 },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:alacrity": 3 } }
+      "minecraft:stored_enchantments": { "yame:alacrity": 3 }
     }
   },
   "casttime": 100

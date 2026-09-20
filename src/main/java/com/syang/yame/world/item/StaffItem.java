@@ -9,33 +9,32 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 /**
  * A castable staff (see §5.7.2/§5.7.7). The staff itself is inert — the {@link ModSpell spells}
  * are stored on the stack (bound at an anvil), and right-click casts the {@link ModStaff#affinity
  * active} one, paying an effective cooldown and 1 durability.
+ *
+ * <p>Repair material is set through {@code Item.Properties#repairable} at registration
+ * (see {@code ModItems}); since 1.21.2 that is a data component, not an item override.
  */
 public class StaffItem extends Item {
 
     private final ModStaff staff;
-    private final Supplier<Ingredient> repairIngredient;
 
-    public StaffItem(ModStaff staff, Supplier<Ingredient> repairIngredient, Properties properties) {
+    public StaffItem(ModStaff staff, Properties properties) {
         super(properties);
         this.staff = staff;
-        this.repairIngredient = repairIngredient;
     }
 
     public ModStaff staff() {
@@ -43,23 +42,14 @@ public class StaffItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        Optional<ModSpell> active = ModDataComponents.getActiveSpell(stack);
+        // Never empty: every staff casts the innate Firebolt (see ModDataComponents#getActiveSpell).
+        ModSpell spell = ModDataComponents.getActiveSpell(stack).orElse(ModSpell.FIREBOLT);
 
-        if (active.isEmpty()) {
-            if (level.isClientSide) {
-                player.displayClientMessage(
-                        Component.translatable("message.yame.staff.no_spell").withStyle(ChatFormatting.GRAY), true);
-            }
-            return InteractionResultHolder.fail(stack);
+        if (player.getCooldowns().isOnCooldown(stack)) {
+            return InteractionResult.FAIL;
         }
-
-        if (player.getCooldowns().isOnCooldown(this)) {
-            return InteractionResultHolder.fail(stack);
-        }
-
-        ModSpell spell = active.get();
 
         if (level instanceof ServerLevel serverLevel) {
             // Spell Power enchant folds into the cast power; Alacrity shortens the effective cooldown.
@@ -67,45 +57,41 @@ public class StaffItem extends Item {
             spell.cast(serverLevel, player, stack, power);
 
             int cooldown = Math.round(staff.effectiveCooldown(spell) * ModEnchantments.cooldown(serverLevel, stack));
-            player.getCooldowns().addCooldown(this, Math.max(1, cooldown));
-            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+            player.getCooldowns().addCooldown(stack, Math.max(1, cooldown));
+            stack.hurtAndBreak(1, player, hand);
 
             serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.0F);
         }
 
-        player.swing(hand, true);
-        return InteractionResultHolder.success(stack);
+        // SUCCESS swings the arm client-side; nothing more to do here.
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return repairIngredient.get().test(repair) || super.isValidRepairItem(toRepair, repair);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
         Element affinity = staff.affinity();
         Component affinityText = affinity == null
                 ? Component.translatable("tooltip.yame.staff.affinity_all").withStyle(ChatFormatting.GOLD)
                 : Component.literal(affinity.glyph() + " " + affinity.displayName()).withStyle(affinity.color());
-        tooltip.add(Component.translatable("tooltip.yame.staff.affinity").withStyle(ChatFormatting.GRAY)
+        tooltip.accept(Component.translatable("tooltip.yame.staff.affinity").withStyle(ChatFormatting.GRAY)
                 .append(affinityText));
 
         // Firebolt is innate (free); the slot count reflects only the bound (spellbook-taught) spells.
         List<ModSpell> castable = ModDataComponents.getCastableSpells(stack);
         int boundCount = ModDataComponents.getBoundSpells(stack).size();
-        Optional<ModSpell> active = ModDataComponents.getActiveSpell(stack);
-        tooltip.add(Component.translatable("tooltip.yame.staff.spells", boundCount, staff.slots())
+        ModSpell active = ModDataComponents.getActiveSpell(stack).orElse(ModSpell.FIREBOLT);
+        tooltip.accept(Component.translatable("tooltip.yame.staff.spells", boundCount, staff.slots())
                 .withStyle(ChatFormatting.GRAY));
         for (ModSpell spell : castable) {
-            boolean isActive = active.isPresent() && active.get() == spell;
+            boolean isActive = active == spell;
             MutableComponent line = Component.literal((isActive ? " ▸ " : "   ") + spell.element().glyph() + " " + spell.displayName())
                     .withStyle(isActive ? spell.element().color() : ChatFormatting.DARK_GRAY);
             if (spell == ModSpell.FIREBOLT) {
                 line.append(Component.translatable("tooltip.yame.staff.innate").withStyle(ChatFormatting.DARK_GRAY));
             }
-            tooltip.add(line);
+            tooltip.accept(line);
         }
     }
 }

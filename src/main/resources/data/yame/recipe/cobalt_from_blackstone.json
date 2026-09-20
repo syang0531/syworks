@@ -1,6 +1,6 @@
 {
   "type": "yame:extraction",
-  "ingredient": { "item": "minecraft:blackstone" },
+  "ingredient": "minecraft:blackstone",
   "result": { "id": "yame:cobalt_ingot", "count": 1 },
   "processtime": 200
 }

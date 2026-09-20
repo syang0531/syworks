@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:projectile_protection": 3 } }
+      "minecraft:stored_enchantments": { "minecraft:projectile_protection": 3 }
     }
   },
   "catalyst": { "id": "yame:rune" },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "minecraft:projectile_protection": 4 } }
+      "minecraft:stored_enchantments": { "minecraft:projectile_protection": 4 }
     }
   },
   "casttime": 100

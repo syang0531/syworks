@@ -3,14 +3,14 @@
   "base": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:spell_power": 2 } }
+      "minecraft:stored_enchantments": { "yame:spell_power": 2 }
     }
   },
   "catalyst": { "id": "yame:rune", "count": 2 },
   "result": {
     "id": "minecraft:enchanted_book",
     "components": {
-      "minecraft:stored_enchantments": { "levels": { "yame:spell_power": 3 } }
+      "minecraft:stored_enchantments": { "yame:spell_power": 3 }
     }
   },
   "casttime": 100

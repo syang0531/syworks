@@ -12,8 +12,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 /**
  * Container menu for the Rune Altar. Two interchangeable input slots + one output slot that shows
@@ -43,9 +43,9 @@ public class RuneAltarMenu extends AbstractContainerMenu {
         this.blockEntity = blockEntity;
         this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
-        IItemHandler handler = blockEntity.getInventory();
-        addSlot(new SlotItemHandler(handler, RuneAltarBlockEntity.SLOT_BASE, 44, 35));
-        addSlot(new SlotItemHandler(handler, RuneAltarBlockEntity.SLOT_CATALYST, 76, 35));
+        ItemStacksResourceHandler handler = blockEntity.getInventory();
+        addSlot(new ResourceHandlerSlot(handler, handler::set, RuneAltarBlockEntity.SLOT_BASE, 44, 35));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, RuneAltarBlockEntity.SLOT_CATALYST, 76, 35));
         addSlot(new ResultSlot(resultSlots, 134, 35));
 
         for (int row = 0; row < 3; row++) {
@@ -62,7 +62,7 @@ public class RuneAltarMenu extends AbstractContainerMenu {
 
     /** Refresh the output preview from the current inputs (server-authoritative). */
     private void updateResult() {
-        if (blockEntity.getLevel() != null && !blockEntity.getLevel().isClientSide) {
+        if (blockEntity.getLevel() != null && !blockEntity.getLevel().isClientSide()) {
             resultSlots.setItem(0, blockEntity.assembleResult());
         }
     }
@@ -116,7 +116,7 @@ public class RuneAltarMenu extends AbstractContainerMenu {
         }
 
         if (stack.isEmpty()) {
-            slot.set(ItemStack.EMPTY);
+            slot.setByPlayer(ItemStack.EMPTY);
         } else {
             slot.setChanged();
         }

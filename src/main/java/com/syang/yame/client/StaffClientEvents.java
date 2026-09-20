@@ -5,9 +5,10 @@ import com.syang.yame.net.SelectSpellPayload;
 import com.syang.yame.registry.ModDataComponents;
 import com.syang.yame.world.item.ModSpell;
 import com.syang.yame.world.item.StaffItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ import java.util.Optional;
  */
 @EventBusSubscriber(modid = Yame.MOD_ID, value = Dist.CLIENT)
 public final class StaffClientEvents {
+
+    /** Opaque white — GUI colours are ARGB since 1.21.2, so a bare 0xFFFFFF would be invisible. */
+    private static final int WHITE = 0xFFFFFFFF;
 
     private StaffClientEvents() {
     }
@@ -51,7 +55,7 @@ public final class StaffClientEvents {
             return;
         }
         // Scroll up = previous spell, scroll down = next.
-        PacketDistributor.sendToServer(new SelectSpellPayload(delta > 0 ? -1 : 1));
+        ClientPacketDistributor.sendToServer(new SelectSpellPayload(delta > 0 ? -1 : 1));
         event.setCanceled(true);
     }
 
@@ -76,14 +80,14 @@ public final class StaffClientEvents {
         String slots = castable.size() > 1 ? "  (" + (castable.indexOf(spell) + 1) + "/" + castable.size() + ")" : "";
         Component label = Component.literal(spell.element().glyph() + " " + spell.displayName())
                 .withStyle(spell.element().color())
-                .append(Component.literal(slots).withStyle(net.minecraft.ChatFormatting.GRAY));
+                .append(Component.literal(slots).withStyle(ChatFormatting.GRAY));
 
-        GuiGraphics graphics = event.getGuiGraphics();
+        GuiGraphicsExtractor graphics = event.getGuiGraphics();
         Font font = mc.font;
         int width = mc.getWindow().getGuiScaledWidth();
         int height = mc.getWindow().getGuiScaledHeight();
         int x = (width - font.width(label)) / 2;
         int y = height - 59;
-        graphics.drawString(font, label, x, y, 0xFFFFFF, true);
+        graphics.text(font, label, x, y, WHITE, true);
     }
 }
