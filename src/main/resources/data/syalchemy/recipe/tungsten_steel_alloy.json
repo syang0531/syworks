@@ -1,9 +1,0 @@
-{
-  "type": "syalchemy:alloying",
-  "ingredients": [
-    { "ingredient": "syalchemy:steel_ingot", "count": 2 },
-    { "ingredient": "syalchemy:tungsten_ingot", "count": 1 }
-  ],
-  "result": { "id": "syalchemy:tungsten_steel_ingot", "count": 2 },
-  "processtime": 400
-}

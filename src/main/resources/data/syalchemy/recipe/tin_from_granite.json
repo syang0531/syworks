@@ -1,6 +1,0 @@
-{
-  "type": "syalchemy:extraction",
-  "ingredient": "minecraft:granite",
-  "result": { "id": "syalchemy:tin_ingot", "count": 1 },
-  "processtime": 200
-}
