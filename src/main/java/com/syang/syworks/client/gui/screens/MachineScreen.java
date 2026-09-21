@@ -1,6 +1,6 @@
 package com.syang.syworks.client.gui.screens;
 
-import com.syang.syworks.world.inventory.ExtractionFurnaceMenu;
+import com.syang.syworks.world.inventory.MachineMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -9,10 +9,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * Extraction Furnace GUI. Reuses the vanilla furnace background panel and its GUI sprites for
+ * Machine GUI, shared by every machine. Reuses the vanilla furnace background panel and its GUI sprites for
  * the flame (fuel remaining) and progress arrow, drawn at the vanilla slot coordinates.
  */
-public class ExtractionFurnaceScreen extends AbstractContainerScreen<ExtractionFurnaceMenu> {
+public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
 
     private static final Identifier TEXTURE =
             Identifier.withDefaultNamespace("textures/gui/container/furnace.png");
@@ -21,7 +21,7 @@ public class ExtractionFurnaceScreen extends AbstractContainerScreen<ExtractionF
     private static final Identifier BURN_SPRITE =
             Identifier.withDefaultNamespace("container/furnace/burn_progress");
 
-    public ExtractionFurnaceScreen(ExtractionFurnaceMenu menu, Inventory playerInventory, Component title) {
+    public MachineScreen(MachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 

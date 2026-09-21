@@ -2,6 +2,7 @@ package com.syang.syworks.datagen;
 
 import com.syang.syworks.SyWorks;
 import com.syang.syworks.registry.ModBlocks;
+import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -20,6 +21,9 @@ import java.util.concurrent.CompletableFuture;
  * Crafting recipes for the machines themselves. Without these the mod is survival-unobtainable, and
  * they use vanilla-only ingredients so nothing has to exist before them.
  *
+ * <p>The machines' own recipes (what they accept and produce) are hand-written JSON under
+ * {@code data/syworks/recipe/}, because they are tag-driven one-liners rather than patterns.
+ *
  * <p>Since 1.21.4 a {@link RecipeProvider} is created per run by a {@link Runner}; the provider
  * itself only holds the registries and the output.
  */
@@ -32,11 +36,20 @@ public class ModRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes() {
         // Extraction Furnace — a furnace core wrapped in iron.
-        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC, ModBlocks.EXTRACTION_FURNACE.get())
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC,
+                        ModBlocks.MACHINES.get(ModMachine.EXTRACTION_FURNACE).get())
                 .pattern("III").pattern("IFI").pattern("III")
                 .define('I', Items.IRON_INGOT).define('F', Items.FURNACE)
                 .unlockedBy("has_furnace", has(Items.FURNACE))
-                .save(this.output, key("extraction_furnace"));
+                .save(this.output, key(ModMachine.EXTRACTION_FURNACE.id()));
+
+        // Crusher — a piston doing the crushing, braced with iron inside a stone shell.
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC,
+                        ModBlocks.MACHINES.get(ModMachine.CRUSHER).get())
+                .pattern("CIC").pattern("IPI").pattern("CIC")
+                .define('C', Items.COBBLESTONE).define('I', Items.IRON_INGOT).define('P', Items.PISTON)
+                .unlockedBy("has_piston", has(Items.PISTON))
+                .save(this.output, key(ModMachine.CRUSHER.id()));
     }
 
     private static ResourceKey<Recipe<?>> key(String path) {

@@ -2,14 +2,17 @@ package com.syang.syworks.world.level.block.entity;
 
 import com.syang.syworks.registry.ModBlockEntities;
 import com.syang.syworks.registry.ModRecipes;
-import com.syang.syworks.world.inventory.ExtractionFurnaceMenu;
-import com.syang.syworks.world.item.crafting.ExtractionRecipe;
-import com.syang.syworks.world.level.block.ExtractionFurnaceBlock;
+import com.syang.syworks.world.inventory.MachineMenu;
+import com.syang.syworks.world.item.crafting.ProcessingRecipe;
+import com.syang.syworks.world.level.block.MachineBlock;
+import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,19 +26,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Drives the Extraction Furnace: consumes fuel to turn a source item (slot 0) into a metal
- * (slot 2) according to an {@link ExtractionRecipe}. Furnace-style burn + progress.
+ * Drives every machine: burns fuel to turn the input (slot 0) into the output (slot 2) according to
+ * a {@link ProcessingRecipe} of its own {@link ModMachine}'s type. Furnace-style burn + progress.
  *
  * <p>The inventory is a NeoForge {@link ItemStacksResourceHandler} (the 1.21.9+ transfer API):
  * it is what hoppers see through the item capability and what the menu's slots wrap.
+ *
+ * <p>Experience accumulates as runs finish and is paid out when a player takes the output, exactly
+ * as a furnace does — so a hopper can drain the machine, but only a person collects the XP.
  */
-public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuProvider {
+public class MachineBlockEntity extends BlockEntity implements MenuProvider {
 
     public static final int SLOT_INPUT = 0;
     public static final int SLOT_FUEL = 1;
@@ -43,6 +50,8 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
     public static final int SLOT_COUNT = 3;
 
     private static final int DEFAULT_PROCESS_TIME = 200;
+
+    private final ModMachine machine;
 
     private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(SLOT_COUNT) {
         @Override
@@ -64,6 +73,7 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
     private int litDuration;   // total ticks the current fuel unit burns
     private int progress;      // ticks progressed on the current item
     private int maxProgress = DEFAULT_PROCESS_TIME;
+    private float storedExperience;
 
     private final ContainerData dataAccess = new ContainerData() {
         @Override
@@ -93,8 +103,13 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
         }
     };
 
-    public ExtractionFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.EXTRACTION_FURNACE.get(), pos, state);
+    public MachineBlockEntity(ModMachine machine, BlockPos pos, BlockState state) {
+        super(ModBlockEntities.MACHINES.get(machine).get(), pos, state);
+        this.machine = machine;
+    }
+
+    public ModMachine machine() {
+        return machine;
     }
 
     public ItemStacksResourceHandler getInventory() {
@@ -134,7 +149,7 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
             litTime--;
         }
 
-        ExtractionRecipe recipe = getCurrentRecipe();
+        ProcessingRecipe recipe = getCurrentRecipe();
         boolean canProcess = canProcess(recipe);
         ItemStack fuel = stackIn(SLOT_FUEL);
 
@@ -173,7 +188,7 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
 
         if (wasLit != isLit()) {
             changed = true;
-            state = state.setValue(ExtractionFurnaceBlock.LIT, isLit());
+            state = state.setValue(MachineBlock.LIT, isLit());
             level.setBlock(pos, state, Block.UPDATE_ALL);
         }
         if (changed) {
@@ -182,34 +197,68 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
     }
 
     @Nullable
-    private ExtractionRecipe getCurrentRecipe() {
+    private ProcessingRecipe getCurrentRecipe() {
         if (!(level instanceof ServerLevel server)) {
             return null;
         }
         return server.recipeAccess()
-                .getRecipeFor(ModRecipes.EXTRACTION_TYPE.get(), new SingleRecipeInput(stackIn(SLOT_INPUT)), server)
+                .getRecipeFor(ModRecipes.TYPES.get(machine).get(), new SingleRecipeInput(stackIn(SLOT_INPUT)), server)
                 .map(RecipeHolder::value)
                 .orElse(null);
     }
 
-    private boolean canProcess(@Nullable ExtractionRecipe recipe) {
-        if (recipe == null || stackIn(SLOT_INPUT).isEmpty()) {
+    private boolean canProcess(@Nullable ProcessingRecipe recipe) {
+        if (recipe == null) {
+            return false;
+        }
+        // matches() already checked the count, but the stack can shrink between ticks.
+        if (stackIn(SLOT_INPUT).getCount() < recipe.inputCount()) {
             return false;
         }
         return FurnaceSupport.outputAccepts(stackIn(SLOT_OUTPUT), recipe.result().create());
     }
 
-    private void craft(ExtractionRecipe recipe) {
+    private void craft(ProcessingRecipe recipe) {
         ItemStack result = recipe.assemble(new SingleRecipeInput(stackIn(SLOT_INPUT)));
-        take(SLOT_INPUT, 1);
+        take(SLOT_INPUT, recipe.inputCount());
         FurnaceSupport.addToOutput(inventory, SLOT_OUTPUT, result);
+        storedExperience += recipe.experience();
+    }
+
+    /**
+     * Pays out everything earned since the last collection, rounding the fractional remainder by
+     * chance so small per-run values still add up honestly over many runs (vanilla does the same).
+     * Called by the output slot when a player takes from it.
+     */
+    public void awardExperience(Player player) {
+        if (!(level instanceof ServerLevel server) || storedExperience <= 0.0F) {
+            return;
+        }
+        int whole = Mth.floor(storedExperience);
+        float fraction = storedExperience - whole;
+        if (fraction > 0.0F && server.getRandom().nextFloat() < fraction) {
+            whole++;
+        }
+        storedExperience = 0.0F;
+        setChanged();
+        if (whole > 0) {
+            ExperienceOrb.award(server, player.position(), whole);
+        }
     }
 
     /** Called by the chunk right before this block entity is removed (block broken / replaced). */
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
-        if (level != null) {
+        if (level instanceof ServerLevel server) {
+            Containers.dropContents(level, pos, inventory.copyToList());
+            // Don't silently eat what the machine already earned.
+            int whole = Mth.floor(storedExperience);
+            if (whole > 0) {
+                ExperienceOrb.award(server, Vec3.atCenterOf(pos), whole);
+            }
+            storedExperience = 0.0F;
+        } else if (level != null) {
             Containers.dropContents(level, pos, inventory.copyToList());
         }
     }
@@ -218,13 +267,13 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.syworks.extraction_furnace");
+        return Component.translatable(machine.translationKey());
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-        return new ExtractionFurnaceMenu(id, playerInventory, this, dataAccess);
+        return new MachineMenu(machine, id, playerInventory, this, dataAccess);
     }
 
     // --- persistence (ValueIO since 1.21.6) ---
@@ -237,6 +286,7 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
         output.putInt("LitDuration", litDuration);
         output.putInt("Progress", progress);
         output.putInt("MaxProgress", maxProgress);
+        output.putFloat("Experience", storedExperience);
     }
 
     @Override
@@ -247,5 +297,6 @@ public class ExtractionFurnaceBlockEntity extends BlockEntity implements MenuPro
         litDuration = input.getIntOr("LitDuration", 0);
         progress = input.getIntOr("Progress", 0);
         maxProgress = input.getIntOr("MaxProgress", DEFAULT_PROCESS_TIME);
+        storedExperience = input.getFloatOr("Experience", 0.0F);
     }
 }

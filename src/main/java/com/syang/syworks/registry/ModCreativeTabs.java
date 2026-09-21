@@ -1,6 +1,7 @@
 package com.syang.syworks.registry;
 
 import com.syang.syworks.SyWorks;
+import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -18,8 +19,12 @@ public final class ModCreativeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN = TABS.register("main",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.syworks.main"))
-                    .icon(() -> new ItemStack(ModBlocks.EXTRACTION_FURNACE.get()))
-                    .displayItems((params, output) -> output.accept(ModBlocks.EXTRACTION_FURNACE.get()))
+                    .icon(() -> new ItemStack(ModBlocks.MACHINES.get(ModMachine.CRUSHER).get()))
+                    .displayItems((params, output) -> {
+                        for (ModMachine machine : ModMachine.values()) {
+                            output.accept(ModBlocks.MACHINES.get(machine).get());
+                        }
+                    })
                     .build());
 
     private ModCreativeTabs() {

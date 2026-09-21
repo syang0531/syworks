@@ -1,8 +1,9 @@
 package com.syang.syworks.world.level.block;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.syang.syworks.registry.ModBlockEntities;
-import com.syang.syworks.world.level.block.entity.ExtractionFurnaceBlockEntity;
+import com.syang.syworks.world.level.block.entity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,29 +32,38 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The Extraction Furnace (추출로): a furnace-like machine that turns vanilla natural blocks into
- * pure metals. Backed by {@link ExtractionFurnaceBlockEntity}.
- *
- * <p>Has a {@link #FACING} (front toward the placer) and a {@link #LIT} state; the block
- * entity flips {@code LIT} while it is burning fuel, which swaps to the glowing front
- * model and drives {@link #animateTick} (smoke + soul-flame particles + crackle sound).
+ * Every machine's block, told apart only by its {@link ModMachine}. Furnace-like: it has a
+ * {@link #FACING} (front toward the placer) and a {@link #LIT} state, and the block entity flips
+ * {@code LIT} while burning fuel, which swaps in the glowing front model and drives
+ * {@link #animateTick} (smoke + soul-flame particles + crackle sound).
  */
-public class ExtractionFurnaceBlock extends Block implements EntityBlock {
+public class MachineBlock extends Block implements EntityBlock {
 
-    public static final MapCodec<ExtractionFurnaceBlock> CODEC = simpleCodec(ExtractionFurnaceBlock::new);
+    public static final MapCodec<MachineBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
+                    ModMachine.CODEC.fieldOf("machine").forGetter(MachineBlock::machine),
+                    propertiesCodec()
+            ).apply(instance, MachineBlock::new));
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public ExtractionFurnaceBlock(Properties properties) {
+    private final ModMachine machine;
+
+    public MachineBlock(ModMachine machine, Properties properties) {
         super(properties);
+        this.machine = machine;
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(LIT, Boolean.FALSE));
     }
 
+    public ModMachine machine() {
+        return machine;
+    }
+
     @Override
-    protected MapCodec<? extends ExtractionFurnaceBlock> codec() {
+    protected MapCodec<? extends MachineBlock> codec() {
         return CODEC;
     }
 
@@ -92,7 +102,7 @@ public class ExtractionFurnaceBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ExtractionFurnaceBlockEntity(pos, state);
+        return new MachineBlockEntity(machine, pos, state);
     }
 
     @Nullable
@@ -102,7 +112,7 @@ public class ExtractionFurnaceBlock extends Block implements EntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return createTickerHelper(type, ModBlockEntities.EXTRACTION_FURNACE.get(),
+        return createTickerHelper(type, ModBlockEntities.MACHINES.get(machine).get(),
                 (lvl, pos, st, be) -> be.tick(lvl, pos, st));
     }
 
@@ -110,8 +120,8 @@ public class ExtractionFurnaceBlock extends Block implements EntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                Player player, BlockHitResult hitResult) {
         if (player instanceof ServerPlayer serverPlayer
-                && level.getBlockEntity(pos) instanceof ExtractionFurnaceBlockEntity furnace) {
-            serverPlayer.openMenu(furnace, buf -> buf.writeBlockPos(pos));
+                && level.getBlockEntity(pos) instanceof MachineBlockEntity machineEntity) {
+            serverPlayer.openMenu(machineEntity, buf -> buf.writeBlockPos(pos));
         }
         return InteractionResult.SUCCESS;
     }

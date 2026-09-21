@@ -2,6 +2,7 @@ package com.syang.syworks.datagen;
 
 import com.syang.syworks.SyWorks;
 import com.syang.syworks.registry.ModBlocks;
+import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
@@ -26,6 +27,8 @@ public class ModModelProvider extends ModelProvider {
 
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        blockModels.createFurnace(ModBlocks.EXTRACTION_FURNACE.get(), TexturedModel.ORIENTABLE_ONLY_TOP);
+        for (ModMachine machine : ModMachine.values()) {
+            blockModels.createFurnace(ModBlocks.MACHINES.get(machine).get(), TexturedModel.ORIENTABLE_ONLY_TOP);
+        }
     }
 }

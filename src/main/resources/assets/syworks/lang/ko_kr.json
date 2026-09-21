@@ -1,5 +1,6 @@
 {
-  "itemGroup.syworks.main": "SY 연금술",
+  "itemGroup.syworks.main": "SY Works",
 
-  "block.syworks.extraction_furnace": "추출로"
+  "block.syworks.extraction_furnace": "추출로",
+  "block.syworks.crusher": "분쇄기"
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:cobblestone",
+    "I": "minecraft:iron_ingot",
+    "P": "minecraft:piston"
+  },
+  "pattern": [
+    "CIC",
+    "IPI",
+    "CIC"
+  ],
+  "result": {
+    "id": "syworks:crusher"
+  }
+}
