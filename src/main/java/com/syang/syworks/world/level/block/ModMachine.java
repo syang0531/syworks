@@ -31,7 +31,13 @@ public enum ModMachine implements StringRepresentable {
      * Comminution. Takes every rock and every stair/wall/slab cut from one, plus dirt and calcite,
      * and grinds them down the one chain: rock → gravel → sand.
      */
-    CRUSHER("crusher", "Crusher", "crushing");
+    CRUSHER("crusher", "Crusher", "crushing"),
+
+    /**
+     * Pyrolysis. Chars the wooden things a furnace refuses — planks, stairs, fences, doors, sticks —
+     * and pays double, because a machine built for one job should be better at it than the furnace.
+     */
+    CHARCOAL_KILN("charcoal_kiln", "Charcoal Kiln", "charring");
 
     /** Used by the block codec, which has to name its machine when a block is serialized. */
     public static final Codec<ModMachine> CODEC = StringRepresentable.fromEnum(ModMachine::values);

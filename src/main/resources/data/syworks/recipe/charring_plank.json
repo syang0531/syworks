@@ -1,0 +1,8 @@
+{
+  "type": "syworks:charring",
+  "ingredient": "#syworks:charrable/plank",
+  "count": 2,
+  "result": { "id": "minecraft:charcoal", "count": 1 },
+  "processtime": 200,
+  "experience": 0.1
+}

@@ -50,6 +50,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('C', Items.COBBLESTONE).define('I', Items.IRON_INGOT).define('P', Items.PISTON)
                 .unlockedBy("has_piston", has(Items.PISTON))
                 .save(this.output, key(ModMachine.CRUSHER.id()));
+
+        // Charcoal Kiln — a furnace sealed in fired clay, which is what a real charcoal kiln is.
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC,
+                        ModBlocks.MACHINES.get(ModMachine.CHARCOAL_KILN).get())
+                .pattern("BBB").pattern("BFB").pattern("BBB")
+                .define('B', Items.BRICK).define('F', Items.FURNACE)
+                .unlockedBy("has_brick", has(Items.BRICK))
+                .save(this.output, key(ModMachine.CHARCOAL_KILN.id()));
     }
 
     private static ResourceKey<Recipe<?>> key(String path) {

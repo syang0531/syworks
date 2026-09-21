@@ -42,6 +42,18 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     /** Soil → sand, skipping gravel: soil is already sand, silt and clay, not rock. */
     public static final TagKey<Item> CRUSHABLE_SOIL = tag("crushable/soil");
 
+    /**
+     * Kiln, plank tier → 1 charcoal per 2. A plank is a quarter of a log and a log gives 2, so two
+     * planks are exactly break-even; everything else in this tier costs more wood than a plank and
+     * is therefore a loss. No crafting route gains charcoal.
+     */
+    public static final TagKey<Item> CHARRABLE_PLANK = tag("charrable/plank");
+    /**
+     * Kiln, small tier → 1 charcoal per 4. A slab and a stick are each an eighth of a log, so four
+     * of either is break-even; buttons, ladders and bowls cost more and are a loss.
+     */
+    public static final TagKey<Item> CHARRABLE_SMALL = tag("charrable/small");
+
     private static TagKey<Item> tag(String path) {
         return ItemTags.create(Identifier.fromNamespaceAndPath(SyWorks.MOD_ID, path));
     }
@@ -109,6 +121,37 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         // ----- lime and soil -----
         add(CRUSHABLE_LIME, Items.CALCITE, Items.DRIPSTONE_BLOCK);
         add(CRUSHABLE_SOIL, Items.DIRT, Items.COARSE_DIRT, Items.ROOTED_DIRT);
+
+        // ----- kiln: the wooden things a furnace refuses -----
+        // Logs are not listed: they come in through the vanilla #minecraft:logs_that_burn tag, which
+        // already excludes crimson and warped (fungus, not wood) and bamboo (a grass).
+        wood(Items.OAK_PLANKS, Items.OAK_STAIRS, Items.OAK_SLAB, Items.OAK_FENCE, Items.OAK_FENCE_GATE,
+                Items.OAK_DOOR, Items.OAK_TRAPDOOR, Items.OAK_SIGN, Items.OAK_BUTTON, Items.OAK_PRESSURE_PLATE);
+        wood(Items.SPRUCE_PLANKS, Items.SPRUCE_STAIRS, Items.SPRUCE_SLAB, Items.SPRUCE_FENCE, Items.SPRUCE_FENCE_GATE,
+                Items.SPRUCE_DOOR, Items.SPRUCE_TRAPDOOR, Items.SPRUCE_SIGN, Items.SPRUCE_BUTTON, Items.SPRUCE_PRESSURE_PLATE);
+        wood(Items.BIRCH_PLANKS, Items.BIRCH_STAIRS, Items.BIRCH_SLAB, Items.BIRCH_FENCE, Items.BIRCH_FENCE_GATE,
+                Items.BIRCH_DOOR, Items.BIRCH_TRAPDOOR, Items.BIRCH_SIGN, Items.BIRCH_BUTTON, Items.BIRCH_PRESSURE_PLATE);
+        wood(Items.JUNGLE_PLANKS, Items.JUNGLE_STAIRS, Items.JUNGLE_SLAB, Items.JUNGLE_FENCE, Items.JUNGLE_FENCE_GATE,
+                Items.JUNGLE_DOOR, Items.JUNGLE_TRAPDOOR, Items.JUNGLE_SIGN, Items.JUNGLE_BUTTON, Items.JUNGLE_PRESSURE_PLATE);
+        wood(Items.ACACIA_PLANKS, Items.ACACIA_STAIRS, Items.ACACIA_SLAB, Items.ACACIA_FENCE, Items.ACACIA_FENCE_GATE,
+                Items.ACACIA_DOOR, Items.ACACIA_TRAPDOOR, Items.ACACIA_SIGN, Items.ACACIA_BUTTON, Items.ACACIA_PRESSURE_PLATE);
+        wood(Items.DARK_OAK_PLANKS, Items.DARK_OAK_STAIRS, Items.DARK_OAK_SLAB, Items.DARK_OAK_FENCE, Items.DARK_OAK_FENCE_GATE,
+                Items.DARK_OAK_DOOR, Items.DARK_OAK_TRAPDOOR, Items.DARK_OAK_SIGN, Items.DARK_OAK_BUTTON, Items.DARK_OAK_PRESSURE_PLATE);
+        wood(Items.MANGROVE_PLANKS, Items.MANGROVE_STAIRS, Items.MANGROVE_SLAB, Items.MANGROVE_FENCE, Items.MANGROVE_FENCE_GATE,
+                Items.MANGROVE_DOOR, Items.MANGROVE_TRAPDOOR, Items.MANGROVE_SIGN, Items.MANGROVE_BUTTON, Items.MANGROVE_PRESSURE_PLATE);
+        wood(Items.CHERRY_PLANKS, Items.CHERRY_STAIRS, Items.CHERRY_SLAB, Items.CHERRY_FENCE, Items.CHERRY_FENCE_GATE,
+                Items.CHERRY_DOOR, Items.CHERRY_TRAPDOOR, Items.CHERRY_SIGN, Items.CHERRY_BUTTON, Items.CHERRY_PRESSURE_PLATE);
+        wood(Items.PALE_OAK_PLANKS, Items.PALE_OAK_STAIRS, Items.PALE_OAK_SLAB, Items.PALE_OAK_FENCE, Items.PALE_OAK_FENCE_GATE,
+                Items.PALE_OAK_DOOR, Items.PALE_OAK_TRAPDOOR, Items.PALE_OAK_SIGN, Items.PALE_OAK_BUTTON, Items.PALE_OAK_PRESSURE_PLATE);
+
+        add(CHARRABLE_SMALL, Items.STICK, Items.LADDER, Items.BOWL);
+    }
+
+    /** One wood type. Hanging signs are left out on purpose — they hold iron chains. */
+    private void wood(Item planks, Item stairs, Item slab, Item fence, Item gate,
+                      Item door, Item trapdoor, Item sign, Item button, Item plate) {
+        add(CHARRABLE_PLANK, planks, stairs, fence, gate, door, trapdoor, sign, plate);
+        add(CHARRABLE_SMALL, slab, button);
     }
 
     private void rock(Item... items) {

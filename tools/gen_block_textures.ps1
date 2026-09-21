@@ -1,11 +1,12 @@
 Add-Type -AssemblyName System.Drawing
 
 # ---------------------------------------------------------------------------
-# Machine block textures for the Extraction Furnace (추출로) and the Crusher (분쇄기).
+# Machine block textures for the Extraction Furnace (추출로), Crusher (분쇄기) and Charcoal Kiln (숯가마).
 # Built by recoloring the vanilla furnace textures (so they read
 # as believable furnace-family machines) and adding a distinct accent + glow:
 #   Extraction Furnace = stone furnace body recolored steel-blue, CYAN intake glow.
 #   Crusher            = blast-furnace metal body recolored slate gray, AMBER grinding glow.
+#   Charcoal Kiln      = fired-clay body, dark bands, EMBER glow (earthy, not metal).
 # Each block gets 4 faces: _side, _top, _front, _front_on (lit).
 # ---------------------------------------------------------------------------
 
@@ -124,4 +125,12 @@ $s=Recolor (Load 'blast_furnace_side')  $crTint $crBase $false; Add-Rivets $s $c
 $fr=Recolor (Load 'blast_furnace_front') $crTint $crBase $false; Add-Rivets $fr $crAccent; Add-Band $fr $crAccent 3; Save $fr 'crusher_front'; $fr.Dispose()
 $fo=Recolor (Load 'blast_furnace_front_on') $crTint $crBase $true; Add-Rivets $fo $crAccent; Add-Band $fo $crAccent 3; Add-Glow $fo 'FFE9B0' 'C4761A'; Save $fo 'crusher_front_on'; $fo.Dispose()
 
-Write-Output "Generated 8 machine block textures in $root"
+# ---------------- Charcoal Kiln (숯가마): fired-clay body + ember glow ----------------
+# Earthy terracotta rather than metal: a real charcoal kiln is a clay-sealed mound, not a machine.
+$ckTint='A8613E'; $ckAccent='2E241E'; $ckBase=150.0
+$t=Recolor (Load 'furnace_top')   $ckTint $ckBase $false; Add-Rivets $t $ckAccent; Save $t 'charcoal_kiln_top'; $t.Dispose()
+$s=Recolor (Load 'furnace_side')  $ckTint $ckBase $false; Add-Rivets $s $ckAccent; Add-Band $s $ckAccent 3; Save $s 'charcoal_kiln_side'; $s.Dispose()
+$fr=Recolor (Load 'furnace_front') $ckTint $ckBase $false; Add-Rivets $fr $ckAccent; Add-Band $fr $ckAccent 3; Save $fr 'charcoal_kiln_front'; $fr.Dispose()
+$fo=Recolor (Load 'furnace_front') $ckTint $ckBase $false; Add-Rivets $fo $ckAccent; Add-Band $fo $ckAccent 3; Add-Glow $fo 'FFD9A0' 'B33A12'; Save $fo 'charcoal_kiln_front_on'; $fo.Dispose()
+
+Write-Output "Generated 12 machine block textures in $root"
