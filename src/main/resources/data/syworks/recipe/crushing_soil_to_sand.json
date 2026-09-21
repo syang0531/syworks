@@ -1,0 +1,7 @@
+{
+  "type": "syworks:crushing",
+  "ingredient": "#syworks:crushable/soil",
+  "result": { "id": "minecraft:sand", "count": 1 },
+  "processtime": 200,
+  "experience": 0.05
+}

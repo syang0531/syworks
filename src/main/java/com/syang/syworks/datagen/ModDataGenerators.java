@@ -23,5 +23,6 @@ public final class ModDataGenerators {
         event.createProvider(ModModelProvider::new);
         event.createProvider(ModEnglishLangProvider::new);
         event.createProvider(ModRecipeProvider.Runner::new);
+        event.createProvider(ModItemTagsProvider::new);
     }
 }

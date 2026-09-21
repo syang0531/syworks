@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "syworks:block/extraction_furnace"
+    "model": "syworks:block/ore_roaster"
   }
 }

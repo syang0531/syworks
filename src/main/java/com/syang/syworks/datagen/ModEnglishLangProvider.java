@@ -2,6 +2,7 @@ package com.syang.syworks.datagen;
 
 import com.syang.syworks.SyWorks;
 import com.syang.syworks.registry.ModBlocks;
+import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -18,6 +19,8 @@ public class ModEnglishLangProvider extends LanguageProvider {
     protected void addTranslations() {
         add("itemGroup.syworks.main", "SY Works");
 
-        add(ModBlocks.EXTRACTION_FURNACE.get(), "Extraction Furnace");
+        for (ModMachine machine : ModMachine.values()) {
+            add(ModBlocks.MACHINES.get(machine).get(), machine.displayName());
+        }
     }
 }

@@ -1,0 +1,7 @@
+{
+  "type": "syworks:charring",
+  "ingredient": "#minecraft:logs_that_burn",
+  "result": { "id": "minecraft:charcoal", "count": 2 },
+  "processtime": 200,
+  "experience": 0.15
+}

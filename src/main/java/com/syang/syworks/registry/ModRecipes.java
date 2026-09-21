@@ -1,19 +1,23 @@
 package com.syang.syworks.registry;
 
 import com.syang.syworks.SyWorks;
-import com.syang.syworks.world.item.crafting.ExtractionRecipe;
+import com.syang.syworks.world.item.crafting.ProcessingRecipe;
+import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * Recipe types, serializers and recipe-book categories for the machines.
+ * A recipe type, serializer and recipe-book category per {@link ModMachine}. Giving each machine
+ * its own type is what stops a crusher recipe firing in the roaster — and it means each machine's
+ * block entity can ask the recipe manager for exactly its own recipes.
  *
  * <p>Since 1.21.2 a {@link RecipeSerializer} is a plain record of (codec, stream codec), and every
  * recipe must name a {@link RecipeBookCategory}; ours are registered here but never shown in the
@@ -28,19 +32,25 @@ public final class ModRecipes {
     public static final DeferredRegister<RecipeBookCategory> BOOK_CATEGORIES =
             DeferredRegister.create(Registries.RECIPE_BOOK_CATEGORY, SyWorks.MOD_ID);
 
-    public static final Supplier<RecipeType<ExtractionRecipe>> EXTRACTION_TYPE =
-            RECIPE_TYPES.register("extraction", () -> RecipeType.simple(id("extraction")));
-    public static final Supplier<RecipeSerializer<ExtractionRecipe>> EXTRACTION_SERIALIZER =
-            RECIPE_SERIALIZERS.register("extraction",
-                    () -> new RecipeSerializer<>(ExtractionRecipe.CODEC, ExtractionRecipe.STREAM_CODEC));
-    public static final Supplier<RecipeBookCategory> EXTRACTION_CATEGORY =
-            BOOK_CATEGORIES.register("extraction", RecipeBookCategory::new);
+    public static final Map<ModMachine, Supplier<RecipeType<ProcessingRecipe>>> TYPES =
+            new EnumMap<>(ModMachine.class);
+    public static final Map<ModMachine, Supplier<RecipeSerializer<ProcessingRecipe>>> SERIALIZERS =
+            new EnumMap<>(ModMachine.class);
+    public static final Map<ModMachine, Supplier<RecipeBookCategory>> CATEGORIES =
+            new EnumMap<>(ModMachine.class);
 
-    private ModRecipes() {
+    static {
+        for (ModMachine machine : ModMachine.values()) {
+            String id = machine.recipeId();
+            TYPES.put(machine, RECIPE_TYPES.register(id,
+                    () -> RecipeType.simple(machine.recipeKey())));
+            SERIALIZERS.put(machine, RECIPE_SERIALIZERS.register(id,
+                    () -> new RecipeSerializer<>(ProcessingRecipe.codec(machine), ProcessingRecipe.streamCodec(machine))));
+            CATEGORIES.put(machine, BOOK_CATEGORIES.register(id, RecipeBookCategory::new));
+        }
     }
 
-    private static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(SyWorks.MOD_ID, path);
+    private ModRecipes() {
     }
 
     public static void register(IEventBus modBus) {

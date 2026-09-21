@@ -1,0 +1,7 @@
+{
+  "type": "syworks:crushing",
+  "ingredient": "#syworks:crushable/rock",
+  "result": { "id": "minecraft:gravel", "count": 1 },
+  "processtime": 200,
+  "experience": 0.05
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "syworks:block/ore_roaster_front_on",
+    "side": "syworks:block/ore_roaster_side",
+    "top": "syworks:block/ore_roaster_top"
+  }
+}

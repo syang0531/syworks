@@ -1,0 +1,8 @@
+{
+  "type": "syworks:crushing",
+  "ingredient": "#syworks:crushable/tuff_half",
+  "count": 2,
+  "result": { "id": "minecraft:clay_ball", "count": 1 },
+  "processtime": 200,
+  "experience": 0.1
+}

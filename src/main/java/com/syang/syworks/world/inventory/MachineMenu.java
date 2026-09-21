@@ -2,49 +2,53 @@ package com.syang.syworks.world.inventory;
 
 import com.syang.syworks.registry.ModBlocks;
 import com.syang.syworks.registry.ModMenuTypes;
-import com.syang.syworks.world.level.block.entity.ExtractionFurnaceBlockEntity;
+import com.syang.syworks.world.level.block.ModMachine;
+import com.syang.syworks.world.level.block.entity.MachineBlockEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 /**
- * Container menu for the Extraction Furnace. Slot layout matches the vanilla furnace so the
- * furnace GUI texture can be reused: input (56,17), fuel (56,53), output (116,35).
+ * Container menu shared by every machine. The slot layout matches the vanilla furnace so its GUI
+ * texture can be reused: input (56,17), fuel (56,53), output (116,35).
  */
-public class ExtractionFurnaceMenu extends AbstractContainerMenu {
+public class MachineMenu extends AbstractContainerMenu {
 
-    private static final int MACHINE_SLOTS = ExtractionFurnaceBlockEntity.SLOT_COUNT; // 3
+    private static final int MACHINE_SLOTS = MachineBlockEntity.SLOT_COUNT; // 3
     private static final int INV_START = MACHINE_SLOTS;
     private static final int HOTBAR_START = MACHINE_SLOTS + 27;
     private static final int TOTAL_SLOTS = MACHINE_SLOTS + 36;
 
+    private final ModMachine machine;
     private final ContainerLevelAccess access;
     private final ContainerData data;
 
     /** Client-side constructor: reads the block position from the network buffer. */
-    public ExtractionFurnaceMenu(int id, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        this(id, playerInventory,
-                (ExtractionFurnaceBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()),
+    public MachineMenu(ModMachine machine, int id, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+        this(machine, id, playerInventory,
+                (MachineBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()),
                 new SimpleContainerData(4));
     }
 
-    public ExtractionFurnaceMenu(int id, Inventory playerInventory, ExtractionFurnaceBlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.EXTRACTION_FURNACE.get(), id);
+    public MachineMenu(ModMachine machine, int id, Inventory playerInventory,
+                       MachineBlockEntity blockEntity, ContainerData data) {
+        super(ModMenuTypes.MACHINES.get(machine).get(), id);
+        this.machine = machine;
         this.data = data;
         this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
         ItemStacksResourceHandler handler = blockEntity.getInventory();
-        addSlot(new ResourceHandlerSlot(handler, handler::set, ExtractionFurnaceBlockEntity.SLOT_INPUT, 56, 17));
-        addSlot(new ResourceHandlerSlot(handler, handler::set, ExtractionFurnaceBlockEntity.SLOT_FUEL, 56, 53));
-        addSlot(new OutputSlot(handler, ExtractionFurnaceBlockEntity.SLOT_OUTPUT, 116, 35));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, MachineBlockEntity.SLOT_INPUT, 56, 17));
+        addSlot(new ResourceHandlerSlot(handler, handler::set, MachineBlockEntity.SLOT_FUEL, 56, 53));
+        addSlot(new OutputSlot(handler, blockEntity, MachineBlockEntity.SLOT_OUTPUT, 116, 35));
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
@@ -75,12 +79,12 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
                 // Player inventory → machine (fuel if burnable, otherwise input).
                 boolean moved = false;
                 if (player.level().fuelValues().burnDuration(stack) > 0) {
-                    moved = moveItemStackTo(stack, ExtractionFurnaceBlockEntity.SLOT_FUEL,
-                            ExtractionFurnaceBlockEntity.SLOT_FUEL + 1, false);
+                    moved = moveItemStackTo(stack, MachineBlockEntity.SLOT_FUEL,
+                            MachineBlockEntity.SLOT_FUEL + 1, false);
                 }
                 if (!moved) {
-                    moved = moveItemStackTo(stack, ExtractionFurnaceBlockEntity.SLOT_INPUT,
-                            ExtractionFurnaceBlockEntity.SLOT_INPUT + 1, false);
+                    moved = moveItemStackTo(stack, MachineBlockEntity.SLOT_INPUT,
+                            MachineBlockEntity.SLOT_INPUT + 1, false);
                 }
                 if (!moved) {
                     // Shuffle between main inventory and hotbar.
@@ -109,7 +113,7 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(access, player, ModBlocks.EXTRACTION_FURNACE.get());
+        return stillValid(access, player, ModBlocks.MACHINES.get(machine).get());
     }
 
     // --- GUI helpers ---
@@ -135,14 +139,25 @@ public class ExtractionFurnaceMenu extends AbstractContainerMenu {
         return (max == 0 || prog == 0) ? 0 : prog * 24 / max;
     }
 
+    /** Take-only, and paying out the machine's accumulated experience — exactly like a furnace. */
     private static class OutputSlot extends ResourceHandlerSlot {
-        OutputSlot(ItemStacksResourceHandler handler, int index, int x, int y) {
+
+        private final MachineBlockEntity blockEntity;
+
+        OutputSlot(ItemStacksResourceHandler handler, MachineBlockEntity blockEntity, int index, int x, int y) {
             super(handler, handler::set, index, x, y);
+            this.blockEntity = blockEntity;
         }
 
         @Override
         public boolean mayPlace(ItemStack stack) {
             return false;
+        }
+
+        @Override
+        public void onTake(Player player, ItemStack stack) {
+            blockEntity.awardExperience(player);
+            super.onTake(player, stack);
         }
     }
 }

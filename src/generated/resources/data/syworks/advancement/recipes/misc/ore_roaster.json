@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "syworks:extraction_furnace"
+        "recipe": "syworks:ore_roaster"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "syworks:extraction_furnace"
+      "syworks:ore_roaster"
     ]
   }
 }

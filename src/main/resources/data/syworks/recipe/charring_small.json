@@ -1,0 +1,8 @@
+{
+  "type": "syworks:charring",
+  "ingredient": "#syworks:charrable/small",
+  "count": 4,
+  "result": { "id": "minecraft:charcoal", "count": 1 },
+  "processtime": 200,
+  "experience": 0.05
+}
