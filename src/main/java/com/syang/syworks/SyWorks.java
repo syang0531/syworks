@@ -13,13 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SY Works (formerly Yame) — main mod entrypoint.
+ * SY Works — main mod entrypoint.
  *
  * <p>Wires up every {@code DeferredRegister} to the mod event bus. All content
  * (the machines) is declared in the {@code registry} package.
  *
- * <p>Targets Minecraft 26.2 / NeoForge 26.2 (Java 25), the same stack as the sibling
- * {@code placitum} mod so the two can be played together.
+ * <p>Targets Minecraft 26.2 / NeoForge 26.2 (Java 25).
  */
 @Mod(SyWorks.MOD_ID)
 public class SyWorks {
