@@ -1,10 +1,10 @@
 Add-Type -AssemblyName System.Drawing
 
 # ---------------------------------------------------------------------------
-# Machine block textures for the Extraction Furnace (추출로), Crusher (분쇄기) and Charcoal Kiln (숯가마).
+# Machine block textures for the Ore Roaster (배소로), Crusher (분쇄기) and Charcoal Kiln (숯가마).
 # Built by recoloring the vanilla furnace textures (so they read
 # as believable furnace-family machines) and adding a distinct accent + glow:
-#   Extraction Furnace = stone furnace body recolored steel-blue, CYAN intake glow.
+#   Ore Roaster        = stone furnace body recolored steel-blue, CYAN heat glow.
 #   Crusher            = blast-furnace metal body recolored slate gray, AMBER grinding glow.
 #   Charcoal Kiln      = fired-clay body, dark bands, EMBER glow (earthy, not metal).
 # Each block gets 4 faces: _side, _top, _front, _front_on (lit).
@@ -110,15 +110,15 @@ function Add-Glow([System.Drawing.Bitmap]$b,[string]$coreHex,[string]$edgeHex){
 
 Ensure-FurnaceBases
 
-# ---------------- Extraction Furnace (추출로): steel-blue + cyan ----------------
+# ---------------- Ore Roaster (배소로): steel-blue + cyan ----------------
 $exTint='5E7488'; $exAccent='34C7E0'; $exBase=150.0
-$t=Recolor (Load 'furnace_top')   $exTint $exBase $false; Add-Rivets $t $exAccent; Save $t 'extraction_furnace_top'; $t.Dispose()
-$s=Recolor (Load 'furnace_side')  $exTint $exBase $false; Add-Rivets $s $exAccent; Add-Band $s $exAccent 3; Save $s 'extraction_furnace_side'; $s.Dispose()
-$fr=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fr $exAccent; Add-Band $fr $exAccent 3; Save $fr 'extraction_furnace_front'; $fr.Dispose()
-$fo=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fo $exAccent; Add-Band $fo $exAccent 3; Add-Glow $fo 'EAFDFF' '1E9FC0'; Save $fo 'extraction_furnace_front_on'; $fo.Dispose()
+$t=Recolor (Load 'furnace_top')   $exTint $exBase $false; Add-Rivets $t $exAccent; Save $t 'ore_roaster_top'; $t.Dispose()
+$s=Recolor (Load 'furnace_side')  $exTint $exBase $false; Add-Rivets $s $exAccent; Add-Band $s $exAccent 3; Save $s 'ore_roaster_side'; $s.Dispose()
+$fr=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fr $exAccent; Add-Band $fr $exAccent 3; Save $fr 'ore_roaster_front'; $fr.Dispose()
+$fo=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fo $exAccent; Add-Band $fo $exAccent 3; Add-Glow $fo 'EAFDFF' '1E9FC0'; Save $fo 'ore_roaster_front_on'; $fo.Dispose()
 
 # ---------------- Crusher (분쇄기): slate gray metal body + amber grinding glow ----------------
-# Built on the blast furnace so it reads as a heavier, banded machine than the extraction furnace.
+# Built on the blast furnace so it reads as a heavier, banded machine than the ore roaster.
 $crTint='6A6E78'; $crAccent='D8A33A'; $crBase=140.0
 $t=Recolor (Load 'blast_furnace_top')   $crTint $crBase $false; Add-Rivets $t $crAccent; Save $t 'crusher_top'; $t.Dispose()
 $s=Recolor (Load 'blast_furnace_side')  $crTint $crBase $false; Add-Rivets $s $crAccent; Add-Band $s $crAccent 3; Save $s 'crusher_side'; $s.Dispose()

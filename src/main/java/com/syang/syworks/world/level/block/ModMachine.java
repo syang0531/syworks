@@ -22,10 +22,10 @@ import net.minecraft.util.StringRepresentable;
  */
 public enum ModMachine implements StringRepresentable {
     /**
-     * Roasting. Heats silk-touched ore so it yields more than smelting it would — the one place
-     * this mod touches progression, and deliberately a trade with Fortune rather than a gain.
+     * Roasting. Heats silk-touched ore so it yields more than smelting the block would — the one
+     * place this mod touches progression, and deliberately a trade with Fortune rather than a gain.
      */
-    EXTRACTION_FURNACE("extraction_furnace", "Extraction Furnace", "extraction"),
+    ORE_ROASTER("ore_roaster", "Ore Roaster", "roasting"),
 
     /**
      * Comminution. Takes every rock and every stair/wall/slab cut from one, plus dirt and calcite,

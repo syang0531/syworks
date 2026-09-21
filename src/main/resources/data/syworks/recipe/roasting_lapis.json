@@ -1,0 +1,7 @@
+{
+  "type": "syworks:roasting",
+  "ingredient": "#syworks:roastable/lapis",
+  "result": { "id": "minecraft:lapis_lazuli", "count": 7 },
+  "processtime": 300,
+  "experience": 0.4
+}

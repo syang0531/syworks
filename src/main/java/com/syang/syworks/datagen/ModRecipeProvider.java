@@ -35,13 +35,13 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes() {
-        // Extraction Furnace — a furnace core wrapped in iron.
+        // Ore Roaster — a furnace core wrapped in iron.
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC,
-                        ModBlocks.MACHINES.get(ModMachine.EXTRACTION_FURNACE).get())
+                        ModBlocks.MACHINES.get(ModMachine.ORE_ROASTER).get())
                 .pattern("III").pattern("IFI").pattern("III")
                 .define('I', Items.IRON_INGOT).define('F', Items.FURNACE)
                 .unlockedBy("has_furnace", has(Items.FURNACE))
-                .save(this.output, key(ModMachine.EXTRACTION_FURNACE.id()));
+                .save(this.output, key(ModMachine.ORE_ROASTER.id()));
 
         // Crusher — a piston doing the crushing, braced with iron inside a stone shell.
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC,

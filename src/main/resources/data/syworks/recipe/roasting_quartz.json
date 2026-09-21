@@ -1,0 +1,7 @@
+{
+  "type": "syworks:roasting",
+  "ingredient": "minecraft:nether_quartz_ore",
+  "result": { "id": "minecraft:quartz", "count": 2 },
+  "processtime": 300,
+  "experience": 0.3
+}

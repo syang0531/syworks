@@ -49,6 +49,20 @@ public class ModItemTagsProvider extends ItemTagsProvider {
      */
     public static final TagKey<Item> CHARRABLE_PLANK = tag("charrable/plank");
     /**
+     * Roaster inputs. One tag per ore family, because the yields differ and because the vanilla
+     * {@code #minecraft:gold_ores} tag folds in nether gold ore (which drops nuggets, not raw gold)
+     * and would quietly pull in the wrong recipe.
+     */
+    public static final TagKey<Item> ROASTABLE_COAL = tag("roastable/coal");
+    public static final TagKey<Item> ROASTABLE_IRON = tag("roastable/iron");
+    public static final TagKey<Item> ROASTABLE_COPPER = tag("roastable/copper");
+    public static final TagKey<Item> ROASTABLE_GOLD = tag("roastable/gold");
+    public static final TagKey<Item> ROASTABLE_REDSTONE = tag("roastable/redstone");
+    public static final TagKey<Item> ROASTABLE_LAPIS = tag("roastable/lapis");
+    public static final TagKey<Item> ROASTABLE_DIAMOND = tag("roastable/diamond");
+    public static final TagKey<Item> ROASTABLE_EMERALD = tag("roastable/emerald");
+
+    /**
      * Kiln, small tier → 1 charcoal per 4. A slab and a stick are each an eighth of a log, so four
      * of either is break-even; buttons, ladders and bowls cost more and are a loss.
      */
@@ -145,6 +159,18 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 Items.PALE_OAK_DOOR, Items.PALE_OAK_TRAPDOOR, Items.PALE_OAK_SIGN, Items.PALE_OAK_BUTTON, Items.PALE_OAK_PRESSURE_PLATE);
 
         add(CHARRABLE_SMALL, Items.STICK, Items.LADDER, Items.BOWL);
+
+        // ----- roaster: silk-touched ore blocks -----
+        // Ancient debris is deliberately absent: Fortune does not work on it, so any bonus here
+        // would be a pure gain on the netherite gate rather than a trade. Same for gilded blackstone.
+        add(ROASTABLE_COAL, Items.COAL_ORE, Items.DEEPSLATE_COAL_ORE);
+        add(ROASTABLE_IRON, Items.IRON_ORE, Items.DEEPSLATE_IRON_ORE);
+        add(ROASTABLE_COPPER, Items.COPPER_ORE, Items.DEEPSLATE_COPPER_ORE);
+        add(ROASTABLE_GOLD, Items.GOLD_ORE, Items.DEEPSLATE_GOLD_ORE);
+        add(ROASTABLE_REDSTONE, Items.REDSTONE_ORE, Items.DEEPSLATE_REDSTONE_ORE);
+        add(ROASTABLE_LAPIS, Items.LAPIS_ORE, Items.DEEPSLATE_LAPIS_ORE);
+        add(ROASTABLE_DIAMOND, Items.DIAMOND_ORE, Items.DEEPSLATE_DIAMOND_ORE);
+        add(ROASTABLE_EMERALD, Items.EMERALD_ORE, Items.DEEPSLATE_EMERALD_ORE);
     }
 
     /** One wood type. Hanging signs are left out on purpose — they hold iron chains. */
