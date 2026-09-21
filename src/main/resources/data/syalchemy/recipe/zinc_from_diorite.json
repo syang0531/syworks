@@ -1,6 +1,0 @@
-{
-  "type": "syalchemy:extraction",
-  "ingredient": "minecraft:diorite",
-  "result": { "id": "syalchemy:zinc_ingot", "count": 1 },
-  "processtime": 200
-}

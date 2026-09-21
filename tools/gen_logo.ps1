@@ -1,10 +1,10 @@
-# Generates the CurseForge project logo from existing in-game item textures.
+# Generates the CurseForge project logo from the machine block textures.
 # Output: docs/curseforge/logo.png (512x512). Re-run after changing hero assets.
 #   powershell -ExecutionPolicy Bypass -File tools/gen_logo.ps1
 Add-Type -AssemblyName System.Drawing
 
 $root   = Split-Path $PSScriptRoot -Parent
-$itemTx = Join-Path $root 'src/main/resources/assets/syalchemy/textures/item'
+$itemTx = Join-Path $root 'src/main/resources/assets/syworks/textures/block'
 $outDir = Join-Path $root 'docs/curseforge'
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $outPng = Join-Path $outDir 'logo.png'
@@ -16,7 +16,7 @@ $g.SmoothingMode     = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
 $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
 $g.PixelOffsetMode   = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
 
-# --- Background: dark base + radial slate vignette (metal + magic mood) ---
+# --- Background: dark base + radial slate vignette (machine mood) ---
 $g.Clear([System.Drawing.Color]::FromArgb(255, 12, 14, 20))
 
 function Radial-Glow($cx, $cy, $radius, $r, $gr, $b, $alpha) {
@@ -29,9 +29,9 @@ function Radial-Glow($cx, $cy, $radius, $r, $gr, $b, $alpha) {
     $brush.Dispose(); $path.Dispose()
 }
 
-# slate/indigo ambient, then a purple magic glow behind the hero
+# slate ambient, then a cyan intake glow behind the hero
 Radial-Glow 256 250 320  46 60 92   255
-Radial-Glow 256 210 190  96 66 190  110
+Radial-Glow 256 210 190  52 116 140 110
 
 function Draw-Tex($name, $x, $y, $size, $angleDeg) {
     $file = Join-Path $itemTx $name
@@ -45,10 +45,10 @@ function Draw-Tex($name, $x, $y, $size, $angleDeg) {
     $img.Dispose()
 }
 
-# --- Hero: the top alloy ingot + the two machines' axis ---
-Draw-Tex 'tungsten_steel_sword.png'      300 70  190 18   # equipment axis, tucked behind
-Draw-Tex 'tungsten_steel_ingot.png'      120 190 260 -8   # hero: metal/alloy axis
-Draw-Tex 'bronze_ingot.png'             70  70  150 0     # the first alloy
+# --- Hero: the machine, front lit ---
+Draw-Tex 'extraction_furnace_front_on.png' 128 128 256 0    # hero: the machine at work
+Draw-Tex 'extraction_furnace_side.png'     330 70  150 14   # tucked behind
+Draw-Tex 'extraction_furnace_top.png'      60  80  140 -10  # tucked behind
 
 # subtle inner vignette to focus the center
 $vig = New-Object System.Drawing.Drawing2D.GraphicsPath

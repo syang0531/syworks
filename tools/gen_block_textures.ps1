@@ -1,22 +1,20 @@
 Add-Type -AssemblyName System.Drawing
 
 # ---------------------------------------------------------------------------
-# Machine block textures for the Extraction Furnace (추출로) and Alloy Furnace (합금로).
-# Built by recoloring the vanilla furnace / blast-furnace textures (so they read
+# Machine block textures for the Extraction Furnace (추출로).
+# Built by recoloring the vanilla furnace textures (so they read
 # as believable furnace-family machines) and adding a distinct accent + glow:
 #   Extraction Furnace    = stone furnace body recolored steel-blue, CYAN intake glow.
-#   Alloy Furnace= blast-furnace metal body recolored warm steel, ORANGE melt glow.
 # Each block gets 4 faces: _side, _top, _front, _front_on (lit).
 # ---------------------------------------------------------------------------
 
-$root  = Join-Path $PSScriptRoot '..\src\main\resources\assets\syalchemy\textures\block'
+$root  = Join-Path $PSScriptRoot '..\src\main\resources\assets\syworks\textures\block'
 $vbase = "$PSScriptRoot\vanilla_base"
 New-Item -ItemType Directory -Force $root  | Out-Null
 New-Item -ItemType Directory -Force $vbase | Out-Null
 
 function Ensure-FurnaceBases {
-  $need = @('furnace_side','furnace_top','furnace_front','furnace_front_on',
-            'blast_furnace_side','blast_furnace_top','blast_furnace_front','blast_furnace_front_on')
+  $need = @('furnace_side','furnace_top','furnace_front','furnace_front_on')
   $missing = $false
   foreach ($n in $need) { if (-not (Test-Path "$vbase\$n.png")) { $missing = $true } }
   if (-not $missing) { return }
@@ -116,11 +114,4 @@ $s=Recolor (Load 'furnace_side')  $exTint $exBase $false; Add-Rivets $s $exAccen
 $fr=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fr $exAccent; Add-Band $fr $exAccent 3; Save $fr 'extraction_furnace_front'; $fr.Dispose()
 $fo=Recolor (Load 'furnace_front') $exTint $exBase $false; Add-Rivets $fo $exAccent; Add-Band $fo $exAccent 3; Add-Glow $fo 'EAFDFF' '1E9FC0'; Save $fo 'extraction_furnace_front_on'; $fo.Dispose()
 
-# ---------------- Alloy Furnace (합금로): warm steel + orange ----------------
-$afTint='7A6A5C'; $afAccent='E8922E'; $afBase=140.0
-$t=Recolor (Load 'blast_furnace_top')   $afTint $afBase $false; Add-Rivets $t $afAccent; Save $t 'alloy_furnace_top'; $t.Dispose()
-$s=Recolor (Load 'blast_furnace_side')  $afTint $afBase $false; Add-Rivets $s $afAccent; Add-Band $s $afAccent 3; Save $s 'alloy_furnace_side'; $s.Dispose()
-$fr=Recolor (Load 'blast_furnace_front') $afTint $afBase $false; Add-Rivets $fr $afAccent; Add-Band $fr $afAccent 3; Save $fr 'alloy_furnace_front'; $fr.Dispose()
-$fo=Recolor (Load 'blast_furnace_front_on') $afTint $afBase $true; Add-Rivets $fo $afAccent; Add-Band $fo $afAccent 3; Add-Glow $fo 'FFF0C0' 'E0641A'; Save $fo 'alloy_furnace_front_on'; $fo.Dispose()
-
-Write-Output "Generated 8 furnace-family block textures in $root"
+Write-Output "Generated 4 furnace block textures in $root"
