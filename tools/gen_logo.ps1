@@ -45,10 +45,10 @@ function Draw-Tex($name, $x, $y, $size, $angleDeg) {
     $img.Dispose()
 }
 
-# --- Hero: the machine, front lit ---
-Draw-Tex 'extraction_furnace_front_on.png' 128 128 256 0    # hero: the machine at work
-Draw-Tex 'extraction_furnace_side.png'     330 70  150 14   # tucked behind
-Draw-Tex 'extraction_furnace_top.png'      60  80  140 -10  # tucked behind
+# --- Hero: the three machines, all lit ---
+Draw-Tex 'charcoal_kiln_front_on.png' 48  48  170 -12  # behind, left
+Draw-Tex 'ore_roaster_front_on.png'   296 56  170 12   # behind, right
+Draw-Tex 'crusher_front_on.png'       136 168 240 0    # hero, front and centre
 
 # subtle inner vignette to focus the center
 $vig = New-Object System.Drawing.Drawing2D.GraphicsPath
