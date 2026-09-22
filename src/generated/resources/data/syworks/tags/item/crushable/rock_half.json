@@ -18,6 +18,15 @@
     "minecraft:deepslate_tile_slab",
     "minecraft:blackstone_slab",
     "minecraft:polished_blackstone_slab",
-    "minecraft:polished_blackstone_brick_slab"
+    "minecraft:polished_blackstone_brick_slab",
+    "minecraft:nether_brick_slab",
+    "minecraft:red_nether_brick_slab",
+    "minecraft:nether_brick_fence",
+    "minecraft:sulfur_slab",
+    "minecraft:polished_sulfur_slab",
+    "minecraft:sulfur_brick_slab",
+    "minecraft:cinnabar_slab",
+    "minecraft:polished_cinnabar_slab",
+    "minecraft:cinnabar_brick_slab"
   ]
 }

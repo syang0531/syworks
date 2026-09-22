@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -24,8 +25,11 @@ import java.util.concurrent.CompletableFuture;
  * block — an infinite gravel loop. So slabs go in their own tag and their recipe consumes two.
  * See docs/정체성-재설계.md §6.
  *
- * <p>Deliberately <b>not</b> included: gilded blackstone (it holds gold), sandstone (it is made
- * from sand in the first place, so crushing it back is pointless), and anything from the End.
+ * <p>Deliberately <b>not</b> included: gilded blackstone (it holds gold), quartz and amethyst
+ * blocks, glowstone and magma blocks (their crushed form is progression or brewing stock),
+ * concrete (a block costs half a sand and half a gravel, so any output at all would duplicate),
+ * pointed dripstone (four of them come from one dripstone block, which already gives one bone
+ * meal), raw mud (that is the dripstone recipe's job), and anything from the End.
  */
 public class ModItemTagsProvider extends ItemTagsProvider {
 
@@ -41,7 +45,38 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     public static final TagKey<Item> CRUSHABLE_LIME = tag("crushable/lime");
     /** Soil → sand, skipping gravel: soil is already sand, silt and clay, not rock. */
     public static final TagKey<Item> CRUSHABLE_SOIL = tag("crushable/soil");
+    /**
+     * Sandstone and its 1:1 cuts → sand, skipping gravel: sandstone is cemented sand, not rock.
+     *
+     * <p>It was left out until 0.5.0 on the grounds that sandstone is crafted <i>from</i> sand, so
+     * crushing it back was pointless. That only ever described crafted sandstone. Nearly all the
+     * sandstone a player meets is the natural layer under a desert or a temple torn down for its
+     * stairs, and four sand still make one block, so this can never gain.
+     */
+    public static final TagKey<Item> CRUSHABLE_SAND_ROCK = tag("crushable/sand_rock");
+    /** Sandstone slabs → sand. */
+    public static final TagKey<Item> CRUSHABLE_SAND_ROCK_HALF = tag("crushable/sand_rock_half");
+    /**
+     * Red sandstone and its 1:1 cuts → red sand. Its own family, because red sand exists nowhere
+     * but the badlands and there is otherwise no way to carry it out.
+     */
+    public static final TagKey<Item> CRUSHABLE_RED_SAND_ROCK = tag("crushable/red_sand_rock");
+    /** Red sandstone slabs → red sand. */
+    public static final TagKey<Item> CRUSHABLE_RED_SAND_ROCK_HALF = tag("crushable/red_sand_rock_half");
+    /**
+     * Fired clay → clay. Terracotta is a smelted clay block and a brick is a smelted clay ball, so
+     * every block here cost four balls and gives back one.
+     */
+    public static final TagKey<Item> CRUSHABLE_FIRED_CLAY = tag("crushable/fired_clay");
+    /** Brick slabs → clay. */
+    public static final TagKey<Item> CRUSHABLE_FIRED_CLAY_HALF = tag("crushable/fired_clay_half");
 
+    /**
+     * Kiln, log tier → 2 charcoal. Wraps the vanilla {@code #minecraft:logs_that_burn} and adds the
+     * shelves, which are new in 26.2 and are worth a whole log each: six stripped logs make six
+     * shelves, so charring a shelf for two is exactly what charring its log would have given.
+     */
+    public static final TagKey<Item> CHARRABLE_LOG = tag("charrable/log");
     /**
      * Kiln, plank tier → 1 charcoal per 2. A plank is a quarter of a log and a log gives 2, so two
      * planks are exactly break-even; everything else in this tier costs more wood than a plank and
@@ -85,7 +120,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 Items.STONE_STAIRS, Items.COBBLESTONE_STAIRS, Items.MOSSY_COBBLESTONE_STAIRS,
                 Items.STONE_BRICK_STAIRS, Items.MOSSY_STONE_BRICK_STAIRS,
                 Items.COBBLESTONE_WALL, Items.MOSSY_COBBLESTONE_WALL,
-                Items.STONE_BRICK_WALL, Items.MOSSY_STONE_BRICK_WALL);
+                Items.STONE_BRICK_WALL, Items.MOSSY_STONE_BRICK_WALL,
+                // A button is one stone exactly, a pressure plate two — break-even and a loss.
+                Items.STONE_BUTTON, Items.STONE_PRESSURE_PLATE);
         half(Items.STONE_SLAB, Items.COBBLESTONE_SLAB, Items.MOSSY_COBBLESTONE_SLAB,
                 Items.SMOOTH_STONE_SLAB, Items.STONE_BRICK_SLAB, Items.MOSSY_STONE_BRICK_SLAB);
 
@@ -119,11 +156,37 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 Items.BLACKSTONE_STAIRS, Items.POLISHED_BLACKSTONE_STAIRS,
                 Items.POLISHED_BLACKSTONE_BRICK_STAIRS,
                 Items.BLACKSTONE_WALL, Items.POLISHED_BLACKSTONE_WALL,
-                Items.POLISHED_BLACKSTONE_BRICK_WALL);
+                Items.POLISHED_BLACKSTONE_BRICK_WALL,
+                Items.POLISHED_BLACKSTONE_BUTTON, Items.POLISHED_BLACKSTONE_PRESSURE_PLATE);
         half(Items.BLACKSTONE_SLAB, Items.POLISHED_BLACKSTONE_SLAB,
                 Items.POLISHED_BLACKSTONE_BRICK_SLAB);
 
         rock(Items.BASALT, Items.POLISHED_BASALT, Items.SMOOTH_BASALT, Items.NETHERRACK);
+
+        // Nether brick is fired netherrack: one block cost four netherrack and gives back one
+        // gravel. Red nether brick cost two, so it is the same trade with nether wart thrown away.
+        rock(Items.NETHER_BRICKS, Items.CHISELED_NETHER_BRICKS, Items.CRACKED_NETHER_BRICKS,
+                Items.NETHER_BRICK_STAIRS, Items.NETHER_BRICK_WALL,
+                Items.RED_NETHER_BRICKS, Items.RED_NETHER_BRICK_STAIRS, Items.RED_NETHER_BRICK_WALL);
+        // The fence is in the half tag, not because it is half a block, but because six of them
+        // come from four blocks and two loose bricks — at 1:1 that would be a 4:3 gain.
+        half(Items.NETHER_BRICK_SLAB, Items.RED_NETHER_BRICK_SLAB, Items.NETHER_BRICK_FENCE);
+
+        // ----- sulfur / cinnabar -----
+        // New in 26.2 and easy to miss: both sit in #minecraft:overworld_carver_replaceables, so
+        // they are cave filler like stone and deepslate, not a crafted decoration. Neither has a
+        // crushed form of its own in vanilla — there is no sulfur dust and no mercury — so they
+        // take the same road as every other rock. Potent sulfur and the sulfur spike stay out:
+        // they are functional blocks, not building stone.
+        rock(Items.SULFUR, Items.POLISHED_SULFUR, Items.CHISELED_SULFUR, Items.SULFUR_BRICKS,
+                Items.SULFUR_STAIRS, Items.POLISHED_SULFUR_STAIRS, Items.SULFUR_BRICK_STAIRS,
+                Items.SULFUR_WALL, Items.POLISHED_SULFUR_WALL, Items.SULFUR_BRICK_WALL);
+        half(Items.SULFUR_SLAB, Items.POLISHED_SULFUR_SLAB, Items.SULFUR_BRICK_SLAB);
+
+        rock(Items.CINNABAR, Items.POLISHED_CINNABAR, Items.CHISELED_CINNABAR, Items.CINNABAR_BRICKS,
+                Items.CINNABAR_STAIRS, Items.POLISHED_CINNABAR_STAIRS, Items.CINNABAR_BRICK_STAIRS,
+                Items.CINNABAR_WALL, Items.POLISHED_CINNABAR_WALL, Items.CINNABAR_BRICK_WALL);
+        half(Items.CINNABAR_SLAB, Items.POLISHED_CINNABAR_SLAB, Items.CINNABAR_BRICK_SLAB);
 
         // ----- tuff: the one rock that really becomes clay -----
         add(CRUSHABLE_TUFF, Items.TUFF, Items.POLISHED_TUFF, Items.CHISELED_TUFF,
@@ -135,6 +198,29 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         // ----- lime and soil -----
         add(CRUSHABLE_LIME, Items.CALCITE, Items.DRIPSTONE_BLOCK);
         add(CRUSHABLE_SOIL, Items.DIRT, Items.COARSE_DIRT, Items.ROOTED_DIRT);
+
+        // ----- sandstone: cemented sand, so it goes straight back to sand -----
+        // Note the vanilla field name: CUT_STANDSTONE_SLAB is a typo in Items, and only on this
+        // one — the red family spells CUT_RED_SANDSTONE_SLAB correctly.
+        add(CRUSHABLE_SAND_ROCK, Items.SANDSTONE, Items.CHISELED_SANDSTONE, Items.CUT_SANDSTONE,
+                Items.SMOOTH_SANDSTONE, Items.SANDSTONE_STAIRS, Items.SMOOTH_SANDSTONE_STAIRS,
+                Items.SANDSTONE_WALL);
+        add(CRUSHABLE_SAND_ROCK_HALF, Items.SANDSTONE_SLAB, Items.SMOOTH_SANDSTONE_SLAB,
+                Items.CUT_STANDSTONE_SLAB);
+
+        add(CRUSHABLE_RED_SAND_ROCK, Items.RED_SANDSTONE, Items.CHISELED_RED_SANDSTONE,
+                Items.CUT_RED_SANDSTONE, Items.SMOOTH_RED_SANDSTONE, Items.RED_SANDSTONE_STAIRS,
+                Items.SMOOTH_RED_SANDSTONE_STAIRS, Items.RED_SANDSTONE_WALL);
+        add(CRUSHABLE_RED_SAND_ROCK_HALF, Items.RED_SANDSTONE_SLAB,
+                Items.SMOOTH_RED_SANDSTONE_SLAB, Items.CUT_RED_SANDSTONE_SLAB);
+
+        // ----- fired clay -----
+        add(CRUSHABLE_FIRED_CLAY, Items.BRICKS, Items.BRICK_STAIRS, Items.BRICK_WALL);
+        add(CRUSHABLE_FIRED_CLAY_HALF, Items.BRICK_SLAB);
+        // Since 26.2 the sixteen dyed variants are one ColorCollection rather than sixteen fields.
+        add(CRUSHABLE_FIRED_CLAY, Items.TERRACOTTA);
+        add(CRUSHABLE_FIRED_CLAY, Items.DYED_TERRACOTTA.asList());
+        add(CRUSHABLE_FIRED_CLAY, Items.GLAZED_TERRACOTTA.asList());
 
         // ----- kiln: the wooden things a furnace refuses -----
         // Logs are not listed: they come in through the vanilla #minecraft:logs_that_burn tag, which
@@ -159,6 +245,12 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 Items.PALE_OAK_DOOR, Items.PALE_OAK_TRAPDOOR, Items.PALE_OAK_SIGN, Items.PALE_OAK_BUTTON, Items.PALE_OAK_PRESSURE_PLATE);
 
         add(CHARRABLE_SMALL, Items.STICK, Items.LADDER, Items.BOWL);
+
+        // Logs come in through the vanilla tag; shelves are worth exactly one log each.
+        tag(CHARRABLE_LOG).addTag(ItemTags.LOGS_THAT_BURN);
+        add(CHARRABLE_LOG, Items.OAK_SHELF, Items.SPRUCE_SHELF, Items.BIRCH_SHELF,
+                Items.JUNGLE_SHELF, Items.ACACIA_SHELF, Items.DARK_OAK_SHELF,
+                Items.MANGROVE_SHELF, Items.CHERRY_SHELF, Items.PALE_OAK_SHELF);
 
         // ----- roaster: silk-touched ore blocks -----
         // Ancient debris is deliberately absent: Fortune does not work on it, so any bonus here
@@ -189,6 +281,10 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     }
 
     private void add(TagKey<Item> tag, Item... items) {
+        add(tag, List.of(items));
+    }
+
+    private void add(TagKey<Item> tag, List<Item> items) {
         var builder = tag(tag);
         for (Item item : items) {
             builder.add(key(item));

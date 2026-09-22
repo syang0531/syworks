@@ -1,0 +1,7 @@
+{
+  "type": "syworks:crushing",
+  "ingredient": "#syworks:crushable/red_sand_rock",
+  "result": { "id": "minecraft:red_sand", "count": 1 },
+  "processtime": 200,
+  "experience": 0.05
+}
