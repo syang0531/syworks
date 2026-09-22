@@ -1,7 +1,7 @@
 Add-Type -AssemblyName System.Drawing
 
 # ---------------------------------------------------------------------------
-# Machine block textures for the Ore Roaster (배소로), Crusher (분쇄기) and Charcoal Kiln (숯가마).
+# Machine block textures for the Ore Roaster (광석 화덕), Crusher (분쇄기) and Charcoal Kiln (숯가마).
 # Built by recoloring the vanilla furnace textures (so they read
 # as believable furnace-family machines) and adding a distinct accent + glow:
 #   Ore Roaster        = stone furnace body recolored steel-blue, CYAN heat glow.
@@ -110,7 +110,7 @@ function Add-Glow([System.Drawing.Bitmap]$b,[string]$coreHex,[string]$edgeHex){
 
 Ensure-FurnaceBases
 
-# ---------------- Ore Roaster (배소로): steel-blue + cyan ----------------
+# ---------------- Ore Roaster (광석 화덕): steel-blue + cyan ----------------
 $exTint='5E7488'; $exAccent='34C7E0'; $exBase=150.0
 $t=Recolor (Load 'furnace_top')   $exTint $exBase $false; Add-Rivets $t $exAccent; Save $t 'ore_roaster_top'; $t.Dispose()
 $s=Recolor (Load 'furnace_side')  $exTint $exBase $false; Add-Rivets $s $exAccent; Add-Band $s $exAccent 3; Save $s 'ore_roaster_side'; $s.Dispose()
