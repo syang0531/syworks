@@ -1,9 +1,14 @@
 package com.syang.syworks.datagen;
 
 import com.syang.syworks.SyWorks;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Hooks the data providers to {@code ./gradlew runData}. Output lands in
@@ -24,5 +29,9 @@ public final class ModDataGenerators {
         event.createProvider(ModEnglishLangProvider::new);
         event.createProvider(ModRecipeProvider.Runner::new);
         event.createProvider(ModItemTagsProvider::new);
+        event.createProvider(ModBlockTagsProvider::new);
+        event.createProvider((output, registries) -> new LootTableProvider(output, Set.of(),
+                List.of(new LootTableProvider.SubProviderEntry(ModBlockLootProvider::new, LootContextParamSets.BLOCK)),
+                registries));
     }
 }
