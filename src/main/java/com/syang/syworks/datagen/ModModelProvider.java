@@ -16,7 +16,7 @@ import net.minecraft.data.PackOutput;
  * <p>The machines are furnace-style: an orientable body (distinct front/side/top textures) that
  * faces the placer, with a glowing {@code _front_on} swapped in by {@code LIT}. Textures live at
  * assets/syworks/textures/block/&lt;name&gt;_{side,top,front,front_on}.png and are produced by
- * {@code tools/gen_block_textures.ps1}. Block items get a plain model pointing at the block model
+ * {@code tools/gen_block_textures.py}. Block items get a plain model pointing at the block model
  * automatically.
  */
 public class ModModelProvider extends ModelProvider {

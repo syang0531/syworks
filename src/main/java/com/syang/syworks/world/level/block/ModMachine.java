@@ -18,7 +18,7 @@ import net.minecraft.util.StringRepresentable;
  * <p><b>광석은 굽고, 돌은 부수고, 나무는 숯으로.</b>
  *
  * <p>Adding a machine is this enum row, a block texture colour in
- * {@code tools/gen_block_textures.ps1}, and its recipes. The registries all iterate these values.
+ * {@code tools/gen_block_textures.py}, and its recipes. The registries all iterate these values.
  */
 public enum ModMachine implements StringRepresentable {
     /**

@@ -96,7 +96,7 @@ Minecraft **26.2** / **NeoForge 26.2** (Java 25) 모드. **다른 모드에 의�
 .\gradlew.bat build        # 배포용 jar (build/libs/)
 ```
 
-블록 텍스처는 `tools\gen_block_textures.ps1`이 바닐라 화로 텍스처를 리컬러해 만든다.
+블록 텍스처는 `python tools/gen_block_textures.py`가 바닐라 화로 텍스처를 리컬러해 만든다(Pillow 필요).
 
 ## 구조
 
