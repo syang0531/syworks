@@ -18,7 +18,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Crafting recipes for the machines themselves. Without these the mod is survival-unobtainable, and
+ * Crafting recipes for the machines themselves, and the incinerator. Without these the mod is survival-unobtainable, and
  * they use vanilla-only ingredients so nothing has to exist before them.
  *
  * <p>The machines' own recipes (what they accept and produce) are hand-written JSON under
@@ -58,6 +58,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', Items.BRICK).define('F', Items.FURNACE)
                 .unlockedBy("has_brick", has(Items.BRICK))
                 .save(this.output, key(ModMachine.CHARCOAL_KILN.id()));
+
+        // Incinerator — a pool of lava walled in stone, which is the trash can it replaces.
+        // The bucket comes back: a lava bucket's crafting remainder is an empty bucket.
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC, ModBlocks.INCINERATOR.get())
+                .pattern("CCC").pattern("CLC").pattern("CCC")
+                .define('C', Items.COBBLESTONE).define('L', Items.LAVA_BUCKET)
+                .unlockedBy("has_lava_bucket", has(Items.LAVA_BUCKET))
+                .save(this.output, key("incinerator"));
     }
 
     private static ResourceKey<Recipe<?>> key(String path) {

@@ -22,5 +22,6 @@ public class ModEnglishLangProvider extends LanguageProvider {
         for (ModMachine machine : ModMachine.values()) {
             add(ModBlocks.MACHINES.get(machine).get(), machine.displayName());
         }
+        add(ModBlocks.INCINERATOR.get(), "Incinerator");
     }
 }

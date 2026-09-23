@@ -1,7 +1,8 @@
 Add-Type -AssemblyName System.Drawing
 
 # ---------------------------------------------------------------------------
-# Machine block textures for the Ore Roaster (광석 화덕), Crusher (분쇄기) and Charcoal Kiln (숯가마).
+# Machine block textures for the Ore Roaster (광석 화덕), Crusher (분쇄기) and Charcoal Kiln (숯가마),
+# plus the Incinerator (소각로).
 # Built by recoloring the vanilla furnace textures (so they read
 # as believable furnace-family machines) and adding a distinct accent + glow:
 #   Ore Roaster        = stone furnace body recolored steel-blue, CYAN heat glow.
@@ -133,4 +134,13 @@ $s=Recolor (Load 'furnace_side')  $ckTint $ckBase $false; Add-Rivets $s $ckAccen
 $fr=Recolor (Load 'furnace_front') $ckTint $ckBase $false; Add-Rivets $fr $ckAccent; Add-Band $fr $ckAccent 3; Save $fr 'charcoal_kiln_front'; $fr.Dispose()
 $fo=Recolor (Load 'furnace_front') $ckTint $ckBase $false; Add-Rivets $fo $ckAccent; Add-Band $fo $ckAccent 3; Add-Glow $fo 'FFD9A0' 'B33A12'; Save $fo 'charcoal_kiln_front_on'; $fo.Dispose()
 
-Write-Output "Generated 12 machine block textures in $root"
+# ---------------- Incinerator (소각로): soot-black iron + red fire ----------------
+# Not a machine, but it stands next to them. Blast-furnace metal like the crusher, blackened as if
+# it had been burning rubbish for years, and a glow redder than any machine's — it only destroys.
+$inTint='3C3836'; $inAccent='B8382A'; $inBase=140.0
+$t=Recolor (Load 'blast_furnace_top')   $inTint $inBase $false; Add-Rivets $t $inAccent; Save $t 'incinerator_top'; $t.Dispose()
+$s=Recolor (Load 'blast_furnace_side')  $inTint $inBase $false; Add-Rivets $s $inAccent; Add-Band $s $inAccent 3; Save $s 'incinerator_side'; $s.Dispose()
+$fr=Recolor (Load 'blast_furnace_front') $inTint $inBase $false; Add-Rivets $fr $inAccent; Add-Band $fr $inAccent 3; Save $fr 'incinerator_front'; $fr.Dispose()
+$fo=Recolor (Load 'blast_furnace_front_on') $inTint $inBase $true; Add-Rivets $fo $inAccent; Add-Band $fo $inAccent 3; Add-Glow $fo 'FFE08A' 'D2361A'; Save $fo 'incinerator_front_on'; $fo.Dispose()
+
+Write-Output "Generated 16 block textures in $root"

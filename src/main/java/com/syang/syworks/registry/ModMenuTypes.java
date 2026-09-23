@@ -1,6 +1,7 @@
 package com.syang.syworks.registry;
 
 import com.syang.syworks.SyWorks;
+import com.syang.syworks.world.inventory.IncineratorMenu;
 import com.syang.syworks.world.inventory.MachineMenu;
 import com.syang.syworks.world.level.block.ModMachine;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +21,9 @@ public final class ModMenuTypes {
 
     public static final Map<ModMachine, Supplier<MenuType<MachineMenu>>> MACHINES =
             new EnumMap<>(ModMachine.class);
+
+    public static final Supplier<MenuType<IncineratorMenu>> INCINERATOR =
+            MENUS.register("incinerator", () -> IMenuTypeExtension.create(IncineratorMenu::new));
 
     static {
         for (ModMachine machine : ModMachine.values()) {

@@ -2,6 +2,7 @@ package com.syang.syworks.registry;
 
 import com.syang.syworks.SyWorks;
 import com.syang.syworks.world.level.block.ModMachine;
+import com.syang.syworks.world.level.block.entity.IncineratorBlockEntity;
 import com.syang.syworks.world.level.block.entity.MachineBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,6 +20,10 @@ public final class ModBlockEntities {
 
     public static final Map<ModMachine, Supplier<BlockEntityType<MachineBlockEntity>>> MACHINES =
             new EnumMap<>(ModMachine.class);
+
+    public static final Supplier<BlockEntityType<IncineratorBlockEntity>> INCINERATOR =
+            BLOCK_ENTITIES.register("incinerator", () -> new BlockEntityType<>(
+                    IncineratorBlockEntity::new, ModBlocks.INCINERATOR.get()));
 
     static {
         for (ModMachine machine : ModMachine.values()) {

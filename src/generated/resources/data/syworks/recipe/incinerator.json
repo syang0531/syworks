@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:cobblestone",
+    "L": "minecraft:lava_bucket"
+  },
+  "pattern": [
+    "CCC",
+    "CLC",
+    "CCC"
+  ],
+  "result": {
+    "id": "syworks:incinerator"
+  }
+}

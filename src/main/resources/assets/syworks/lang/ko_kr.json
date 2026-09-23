@@ -3,5 +3,6 @@
 
   "block.syworks.ore_roaster": "광석 화덕",
   "block.syworks.crusher": "분쇄기",
-  "block.syworks.charcoal_kiln": "숯가마"
+  "block.syworks.charcoal_kiln": "숯가마",
+  "block.syworks.incinerator": "소각로"
 }

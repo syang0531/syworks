@@ -10,7 +10,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-/** A single tab holding the machines. The mod has no items of its own. */
+/** A single tab holding the machines and the incinerator. The mod has no items of its own. */
 public final class ModCreativeTabs {
 
     public static final DeferredRegister<CreativeModeTab> TABS =
@@ -24,6 +24,7 @@ public final class ModCreativeTabs {
                         for (ModMachine machine : ModMachine.values()) {
                             output.accept(ModBlocks.MACHINES.get(machine).get());
                         }
+                        output.accept(ModBlocks.INCINERATOR.get());
                     })
                     .build());
 

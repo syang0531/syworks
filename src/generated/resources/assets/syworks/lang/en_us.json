@@ -1,6 +1,7 @@
 {
   "block.syworks.charcoal_kiln": "Charcoal Kiln",
   "block.syworks.crusher": "Crusher",
+  "block.syworks.incinerator": "Incinerator",
   "block.syworks.ore_roaster": "Ore Roaster",
   "itemGroup.syworks.main": "SY Works"
 }

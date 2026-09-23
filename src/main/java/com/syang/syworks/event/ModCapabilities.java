@@ -12,6 +12,9 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
  * Exposes each machine's inventory as the item {@code ResourceHandler} capability so hoppers and
  * other automation can insert fuel and input and pull the result.
  *
+ * <p>The incinerator exposes a handler that accepts everything and keeps nothing, so a hopper or a
+ * pipe can feed it like a void.
+ *
  * <p>Note that a hopper draining the output does <b>not</b> collect the machine's experience —
  * that is paid out only when a player takes from the output slot, as with a furnace.
  */
@@ -29,5 +32,9 @@ public final class ModCapabilities {
                     ModBlockEntities.MACHINES.get(machine).get(),
                     (blockEntity, side) -> blockEntity.getInventory());
         }
+        event.registerBlockEntity(
+                Capabilities.Item.BLOCK,
+                ModBlockEntities.INCINERATOR.get(),
+                (blockEntity, side) -> blockEntity.getHandler());
     }
 }

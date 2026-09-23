@@ -11,7 +11,7 @@ import net.minecraft.data.PackOutput;
 
 /**
  * Generates blockstates, block models and the client item definitions
- * ({@code assets/syworks/items/*.json}, required since 1.21.4) for each machine.
+ * ({@code assets/syworks/items/*.json}, required since 1.21.4) for each machine and the incinerator.
  *
  * <p>The machines are furnace-style: an orientable body (distinct front/side/top textures) that
  * faces the placer, with a glowing {@code _front_on} swapped in by {@code LIT}. Textures live at
@@ -30,5 +30,7 @@ public class ModModelProvider extends ModelProvider {
         for (ModMachine machine : ModMachine.values()) {
             blockModels.createFurnace(ModBlocks.MACHINES.get(machine).get(), TexturedModel.ORIENTABLE_ONLY_TOP);
         }
+        // Same shape as the machines, so the same generator: FACING and a lit front.
+        blockModels.createFurnace(ModBlocks.INCINERATOR.get(), TexturedModel.ORIENTABLE_ONLY_TOP);
     }
 }
