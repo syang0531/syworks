@@ -5,6 +5,8 @@
 
 Minecraft **26.2** / **NeoForge 26.2** (Java 25) 모드. **다른 모드에 의존하지 않는다.**
 
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/syworks) · MIT
+
 > ### ⚠ 0.4.0은 이전 버전과 완전히 다른 모드다
 >
 > 0.3.0까지 이 모드는 **SY Alchemy**였고, 바닐라 블록에서 금속을 뽑아 합금 장비를 만들었다.
@@ -114,3 +116,7 @@ src/main/java/com/syang/syworks/
 ```
 
 진행 상황과 함정은 [docs/진행상황.md](docs/진행상황.md).
+
+## 라이선스
+
+MIT — [LICENSE](LICENSE).
