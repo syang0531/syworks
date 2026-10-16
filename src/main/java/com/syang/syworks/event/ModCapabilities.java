@@ -3,6 +3,7 @@ package com.syang.syworks.event;
 import com.syang.syworks.SyWorks;
 import com.syang.syworks.registry.ModBlockEntities;
 import com.syang.syworks.world.level.block.ModMachine;
+import com.syang.syworks.world.level.block.entity.MachineFaceHandler;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -10,7 +11,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**
  * Exposes each machine's inventory as the item {@code ResourceHandler} capability so hoppers and
- * other automation can insert fuel and input and pull the result.
+ * other automation can insert fuel and input and pull the result — one face at a time, by the
+ * furnace's rules (top = input, sides = fuel, bottom = output). See {@link MachineFaceHandler}.
  *
  * <p>The incinerator exposes a handler that accepts everything and keeps nothing, so a hopper or a
  * pipe can feed it like a void.
@@ -30,7 +32,7 @@ public final class ModCapabilities {
             event.registerBlockEntity(
                     Capabilities.Item.BLOCK,
                     ModBlockEntities.MACHINES.get(machine).get(),
-                    (blockEntity, side) -> blockEntity.getInventory());
+                    (blockEntity, side) -> MachineFaceHandler.of(blockEntity.getInventory(), side));
         }
         event.registerBlockEntity(
                 Capabilities.Item.BLOCK,

@@ -28,6 +28,7 @@ public class MachineMenu extends AbstractContainerMenu {
     private static final int TOTAL_SLOTS = MACHINE_SLOTS + 36;
 
     private final ModMachine machine;
+    private final MachineBlockEntity blockEntity;
     private final ContainerLevelAccess access;
     private final ContainerData data;
 
@@ -43,6 +44,7 @@ public class MachineMenu extends AbstractContainerMenu {
         super(ModMenuTypes.MACHINES.get(machine).get(), id);
         this.machine = machine;
         this.data = data;
+        this.blockEntity = blockEntity;
         this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
         ItemStacksResourceHandler handler = blockEntity.getInventory();
@@ -76,15 +78,23 @@ public class MachineMenu extends AbstractContainerMenu {
                     return ItemStack.EMPTY;
                 }
             } else {
-                // Player inventory → machine (fuel if burnable, otherwise input).
-                boolean moved = false;
-                if (player.level().fuelValues().burnDuration(stack) > 0) {
-                    moved = moveItemStackTo(stack, MachineBlockEntity.SLOT_FUEL,
-                            MachineBlockEntity.SLOT_FUEL + 1, false);
-                }
-                if (!moved) {
+                // Player inventory → machine. The furnace's order: something a recipe takes goes
+                // to the input and only there; otherwise fuel if it burns; otherwise the input.
+                // Fuel-first was wrong for the kiln, where everything it chars also burns — every
+                // log went to the fuel slot. The client has no recipes and guesses fuel-first;
+                // the server's answer replaces the guess on the next sync.
+                boolean moved;
+                if (blockEntity.isInput(stack)) {
                     moved = moveItemStackTo(stack, MachineBlockEntity.SLOT_INPUT,
                             MachineBlockEntity.SLOT_INPUT + 1, false);
+                } else {
+                    moved = player.level().fuelValues().burnDuration(stack) > 0
+                            && moveItemStackTo(stack, MachineBlockEntity.SLOT_FUEL,
+                                    MachineBlockEntity.SLOT_FUEL + 1, false);
+                    if (!moved) {
+                        moved = moveItemStackTo(stack, MachineBlockEntity.SLOT_INPUT,
+                                MachineBlockEntity.SLOT_INPUT + 1, false);
+                    }
                 }
                 if (!moved) {
                     // Shuffle between main inventory and hotbar.

@@ -196,6 +196,18 @@ public class MachineBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
+    /**
+     * Whether any of this machine's recipes takes {@code stack}, ignoring how many it needs.
+     * Server-only: since 1.21.2 the client is not sent recipes, so it always answers false there.
+     */
+    public boolean isInput(ItemStack stack) {
+        if (!(level instanceof ServerLevel server) || stack.isEmpty()) {
+            return false;
+        }
+        return server.recipeAccess().recipeMap().byType(ModRecipes.TYPES.get(machine).get()).stream()
+                .anyMatch(holder -> holder.value().input().test(stack));
+    }
+
     @Nullable
     private ProcessingRecipe getCurrentRecipe() {
         if (!(level instanceof ServerLevel server)) {
